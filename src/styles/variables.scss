@@ -1,0 +1,22 @@
+// Call in in css like var(--palette-primary-600);
+$palettes: (
+  options: (
+    transition-duration: 0.25s,
+    border-radius: 8px,
+  ),
+  status: (
+    success: #65e699,
+    danger: #f74343,
+    active: #58a7fe,
+    hightlight: #dbe6eb,
+  ),
+  text: (
+    size: 14px,
+    color: #dbe6eb,
+  ),
+  background: (
+    primary: #0f131f,
+    secondary: #181f32,
+    tertiary: #313e63,
+  ),
+);

@@ -18,17 +18,17 @@ export const routes = [
   {
     name: 'home',
     path: '/',
-    component: () => import('../views/HomePage.vue'),
-    meta: {
-      title: 'Vigad - Home',
-    },
-  },
-  {
-    name: 'sources',
-    path: '/sources',
     component: () => import('../views/SourcesView.vue'),
     meta: {
       title: 'Vigad - Sources',
+    },
+  },
+  {
+    name: 'run',
+    path: '/run',
+    component: () => import('../views/RunPage.vue'),
+    meta: {
+      title: 'Vigad - Run',
     },
   },
   {

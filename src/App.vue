@@ -35,140 +35,6 @@
       ></v-btn>
     </v-system-bar>
 
-    <!-- The Subemnu Things -->
-    <!-- TODO: create components out of this -->
-    <v-navigation-drawer
-      permanent
-      v-model="isScreenOrApplicationSelectPanelOpen"
-      temporary
-      width="450"
-    >
-      <template v-slot:prepend>
-        <v-sheet color="primary text-center" width="100%">
-          <v-list>
-            <v-list-item>Screen or Application</v-list-item>
-          </v-list>
-        </v-sheet>
-
-        <div class="pa-2">
-          <v-tabs
-            v-model="tab"
-            bg-color="primary"
-            fixed-tabs
-            class="rounded-lg"
-          >
-            <v-tab width="50%" value="screen">Screen</v-tab>
-            <v-tab width="50%" value="application">Application</v-tab>
-          </v-tabs>
-        </div>
-      </template>
-
-      <div class="content-container pa-2">
-        <v-window v-model="tab">
-          <!-- TODO: add something that if nothing was found there is a message that nothing has been found -->
-          <v-window-item value="screen">
-            <!-- TODO: maybe create a component out ofthis -->
-            <v-progress-circular
-              v-if="isLoadingScreensAndWindows"
-              color="primary"
-              indeterminate
-              :size="128"
-              :width="12"
-            ></v-progress-circular>
-            <div v-show="!isLoadingScreensAndWindows" class="windows-wrapper">
-              <v-card
-                v-for="source in screenSources"
-                :key="source.id"
-                @click="selectSource(source)"
-                variant="tonal"
-                class="mb-2"
-              >
-                <v-card-title>{{ source.name }}</v-card-title>
-                <v-card-text>
-                  <video
-                    autoplay
-                    :src-object.camel.prop="getStreamSource(source)"
-                    class="preview"
-                  ></video>
-                </v-card-text>
-              </v-card>
-            </div>
-          </v-window-item>
-
-          <v-window-item value="application">
-            <!-- TODO: Video preview isnt loaded on start  -->
-            <v-progress-circular
-              v-if="isLoadingScreensAndWindows"
-              color="primary"
-              indeterminate
-              :size="128"
-              :width="12"
-            ></v-progress-circular>
-            <div v-show="!isLoadingScreensAndWindows" class="windows-wrapper">
-              <v-card
-                v-for="source in applicationSources"
-                :key="source.id"
-                @click="selectSource(source)"
-                variant="tonal"
-                class="mb-2"
-              >
-                <v-card-title>{{ source.name }}</v-card-title>
-                <v-card-text>
-                  <video
-                    autoplay
-                    :src-object.camel.prop="getStreamSource(source)"
-                    class="preview"
-                  ></video>
-                </v-card-text>
-              </v-card>
-            </div>
-          </v-window-item>
-        </v-window>
-
-        <!-- <v-progress-circular
-          v-if="isLoadingScreensAndWindows"
-          color="primary"
-          indeterminate
-          :size="128"
-          :width="12"
-        ></v-progress-circular>
-        <div v-show="!isLoadingScreensAndWindows">
-          <v-card
-            v-for="source in desktopCaptureSources"
-            :key="source.id"
-            @click="selectSource(source)"
-            variant="tonal"
-            class="mb-2"
-          >
-            <v-card-title>{{ source.name }}</v-card-title>
-            <v-card-text>
-              <video
-                autoplay
-                :src-object.camel.prop="getStreamSource(source)"
-                class="preview"
-              ></video>
-            </v-card-text>
-          </v-card>
-        </div> -->
-      </div>
-
-      <template v-slot:append>
-        <div class="pa-2">
-          <v-btn @click="fetchAllStreams()" color="primary" width="100%" tonal
-            >Refresh</v-btn
-          >
-        </div>
-      </template>
-    </v-navigation-drawer>
-
-    <v-navigation-drawer permanent v-model="isRegexPanelOpen" temporary>
-      <v-sheet color="primary text-center" width="100%">
-        <v-list>
-          <v-list-item>Regex Panel</v-list-item>
-        </v-list>
-      </v-sheet>
-    </v-navigation-drawer>
-
     <!-- Main Content view-->
     <v-main>
       <v-container fluid> </v-container>
@@ -176,7 +42,13 @@
       <v-container class="ma-0" fluid>
         <v-row>
           <v-col cols="4">
-            <v-sheet min-height="70vh" rounded="lg">
+            <v-sheet
+              class="changing-view"
+              color="background"
+              min-height="70vh"
+              max-height="80vh"
+              rounded="lg"
+            >
               <!-- TODO: add transition to router view -->
               <router-view />
             </v-sheet>
@@ -194,12 +66,18 @@
 
     <!-- Bottom Navigation -->
     <v-bottom-navigation grow>
-      <v-btn to="/" tonal color="success" prepend-icon="mdi-play" value="run">
+      <v-btn
+        to="/run"
+        tonal
+        color="success"
+        prepend-icon="mdi-play"
+        value="run"
+      >
         Start Capturing
       </v-btn>
 
       <v-btn
-        to="/sources"
+        to="/"
         tonal
         color="success"
         prepend-icon="mdi-monitor"
@@ -217,36 +95,6 @@
       >
         Regex
       </v-btn>
-
-      <v-btn
-        to="/sessions"
-        tonal
-        color="success"
-        prepend-icon="mdi-application-edit-outline"
-        value="session"
-      >
-        Session
-      </v-btn>
-
-      <v-btn
-        to="/settings"
-        tonal
-        color="success"
-        prepend-icon="mdi-cog"
-        value="settings"
-      >
-        Settings
-      </v-btn>
-
-      <v-btn
-        to="/account"
-        tonal
-        color="success"
-        prepend-icon="mdi-account"
-        value="account"
-      >
-        Account
-      </v-btn>
     </v-bottom-navigation>
   </v-app>
 </template>
@@ -257,36 +105,9 @@ import { useRouter } from 'vue-router'
 
 import VideoStreamVue from './components/VideoStream.vue'
 
-// TODO: create a store for this ?
-// Here are only some of the properties
-// TODO: only one panel at the time can be open
-
-const isScreenOrApplicationSelectPanelOpen = ref(false)
-const toggleScreenOrApplicationSelectPanel = () => {
-  if (isScreenOrApplicationSelectPanelOpen.value) {
-    isScreenOrApplicationSelectPanelOpen.value = false
-  } else {
-    // Open the panel
-    isScreenOrApplicationSelectPanelOpen.value = true
-    // Fetch the screens and windows
-    // TODO: handel if already stored
-    fetchAllStreams()
-  }
-}
-const isRegexPanelOpen = ref(false)
-const toggleRegexPanel = () => {
-  isRegexPanelOpen.value = !isRegexPanelOpen.value
-}
-
 const theme = ref('dark')
-const toggleTheme = () => {
-  theme.value = theme.value === 'dark' ? 'light' : 'dark'
-}
-// For the Screen / Application Tab
-const tab = ref(null)
 
 // Screen Capture API things
-const dialog = ref(false)
 const isLoadingScreensAndWindows = ref(false)
 
 const desktopCaptureSources = ref([])
@@ -332,8 +153,6 @@ function clearSources() {
   const videoElement: HTMLVideoElement | null =
     document.querySelector('#mainVideo')
   videoElement!.srcObject = null
-
-  dialog.value = false
 }
 
 async function fetchAllStreamsAndSetMainVideo() {
@@ -508,5 +327,8 @@ body {
   background-color: red;
   margin: 5px 0;
   cursor: pointer;
+}
+.changing-view {
+  overflow-y: scroll;
 }
 </style>

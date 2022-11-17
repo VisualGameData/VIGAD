@@ -1,5 +1,6 @@
 <template>
-  <div>Error</div>
+  An error occoured
+  <font-awesome-icon :icon="['fas', 'exclamation-circle']" />
 </template>
 
 <script setup lang="ts"></script>

@@ -1,30 +1,42 @@
-import HomePage from '../views/HomePage.vue'
-import ErrorPage from '../views/ErrorPage.vue'
-import PageNotFound from '../views/PageNotFound.vue'
-
 export const routes = [
   {
     name: '404',
     path: '/:pathMatch(.*)*',
-    component: PageNotFound,
+    component: () => import('../views/PageNotFound.vue'),
     meta: {
-      title: '404 - Page Not Found',
+      title: 'Vigad - 404 - Page Not Found',
     },
   },
   {
     name: 'error',
     path: '/error',
-    component: ErrorPage,
+    component: () => import('../views/ErrorPage.vue'),
     meta: {
-      title: 'Error',
+      title: 'Vigad - Error',
     },
   },
   {
     name: 'home',
     path: '/',
-    component: HomePage,
+    component: () => import('../views/HomePage.vue'),
     meta: {
-      title: 'Home',
+      title: 'Vigad - Home',
+    },
+  },
+  {
+    name: 'sources',
+    path: '/sources',
+    component: () => import('../views/SourcesView.vue'),
+    meta: {
+      title: 'Vigad - Sources',
+    },
+  },
+  {
+    name: 'regex',
+    path: '/regex',
+    component: () => import('../views/RegexView.vue'),
+    meta: {
+      title: 'Vigad - Regex',
     },
   },
 ]

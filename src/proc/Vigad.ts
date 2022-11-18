@@ -1,0 +1,5 @@
+class Vigad {
+    public main() {
+        // ...
+    }
+}

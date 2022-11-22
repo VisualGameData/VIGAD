@@ -1,5 +1,7 @@
-function domReady(condition: DocumentReadyState[] = ['complete', 'interactive']) {
-  return new Promise(resolve => {
+function domReady(
+  condition: DocumentReadyState[] = ['complete', 'interactive']
+) {
+  return new Promise((resolve) => {
     if (condition.includes(document.readyState)) {
       resolve(true)
     } else {
@@ -14,12 +16,12 @@ function domReady(condition: DocumentReadyState[] = ['complete', 'interactive'])
 
 const safeDOM = {
   append(parent: HTMLElement, child: HTMLElement) {
-    if (!Array.from(parent.children).find(e => e === child)) {
+    if (!Array.from(parent.children).find((e) => e === child)) {
       return parent.appendChild(child)
     }
   },
   remove(parent: HTMLElement, child: HTMLElement) {
-    if (Array.from(parent.children).find(e => e === child)) {
+    if (Array.from(parent.children).find((e) => e === child)) {
       return parent.removeChild(child)
     }
   },
@@ -85,8 +87,49 @@ function useLoading() {
 const { appendLoading, removeLoading } = useLoading()
 domReady().then(appendLoading)
 
-window.onmessage = ev => {
+window.onmessage = (ev) => {
   ev.data.payload === 'removeLoading' && removeLoading()
 }
 
 setTimeout(removeLoading, 4999)
+
+// ! Working with informations from the main process and the renderer process
+const { contextBridge, ipcRenderer } = require('electron')
+
+contextBridge.exposeInMainWorld('electronAPI', {
+  getMedia: () => ipcRenderer.invoke('get-screens'),
+  minimizeScreen: () => ipcRenderer.invoke('minimize-screen'),
+  fullScreen: () => ipcRenderer.invoke('full-screen'),
+  closeApplication: () => ipcRenderer.invoke('close-application'),
+})
+
+ipcRenderer.on('SET_SOURCE', async (event, sourceId) => {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      audio: false,
+      video: {
+        mandatory: {
+          chromeMediaSource: 'desktop',
+          chromeMediaSourceId: sourceId,
+          minWidth: 1280,
+          maxWidth: 3840,
+          minHeight: 720,
+          maxHeight: 2160,
+        },
+      },
+    })
+    handleStream(stream)
+  } catch (e) {
+    handleError(e)
+  }
+})
+
+function handleStream(stream) {
+  const video = document.querySelector('video')
+  video.srcObject = stream
+  video.onloadedmetadata = (e) => video.play()
+}
+
+function handleError(e) {
+  console.log(e)
+}

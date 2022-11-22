@@ -39,13 +39,12 @@
     <v-main>
       <v-container fluid> </v-container>
       <!-- Provides the application the proper gutter -->
-      <v-container class="ma-0" fluid>
-        <v-row>
-          <v-col cols="4">
+      <v-container class="ma-0 pt-0 pb-0" fluid>
+        <v-row cols="12" no-gutters>
+          <v-col cols="5">
             <v-sheet
               class="changing-view"
-              color="background"
-              min-height="70vh"
+              min-height="80vh"
               max-height="80vh"
               rounded="lg"
             >
@@ -55,8 +54,7 @@
           </v-col>
 
           <v-col>
-            <v-sheet min-height="70vh" rounded="lg">
-              Video Element here
+            <v-sheet min-height="80vh" max-height="80vh" rounded="lg">
               <VideoStreamVue />
             </v-sheet>
           </v-col>

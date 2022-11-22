@@ -1,17 +1,14 @@
 <template>
-  <v-card variant="tonal">
-    <v-card-title>Source</v-card-title>
-    <v-card-text class="video-stream">
-      <v-responsive aspect-ratio="16 / 9" class="border">
-        <video id="mainVideo" autoplay class="video" ref="target"></video>
-      </v-responsive>
-      <div>
-        x: {{ x }} y: {{ y }} Is Outside: {{ isOutside }}
+  <div class="video-stream">
+    <v-responsive aspect-ratio="16 / 9" class="border">
+      <video id="mainVideo" autoplay class="video" ref="target"></video>
+    </v-responsive>
+    <div>
+      x: {{ x }} y: {{ y }} Is Outside: {{ isOutside }}
 
-        Height: {{ height }} Width: {{ width }}
-      </div>
-    </v-card-text>
-  </v-card>
+      Height: {{ height }} Width: {{ width }}
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">

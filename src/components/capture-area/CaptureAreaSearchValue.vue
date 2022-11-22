@@ -1,123 +1,124 @@
 <template>
-  <v-card color="background" class="mx-auto" prepend-icon="mdi-magnify">
-    <template v-slot:title class="d-flex pa-2">
-      Find Value <v-spacer />
-      <v-btn
-        color="green"
-        prepend-icon="mdi-plus"
-        size="x-small"
-        rounded="lg"
-        variant="tonal"
-        >Enable</v-btn
-      ></template
-    >
+  <v-card
+    rounded="lg"
+    color="background"
+    class="mb-4"
+    prepend-icon="mdi-magnify"
+  >
+    <template v-slot:title>
+      <v-row no-gutter>
+        <v-col>Find Value</v-col>
+        <v-spacer />
+        <v-col>
+          <v-btn
+            color="green"
+            prepend-icon="mdi-plus"
+            size="small"
+            rounded="lg"
+            variant="tonal"
+            >Enable</v-btn
+          ></v-col
+        >
+      </v-row>
+    </template>
+
+    <v-divider color="primary" class="mb-4"></v-divider>
 
     <v-card-text>
-      <v-row>
+      <v-row class="mb-4" no-gutter>
         <v-col
           ><v-text-field
             label="Regular Expression"
             placeholder="Enter a regular expression"
             variant="outlined"
             dense
-            clearable
             clear-icon="mdi-close-circle"
             :rules="[(v) => !!v || 'Regular expression is required']"
           ></v-text-field
         ></v-col>
       </v-row>
 
-      <v-row>
-        <v-col>is</v-col>
-        <v-col
+      <v-row class="mb-4" no-gutters cols="12">
+        <v-col cols="2">is</v-col>
+        <v-col cols="3"
           ><v-combobox
-            clearable
+            class="pr-2 pl-2"
             label="Position"
             :items="['After', 'Before', 'Between']"
             variant="underlined"
           ></v-combobox
         ></v-col>
-        <v-col
+        <v-col cols="7"
           ><v-text-field
+            cols="1"
             label="Regular Expression"
             placeholder="Enter a regular expression"
             variant="outlined"
             dense
-            clearable
             clear-icon="mdi-close-circle"
             :rules="[(v) => !!v || 'Regular expression is required']"
           ></v-text-field
         ></v-col>
-        <v-col
-          ><v-btn
-            color="red"
-            icon="mdi-delete"
-            rounded="lg"
-            variant="tonal"
-          ></v-btn
-        ></v-col>
       </v-row>
 
-      <!-- TODO: this can be repeated many times -->
-      <v-row>
-        <v-col
+      <v-row class="mb-4" no-gutters>
+        <v-col cols="2"
           ><v-combobox
-            clearable
-            label="Logical Operator"
+            label="Logic"
             :items="['AND', 'OR', 'NOT']"
             variant="underlined"
           ></v-combobox
         ></v-col>
-        <v-col
+        <v-col cols="3"
           ><v-combobox
-            clearable
+            class="pr-2 pl-2"
             label="Position"
             :items="['After', 'Before', 'Between']"
             variant="underlined"
           ></v-combobox
         ></v-col>
-        <v-col
+        <v-col cols="7"
           ><v-text-field
             label="Regular Expression"
             placeholder="Enter a regular expression"
             variant="outlined"
             dense
-            clearable
             clear-icon="mdi-close-circle"
             :rules="[(v) => !!v || 'Regular expression is required']"
           ></v-text-field
         ></v-col>
-        <v-col
+        <!-- <v-col
           ><v-btn
             color="red"
             icon="mdi-delete"
             rounded="lg"
             variant="tonal"
           ></v-btn
-        ></v-col>
+        ></v-col> -->
       </v-row>
 
-      <v-row>
+      <v-row class="mb-4" no-gutters align="center">
         <v-col>
-          <v-divider></v-divider>
+          <v-divider color="grey" />
         </v-col>
         <v-col>
           <v-btn
+            color="grey"
             prepend-icon="mdi-plus"
             size="small"
             rounded="lg"
             variant="outlined"
-            >Add Find value</v-btn
+            >Add constraints</v-btn
           >
         </v-col>
         <v-col>
-          <v-divider></v-divider>
+          <v-divider color="grey" />
         </v-col>
       </v-row>
     </v-card-text>
     <v-card-actions>
       <!-- TODO: proper layouting is missing -->
-      <v-row>
+      <v-row no-gutter>
         <v-col>
           <v-btn
             color="green"
@@ -145,4 +146,4 @@
 
 <script setup lang="ts"></script>
 
-<style lang="scss"></style>
+<style lang="scss" scoped></style>

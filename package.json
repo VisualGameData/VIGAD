@@ -26,7 +26,9 @@
     "vite": "^3.2.4",
     "vite-electron-plugin": "^0.5.2",
     "vue": "^3.2.45",
-    "vue-tsc": "^1.0.9"
+    "vue-cli-plugin-vuetify": "^2.5.8",
+    "vue-tsc": "^1.0.9",
+    "vuetify-loader": "^2.0.0-alpha.9"
   },
   "debug": {
     "env": {
@@ -41,7 +43,13 @@
     "vue"
   ],
   "dependencies": {
+    "@electron/remote": "^2.0.8",
+    "@mdi/font": "^7.0.96",
+    "@vueuse/components": "^9.4.0",
+    "@vueuse/core": "^9.4.0",
+    "roboto-fontface": "^0.10.0",
     "tesseract.js": "^3.0.3",
-    "vue-router": "^4.1.6"
+    "vue-router": "^4.1.6",
+    "vuetify": "^3.0.1"
   }
 }

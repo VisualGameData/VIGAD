@@ -1,23 +1,262 @@
 <template>
-  <div class="logo-box">
-    <img class="logo vite" src="./assets/vite.svg" />
-    <img class="logo electron" src="./assets/electron.svg" />
-    <img class="logo vue" src="./assets/vue.svg" />
-  </div>
-  <HelloWorld msg="Hello Vue 3 + TypeScript + Vite" />
-  <div class="static-public">
-    Place static files into the <code>/public</code> folder
-    <img style="width: 77px" :src="'./node.png'" />
-  </div>
+  <v-app :theme="theme">
+    <v-system-bar class="pa-0 ma-0 drag" color="surface" height="30">
+      <span>Vigad v1.0</span>
 
-  <router-link to="/">Home</router-link>
-  <router-link to="/error">Error</router-link>
-  <router-link to="/page-not-found">Page Not Found</router-link>
-  <RouterView></RouterView>
+      <v-spacer></v-spacer>
+
+      <v-btn
+        @click="minimizeScreen()"
+        icon="mdi-minus"
+        variant="tonal"
+        size="x-small"
+        class="rounded-0"
+        height="30"
+      ></v-btn>
+
+      <v-btn
+        @click="fullScreen()"
+        icon="mdi-checkbox-blank-outline"
+        variant="tonal"
+        class="rounded-0"
+        size="x-small"
+        height="30"
+      ></v-btn>
+
+      <v-btn
+        @click="closeApplication()"
+        icon="mdi-close"
+        variant="tonal"
+        class="rounded-0"
+        size="x-small"
+        color="error"
+        width="50"
+        height="30"
+      ></v-btn>
+    </v-system-bar>
+
+    <!-- Main Content view-->
+    <v-main>
+      <v-container fluid> </v-container>
+      <!-- Provides the application the proper gutter -->
+      <v-container class="ma-0" fluid>
+        <v-row>
+          <v-col cols="4">
+            <v-sheet
+              class="changing-view"
+              color="background"
+              min-height="70vh"
+              max-height="80vh"
+              rounded="lg"
+            >
+              <!-- TODO: add transition to router view -->
+              <router-view />
+            </v-sheet>
+          </v-col>
+
+          <v-col>
+            <v-sheet min-height="70vh" rounded="lg">
+              Video Element here
+              <VideoStreamVue />
+            </v-sheet>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-main>
+
+    <!-- Bottom Navigation -->
+    <v-bottom-navigation grow>
+      <v-btn
+        to="/run"
+        tonal
+        color="success"
+        prepend-icon="mdi-play"
+        value="run"
+      >
+        Start Capturing
+      </v-btn>
+
+      <v-btn
+        to="/"
+        tonal
+        color="success"
+        prepend-icon="mdi-monitor"
+        value="source"
+      >
+        Source
+      </v-btn>
+
+      <v-btn
+        to="/regex"
+        tonal
+        color="success"
+        prepend-icon="mdi-regex"
+        value="regex"
+      >
+        Regex
+      </v-btn>
+    </v-bottom-navigation>
+  </v-app>
 </template>
 
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+
+import VideoStreamVue from './components/VideoStream.vue'
+
+const theme = ref('dark')
+
+// Screen Capture API things
+const isLoadingScreensAndWindows = ref(false)
+
+const desktopCaptureSources = ref([])
+const selectedSource = ref(null)
+
+const screenSources = computed(() =>
+  desktopCaptureSources.value.filter(
+    (source) => source.id.substring(0, source.id.indexOf(':')) === 'screen'
+  )
+)
+const applicationSources = computed(() =>
+  desktopCaptureSources.value.filter(
+    (source) => source.id.substring(0, source.id.indexOf(':')) === 'window'
+  )
+)
+
+// Handle System Bar Functions
+async function minimizeScreen() {
+  await (window as any).electronAPI.minimizeScreen()
+}
+
+async function fullScreen() {
+  await (window as any).electronAPI.fullScreen()
+}
+
+async function closeApplication() {
+  await (window as any).electronAPI.closeApplication()
+}
+
+onMounted(() => {
+  // fetch currenty available screens and windows on startup
+  // aswell as the current selected source
+  fetchAllStreamsAndSetMainVideo()
+  console.log(useRouter())
+})
+
+/**
+ * Clear the sources array
+ */
+function clearSources() {
+  desktopCaptureSources.value = []
+  // Preview the source in a video element
+  const videoElement: HTMLVideoElement | null =
+    document.querySelector('#mainVideo')
+  videoElement!.srcObject = null
+}
+
+async function fetchAllStreamsAndSetMainVideo() {
+  // Fetch the screens and windows
+  await fetchAllStreams()
+
+  // Preview the source in a video element
+  const mainScreen = computed(() =>
+    desktopCaptureSources.value.find((source) => source.id === 'screen:0:0')
+  )
+  await selectSource(mainScreen.value)
+}
+
+/**
+ * Get all available sources
+ */
+async function fetchAllStreams() {
+  isLoadingScreensAndWindows.value = true
+  await getVideoSources()
+  console.log(desktopCaptureSources.value)
+  await loadStreamSources()
+  isLoadingScreensAndWindows.value = false
+}
+
+/**
+ * Get all the video sources available on the system
+ */
+async function getVideoSources() {
+  // TODO: is not called again if new sources showes up
+  // Get the available video sources
+  desktopCaptureSources.value = await (window as any).electronAPI.getMedia()
+}
+
+/**
+ * Load the proper media stream source for the video element
+ */
+async function loadStreamSources() {
+  // Is there a better way then this?
+  const videoElements: HTMLVideoElement | null =
+    document.querySelectorAll('.preview')
+
+  Array.from(videoElements).forEach(function (video, index) {
+    setSourceForVideoNode(desktopCaptureSources.value[index], video)
+  })
+}
+
+/**
+ * Get the stream source
+ * @param {string} sourceName
+ */
+async function getStreamSource(source: any) {
+  const constraints: any = {
+    video: {
+      mandatory: {
+        chromeMediaSource: 'desktop',
+        chromeMediaSourceId: source.id,
+      },
+    },
+  }
+
+  // Create a Stream
+  const stream = await navigator.mediaDevices.getUserMedia(constraints)
+
+  return stream
+}
+
+/**
+ * Load the stream sources
+ * @param {any} source
+ * @param {HTMLVideoElement} videoHTMLNode
+ * @returns {Promise<void>}
+ */
+async function setSourceForVideoNode(source: any, videoNode: HTMLVideoElement) {
+  const constraints: any = {
+    video: {
+      mandatory: {
+        chromeMediaSource: 'desktop',
+        chromeMediaSourceId: source.id,
+      },
+    },
+  }
+
+  // Create a Stream
+  const stream = await navigator.mediaDevices.getUserMedia(constraints)
+
+  // Preview the source in a video element
+  videoNode.srcObject = stream
+}
+
+/**
+ * Load a specific stream source as main video
+ *
+ * @param {any} source
+ */
+async function selectSource(source: any) {
+  // Set the selected source
+  selectedSource.value = source
+
+  // Preview the source in a video element
+  const videoElement: HTMLVideoElement | null =
+    document.querySelector('#mainVideo')
+
+  setSourceForVideoNode(source, videoElement)
+}
 </script>
 
 <style lang="scss">
@@ -45,8 +284,7 @@ body,
 html {
   width: 100%;
   height: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-    Helvetica Neue, Arial, sans-serif;
+  font-family: YouTube Sans, Roboto, sans-serif;
 }
 
 body {
@@ -55,57 +293,42 @@ body {
   max-width: 100%;
   margin: 0;
   padding: 0;
-  background-color: var(--palette-background-primary);
+  user-select: none;
 }
 
-// boilerplait from creation
-
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.drag {
+  -webkit-app-region: drag;
 }
 
-.logo-box {
-  display: flex;
+.no-drag {
+  -webkit-app-region: no-drag;
+}
+
+// Video Sources PReview
+.video-stream {
   width: 100%;
-  justify-content: center;
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: 0.75s;
-  }
-  .vite {
-    &:hover {
-      filter: drop-shadow(0 0 2em #747bff);
-    }
-  }
-  .electron {
-    &:hover {
-      filter: drop-shadow(0 0 2em #9feaf9);
-    }
-  }
-  .vue {
-    &:hover {
-      filter: drop-shadow(0 0 2em #249b73);
-    }
-  }
+  height: 77vh;
+  object-fit: cover;
 }
-
-.static-public {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  code {
-    background-color: #eee;
-    padding: 2px 4px;
-    margin: 0 4px;
-    border-radius: 4px;
-    color: #304455;
-  }
+.video {
+  width: 100%;
+}
+.preview {
+  width: 100%;
+  height: 180px;
+}
+.windows-wrapper {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+.window {
+  width: 100%;
+  background-color: red;
+  margin: 5px 0;
+  cursor: pointer;
+}
+.changing-view {
+  overflow-y: scroll;
 }
 </style>

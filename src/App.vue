@@ -18,6 +18,14 @@
 
 <script setup lang="ts">
 import HelloWorld from './components/HelloWorld.vue'
+
+import { onMounted } from 'vue';
+import { Vigad } from './proc/Vigad';
+
+onMounted(() => {
+  const vigad = new Vigad()
+  vigad.main();
+});
 </script>
 
 <style lang="scss">

@@ -1,8 +1,10 @@
+import RandExp from "randexp";
+
 export class Vigad {
     public main() {
         let data:string = "Here we have some random text that was HP: 55 fetched from the image, including som data in between."
 
-        this.match(data, /[0-9]+/); // value regex
+        this.match(data, /[0-100]/); // value regex
     }
 
 
@@ -14,6 +16,8 @@ export class Vigad {
         console.log(valuesubstr);
         let res = valuesubstr.match(regex); // find value matching the value regex
         console.log(res);
+        console.log("---------------------------------------------");
+        console.log(this.matchingToPercentage(data, regex));
     }
 
     private indexOfFirst(data:string, regex:RegExp, before:boolean = false):number {
@@ -23,6 +27,11 @@ export class Vigad {
             index! += match![0].length;
         }
         return index!;
+    }
+
+    private matchingToPercentage(data:string, regex:RegExp) {
+        const randexp = new RandExp(regex);
+        console.log(randexp.gen());
     }
 
 }

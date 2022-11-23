@@ -41,6 +41,8 @@
     "vue"
   ],
   "dependencies": {
+    "randexp": "^0.5.3",
+    "string-similarity": "^4.0.4",
     "tesseract.js": "^3.0.3",
     "vue-router": "^4.1.6"
   }

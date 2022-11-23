@@ -98,127 +98,53 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
+
+import { DesktopVideoStream } from './proc/DesktopVideoStream'
 
 import VideoStreamVue from './components/VideoStream.vue'
 
 const theme = ref('dark')
 
-// Screen Capture API things
-const isLoadingScreensAndWindows = ref(false)
-
-const desktopCaptureSources = ref([])
-const selectedSource = ref(null)
-
-const screenSources = computed(() =>
-  desktopCaptureSources.value.filter(
-    (source) => source.id.substring(0, source.id.indexOf(':')) === 'screen'
-  )
-)
-const applicationSources = computed(() =>
-  desktopCaptureSources.value.filter(
-    (source) => source.id.substring(0, source.id.indexOf(':')) === 'window'
-  )
-)
-
-// Handle System Bar Functions
-async function minimizeScreen() {
-  await (window as any).electronAPI.minimizeScreen()
-}
-
-async function fullScreen() {
-  await (window as any).electronAPI.fullScreen()
-}
-
-async function closeApplication() {
-  await (window as any).electronAPI.closeApplication()
-}
+// let desktopVideoStream = new DesktopVideoStream()
+const desktopVideoStream = DesktopVideoStream.getInstance()
 
 onMounted(() => {
-  // fetch currenty available screens and windows on startup
-  // aswell as the current selected source
+  // fetch all sources at the time of mounting/application
   fetchAllStreamsAndSetMainVideo()
-  console.log(useRouter())
 })
 
+// fetches everything and sets the main video stream to the main screen
+async function fetchAllStreamsAndSetMainVideo() {
+  // Fetch the screens and windows
+  desktopVideoStream.setIsLoadingScreensAndApplications(true)
+
+  await desktopVideoStream.fetchAllMediaStreams()
+
+  // set the main video stream to the main screen
+  await selectSource(desktopVideoStream.getMainScreenSource())
+
+  desktopVideoStream.setIsLoadingScreensAndApplications(false)
+}
+
 /**
- * Clear the sources array
+ * Load a specific stream source as main video
+ *
+ * @param {any} source
  */
-function clearSources() {
-  desktopCaptureSources.value = []
+async function selectSource(source: any) {
+  // Set the selected source
+  desktopVideoStream.setCurrentSelectedSource(source)
+
   // Preview the source in a video element
   const videoElement: HTMLVideoElement | null =
     document.querySelector('#mainVideo')
-  videoElement!.srcObject = null
-}
 
-async function fetchAllStreamsAndSetMainVideo() {
-  // Fetch the screens and windows
-  await fetchAllStreams()
-
-  // Preview the source in a video element
-  const mainScreen = computed(() =>
-    desktopCaptureSources.value.find((source) => source.id === 'screen:0:0')
-  )
-  await selectSource(mainScreen.value)
+  setSourceForVideoNode(source, videoElement!)
 }
 
 /**
- * Get all available sources
- */
-async function fetchAllStreams() {
-  isLoadingScreensAndWindows.value = true
-  await getVideoSources()
-  console.log(desktopCaptureSources.value)
-  await loadStreamSources()
-  isLoadingScreensAndWindows.value = false
-}
-
-/**
- * Get all the video sources available on the system
- */
-async function getVideoSources() {
-  // TODO: is not called again if new sources showes up
-  // Get the available video sources
-  desktopCaptureSources.value = await (window as any).electronAPI.getMedia()
-}
-
-/**
- * Load the proper media stream source for the video element
- */
-async function loadStreamSources() {
-  // Is there a better way then this?
-  const videoElements: HTMLVideoElement | null =
-    document.querySelectorAll('.preview')
-
-  Array.from(videoElements).forEach(function (video, index) {
-    setSourceForVideoNode(desktopCaptureSources.value[index], video)
-  })
-}
-
-/**
- * Get the stream source
- * @param {string} sourceName
- */
-async function getStreamSource(source: any) {
-  const constraints: any = {
-    video: {
-      mandatory: {
-        chromeMediaSource: 'desktop',
-        chromeMediaSourceId: source.id,
-      },
-    },
-  }
-
-  // Create a Stream
-  const stream = await navigator.mediaDevices.getUserMedia(constraints)
-
-  return stream
-}
-
-/**
- * Load the stream sources
+ * Load the stream sources into a video element
  * @param {any} source
  * @param {HTMLVideoElement} videoHTMLNode
  * @returns {Promise<void>}
@@ -235,25 +161,22 @@ async function setSourceForVideoNode(source: any, videoNode: HTMLVideoElement) {
 
   // Create a Stream
   const stream = await navigator.mediaDevices.getUserMedia(constraints)
-
+  // console.log(stream)
   // Preview the source in a video element
   videoNode.srcObject = stream
 }
 
-/**
- * Load a specific stream source as main video
- *
- * @param {any} source
- */
-async function selectSource(source: any) {
-  // Set the selected source
-  selectedSource.value = source
+// Handle System Bar Functions
+async function minimizeScreen() {
+  await (window as any).electronAPI.minimizeScreen()
+}
 
-  // Preview the source in a video element
-  const videoElement: HTMLVideoElement | null =
-    document.querySelector('#mainVideo')
+async function fullScreen() {
+  await (window as any).electronAPI.fullScreen()
+}
 
-  setSourceForVideoNode(source, videoElement)
+async function closeApplication() {
+  await (window as any).electronAPI.closeApplication()
 }
 </script>
 

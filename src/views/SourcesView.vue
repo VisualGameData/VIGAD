@@ -8,17 +8,16 @@
 
   <div class="content-container pa-2">
     <v-window v-model="tab">
-      <!-- TODO: add something that if nothing was found there is a message that nothing has been found -->
       <v-window-item value="screen">
-        <!-- TODO: maybe create a component out ofthis -->
+        <!-- v-if="isLoadingScreensAndWindows" -->
         <v-progress-circular
-          v-if="isLoadingScreensAndWindows"
           color="primary"
           indeterminate
           :size="128"
           :width="12"
         ></v-progress-circular>
-        <div v-show="!isLoadingScreensAndWindows" class="windows-wrapper">
+        <!-- v-show="!isLoadingScreensAndWindows" -->
+        <div class="windows-wrapper">
           <v-card
             v-for="source in screenSources"
             :key="source.id"
@@ -40,14 +39,15 @@
 
       <v-window-item value="application">
         <!-- TODO: Video preview isnt loaded on start  -->
+        <!-- v-if="isLoadingScreensAndWindows" -->
         <v-progress-circular
-          v-if="isLoadingScreensAndWindows"
           color="primary"
           indeterminate
           :size="128"
           :width="12"
         ></v-progress-circular>
-        <div v-show="!isLoadingScreensAndWindows" class="windows-wrapper">
+        <!-- v-show="!isLoadingScreensAndWindows" -->
+        <div class="windows-wrapper">
           <v-card
             v-for="source in applicationSources"
             :key="source.id"
@@ -96,21 +96,22 @@
   </div>
 
   <div class="pa-2">
-    <v-btn @click="fetchAllStreams()" color="primary" width="100%" tonal
-      >Refresh</v-btn
-    >
+    <v-btn @click="test()" color="primary" width="100%" tonal>Refresh</v-btn>
   </div>
 </template>
 
 <script setup lang="ts">
-// TODO: this is just a copy of the code in the App.vue, will change in the future
 import { ref, computed, onMounted } from 'vue'
+
+import { DesktopVideoStream } from '@/proc/DesktopVideoStream'
 
 // For the Screen / Application Tab
 const tab = ref(null)
 
 // Screen Capture API things
-const isLoadingScreensAndWindows = ref(false)
+const isLoadingScreensAndWindows = computed(() => {
+  return desktopVideoStream.getIsLoadingScreensAndApplications()
+})
 
 const desktopCaptureSources = ref([])
 const selectedSource = ref(null)
@@ -120,49 +121,44 @@ const screenSources = computed(() =>
     (source) => source.id.substring(0, source.id.indexOf(':')) === 'screen'
   )
 )
+
 const applicationSources = computed(() =>
   desktopCaptureSources.value.filter(
     (source) => source.id.substring(0, source.id.indexOf(':')) === 'window'
   )
 )
 
+const newScreenSources = ref()
+const newApplicationSources = ref()
+
+// Get singelton instance of DesktopVideoStream
+const desktopVideoStream = DesktopVideoStream.getInstance()
+
 onMounted(() => {
   // fetch currenty available screens and windows on startup
   // aswell as the current selected source
   fetchAllStreams()
+  // LOAD Screen and Window Sources
 })
-
-/**
- * Clear the sources array
- */
-function clearSources() {
-  desktopCaptureSources.value = []
-  // Preview the source in a video element
-  const videoElement: HTMLVideoElement | null =
-    document.querySelector('#mainVideo')
-  videoElement!.srcObject = null
-}
-
-async function fetchAllStreamsAndSetMainVideo() {
-  // Fetch the screens and windows
-  await fetchAllStreams()
-
-  // Preview the source in a video element
-  const mainScreen = computed(() =>
-    desktopCaptureSources.value.find((source) => source.id === 'screen:0:0')
-  )
-  await selectSource(mainScreen.value)
-}
 
 /**
  * Get all available sources
  */
 async function fetchAllStreams() {
-  isLoadingScreensAndWindows.value = true
+  desktopVideoStream.setIsLoadingScreensAndApplications(true)
+
+  // Fetch the screens and windows for the newest values
+  await desktopVideoStream.fetchAllMediaStreams()
+
+  newScreenSources.value = desktopVideoStream.getOnlyScreenSources()
+  newApplicationSources.value = desktopVideoStream.getOnlyApplicationSources()
+
+  // show all the screens and windows
   await getVideoSources()
-  console.log(desktopCaptureSources.value)
+
   await loadStreamSources()
-  isLoadingScreensAndWindows.value = false
+
+  desktopVideoStream.setIsLoadingScreensAndApplications(false)
 }
 
 /**
@@ -171,7 +167,9 @@ async function fetchAllStreams() {
 async function getVideoSources() {
   // TODO: is not called again if new sources showes up
   // Get the available video sources
+  // desktopCaptureSources.value = await (window as any).electronAPI.getMedia()
   desktopCaptureSources.value = await (window as any).electronAPI.getMedia()
+  console.log(desktopCaptureSources.value)
 }
 
 /**
@@ -185,6 +183,52 @@ async function loadStreamSources() {
   Array.from(videoElements).forEach(function (video, index) {
     setSourceForVideoNode(desktopCaptureSources.value[index], video)
   })
+}
+
+async function test() {
+  const videoElements: HTMLVideoElement | null =
+    document.querySelectorAll('.preview')
+
+  console.log(videoElements)
+}
+
+/**
+ * Load the stream sources into a video element
+ * @param {any} source
+ * @param {HTMLVideoElement} videoHTMLNode
+ * @returns {Promise<void>}
+ */
+async function setSourceForVideoNode(source: any, videoNode: HTMLVideoElement) {
+  const constraints: any = {
+    video: {
+      mandatory: {
+        chromeMediaSource: 'desktop',
+        chromeMediaSourceId: source.id,
+      },
+    },
+  }
+
+  // Create a Stream
+  const stream = await navigator.mediaDevices.getUserMedia(constraints)
+  // console.log(stream)
+  // Preview the source in a video element
+  videoNode.srcObject = stream
+}
+
+/**
+ * Load a specific stream source as main video
+ *
+ * @param {any} source
+ */
+async function selectSource(source: any) {
+  // Set the selected source
+  desktopVideoStream.setCurrentSelectedSource(source)
+
+  // Preview the source in a video element
+  const videoElement: HTMLVideoElement | null =
+    document.querySelector('#mainVideo')
+
+  setSourceForVideoNode(source, videoElement!)
 }
 
 /**
@@ -205,45 +249,6 @@ async function getStreamSource(source: any) {
   const stream = await navigator.mediaDevices.getUserMedia(constraints)
 
   return stream
-}
-
-/**
- * Load the stream sources
- * @param {any} source
- * @param {HTMLVideoElement} videoHTMLNode
- * @returns {Promise<void>}
- */
-async function setSourceForVideoNode(source: any, videoNode: HTMLVideoElement) {
-  const constraints: any = {
-    video: {
-      mandatory: {
-        chromeMediaSource: 'desktop',
-        chromeMediaSourceId: source.id,
-      },
-    },
-  }
-
-  // Create a Stream
-  const stream = await navigator.mediaDevices.getUserMedia(constraints)
-
-  // Preview the source in a video element
-  videoNode.srcObject = stream
-}
-
-/**
- * Load a specific stream source as main video
- *
- * @param {any} source
- */
-async function selectSource(source: any) {
-  // Set the selected source
-  selectedSource.value = source
-
-  // Preview the source in a video element
-  const videoElement: HTMLVideoElement | null =
-    document.querySelector('#mainVideo')
-
-  setSourceForVideoNode(source, videoElement)
 }
 </script>
 

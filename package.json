@@ -50,6 +50,7 @@
     "@vueuse/core": "^9.4.0",
     "roboto-fontface": "^0.10.0",
     "tesseract.js": "^3.0.3",
+    "tplant": "^3.1.0",
     "vue-router": "^4.1.6",
     "vuetify": "^3.0.1"
   }

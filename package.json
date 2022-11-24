@@ -7,7 +7,8 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build && electron-builder"
+    "build": "vue-tsc --noEmit && vite build && electron-builder",
+    "gen-uml": "tplant --input src/proc/**/*.ts --output docs/proc-uml.svg -A"
   },
   "engines": {
     "node": "^14.18.0 || >=16.0.0"

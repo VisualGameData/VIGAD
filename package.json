@@ -45,6 +45,7 @@
   "dependencies": {
     "@electron/remote": "^2.0.8",
     "@mdi/font": "^7.0.96",
+    "@types/webfontloader": "^1.6.35",
     "@vueuse/components": "^9.4.0",
     "@vueuse/core": "^9.4.0",
     "roboto-fontface": "^0.10.0",

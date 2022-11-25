@@ -47,7 +47,7 @@ async function createWindow() {
         minHeight: 500,
         frame: true, // still buggy cant select items from the custom titlebar
         autoHideMenuBar: true,
-        icon: join(process.env.PUBLIC, 'favicon.ico'),
+        icon: join(process.env.PUBLIC, '../src/assets/logo.png'),
         webPreferences: {
             preload,
             // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
@@ -75,7 +75,7 @@ async function createWindow() {
             'main-process-message',
             new Date().toLocaleString()
         );
-        win.setTitle(`Vigad v${1.0}`);
+        win.setTitle(`Vigad`);
     });
 
     // Make all links open with the browser, not with the application

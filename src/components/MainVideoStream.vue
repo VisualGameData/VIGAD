@@ -20,10 +20,10 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useMouseInElement, useElementSize } from '@vueuse/core';
-import { DesktopVideoStream } from '@/proc/DesktopVideoStream';
+import { StreamHandler } from '@/proc/StreamHandler';
 
-// Get singelton instance of DesktopVideoStream
-const desktopVideoStream = DesktopVideoStream.getInstance();
+// Get singelton instance of streamHandler
+const streamHandler = StreamHandler.getInstance();
 
 // Mouse position relative to the element and is in and out
 const mainVideo = ref<HTMLVideoElement | null>(null);
@@ -35,52 +35,15 @@ const { x, y, isOutside } = useMouseInElement(mainVideo);
 const { width, height } = useElementSize(mainVideo);
 
 onMounted(() => {
-    // fetch all sources at the time of mounting/application
-    fetchAllStreamsAndSetMainVideo();
+    setDefaultVideoStream();
 });
 
 /**
  * fetches everything and sets the main video stream to the main screen
  */
-async function fetchAllStreamsAndSetMainVideo() {
-    desktopVideoStream.setIsLoadingScreensAndApplications(true);
-
-    // Fetch the screens and windows
-    await desktopVideoStream.fetchAllMediaStreams();
-
-    // set the main video stream to the main screen
-    await selectSource(desktopVideoStream.getMainScreenSource());
-
-    desktopVideoStream.setIsLoadingScreensAndApplications(false);
-}
-
-/**
- * Load a specific stream source as main video
- *
- * @param {any} source
- */
-async function selectSource(source: any) {
-    // Set the selected source
-    desktopVideoStream.setCurrentSelectedSource(source);
-
-    const videoElement: HTMLVideoElement | null =
-        document.querySelector('#mainVideo');
-
-    // MediaStream Constraints
-    const constraints: any = {
-        video: {
-            mandatory: {
-                chromeMediaSource: 'desktop',
-                chromeMediaSourceId: source.id,
-            },
-        },
-    };
-
-    // Preview the source in a video element
-    const currentStream = await navigator.mediaDevices.getUserMedia(
-        constraints
-    );
-    videoElement!.srcObject = currentStream;
+async function setDefaultVideoStream() {
+    // set the default video stream to the main screen
+    await streamHandler.setDefaultVideoStream();
 }
 </script>
 

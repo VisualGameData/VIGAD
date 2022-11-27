@@ -8,7 +8,7 @@ export class StreamHandler {
     private isLoadingScreensAndApplications: boolean;
 
     /**
-     * private constructor to prevent multiple instances
+     * Create a private constructor to prevent multiple instances
      */
     private constructor() {
         this.currentSelectedSource = {};
@@ -18,9 +18,11 @@ export class StreamHandler {
     }
 
     /**
-     * Create a singeltone instance of the DesktopVideoStream class
+     * This function gets the singelton instance of the StreamHandler
+     *
+     * @returns the singelton instance of the StreamHandler
      */
-    static getInstance(): StreamHandler {
+    public static getInstance(): StreamHandler {
         if (!this.instance) {
             this.instance = new this();
         }
@@ -29,7 +31,9 @@ export class StreamHandler {
     }
 
     /**
-     * Get all available sources
+     * This function fetches all media streams via the electron desktopCapture API
+     *
+     * @returns void
      */
     private async fetchAllMediaStreams(): Promise<void> {
         this.isLoadingScreensAndApplications = true;
@@ -40,43 +44,87 @@ export class StreamHandler {
         this.isLoadingScreensAndApplications = false;
     }
 
+    /**
+     * This function is for setting the loading state
+     *
+     * @param value - set isLoadingScreensAndApplications to value new boolean value
+     * @returns void
+     */
     public setIsLoadingScreensAndApplications(value: boolean): void {
         this.isLoadingScreensAndApplications = value;
     }
 
+    /**
+     * This function returns a boolean which indicates if the StreamHandler is currently loading screens and applications
+     *
+     * @returns boolean value if the screens and applications are loading
+     */
     public getIsLoadingScreensAndApplications(): boolean {
         return this.isLoadingScreensAndApplications;
     }
 
+    /**
+     * This function sets the current selected source as the new main video source
+     *
+     * @returns the current selected source Object
+     */
     public getCurrentSelectedSource(): Object {
         return this.currentSelectedSource;
     }
 
+    /**
+     * This function returns the media stream from the given source object
+     *
+     * @param source - Source object
+     * @returns a MediaStream from the given source as a Promise
+     */
+    public async getMediaStreamFromSource(source: any): Promise<MediaStream> {
+        // MediaStream Constraints
+        const constraints: any = {
+            video: {
+                mandatory: {
+                    chromeMediaSource: 'desktop',
+                    chromeMediaSourceId: source.id,
+                },
+            },
+        };
+
+        return await navigator.mediaDevices.getUserMedia(constraints);
+    }
+
+    /**
+     * This function sets the main screen of the user as the fault video source
+     *
+     * @returns a the main screen of the user as a source via a Promise
+     */
     public async getMainScreenSource(): Promise<Object> {
         await this.fetchAllMediaStreams();
         // TODO: fix this
         return this.desktopCaptureSources[0];
     }
 
+    /**
+     * This function sets the main monitor screen of the user as the default video source
+     *
+     * @returns only a Promise
+     */
     public async setDefaultVideoStream(): Promise<void> {
         const mainScreenSource: any = await this.getMainScreenSource();
 
-        // MediaStream Constraints
-        const constraints: any = {
-            video: {
-                mandatory: {
-                    chromeMediaSource: 'desktop',
-                    chromeMediaSourceId: mainScreenSource.id,
-                },
-            },
-        };
+        const mediaStream = await this.getMediaStreamFromSource(
+            mainScreenSource
+        );
 
         // Set the main video
-        await this.setCurrentSelectedSource(
-            await navigator.mediaDevices.getUserMedia(constraints)
-        );
+        await this.setCurrentSelectedSource(mediaStream);
     }
 
+    /**
+     * This function sets the current selected source as the new main video source
+     *
+     * @param source - MediaStream object
+     * @returns a MediaStreams as a Promise
+     */
     public async setCurrentSelectedSource(source: MediaStream) {
         if (source === this.currentSelectedSource) return;
 
@@ -88,27 +136,59 @@ export class StreamHandler {
         videoElement!.srcObject = source;
     }
 
+    /**
+     * This function returns all available Screen and Application Objects
+     *
+     * @returns an array of all available MediaStreams as a Promise
+     */
     public async getAllMediaStreams(): Promise<MediaStream[]> {
         this.allMediaStreams = [];
         await this.fetchAllMediaStreams();
+
         // Loop through all sources and set the MediaStream to video nodes
         Array.from(this.desktopCaptureSources).forEach(async (element: any) => {
-            const constraints: any = {
-                video: {
-                    mandatory: {
-                        chromeMediaSource: 'desktop',
-                        chromeMediaSourceId: element.id,
-                    },
-                },
-            };
-
-            this.allMediaStreams.push(
-                await navigator.mediaDevices.getUserMedia(constraints)
-            );
+            this.populateMediaStreamsArray(element);
         });
+
         return this.allMediaStreams;
     }
 
+    /**
+     * This function will populate the allMediaStreams array with all available MediaStreams
+     *
+     * @param source - source object
+     * @returns only a Promise
+     */
+    private async populateMediaStreamsArray(source: any): Promise<void> {
+        const constraints: any = {
+            video: {
+                mandatory: {
+                    chromeMediaSource: 'desktop',
+                    chromeMediaSourceId: source.id,
+                },
+            },
+        };
+
+        this.allMediaStreams.push(
+            await navigator.mediaDevices.getUserMedia(constraints)
+        );
+    }
+
+    /**
+     * This function will return a Mediastream via a specific index which is given as a parameter
+     *
+     * @param index - values to search from the allMediaStreams array
+     * @returns a MediaStream from the given source as a Promise
+     */
+    public async getSpecificMediaStreams(index: number): Promise<MediaStream> {
+        return this.allMediaStreams[index];
+    }
+
+    /**
+     * This function returns all available Screen Objects
+     *
+     * @returns an array of all available Screen Objects as a Promise
+     */
     public async getOnlyScreenSources(): Promise<Object[]> {
         await this.fetchAllMediaStreams();
         return this.desktopCaptureSources.filter(
@@ -117,6 +197,11 @@ export class StreamHandler {
         );
     }
 
+    /**
+     * This function returns all available Application Objects
+     *
+     * @returns an array of all available Application Objects as a Promise
+     */
     public async getOnlyApplicationSources(): Promise<Object[]> {
         await this.fetchAllMediaStreams();
         return this.desktopCaptureSources.filter(
@@ -125,6 +210,11 @@ export class StreamHandler {
         );
     }
 
+    /**
+     * This function returns all available Application and Screen Objects
+     *
+     * @returns an array of all available Application and Screen Objects as a Promise
+     */
     async getScreenAndApplicationSources(): Promise<Object[]> {
         await this.fetchAllMediaStreams();
         return this.desktopCaptureSources;

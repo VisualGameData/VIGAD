@@ -1,334 +1,128 @@
 <template>
-  <v-app :theme="theme">
-    <v-system-bar class="pa-0 ma-0 drag" color="surface" height="30">
-      <span>Vigad v1.0</span>
+    <v-app :theme="theme">
+        <!-- Main Content view-->
+        <v-main>
+            <v-container fluid> </v-container>
+            <!-- Provides the application the proper gutter -->
+            <v-container class="ma-0 pt-0 pb-0" fluid>
+                <v-row cols="12" no-gutters>
+                    <v-col cols="2" class="test">
+                        <v-sheet
+                            class="changing-view"
+                            min-height="85vh"
+                            max-height="85vh"
+                            rounded="lg"
+                        >
+                            <router-view />
+                        </v-sheet>
+                    </v-col>
 
-      <v-spacer></v-spacer>
+                    <v-col>
+                        <v-sheet
+                            min-height="85vh"
+                            max-height="85vh"
+                            rounded="lg"
+                        >
+                            <MainVideoStream />
+                        </v-sheet>
+                    </v-col>
+                </v-row>
+            </v-container>
+        </v-main>
 
-      <v-btn
-        @click="minimizeScreen()"
-        icon="mdi-minus"
-        variant="tonal"
-        size="x-small"
-        class="rounded-0"
-        height="30"
-      ></v-btn>
-
-      <v-btn
-        @click="fullScreen()"
-        icon="mdi-checkbox-blank-outline"
-        variant="tonal"
-        class="rounded-0"
-        size="x-small"
-        height="30"
-      ></v-btn>
-
-      <v-btn
-        @click="closeApplication()"
-        icon="mdi-close"
-        variant="tonal"
-        class="rounded-0"
-        size="x-small"
-        color="error"
-        width="50"
-        height="30"
-      ></v-btn>
-    </v-system-bar>
-
-    <!-- Main Content view-->
-    <v-main>
-      <v-container fluid> </v-container>
-      <!-- Provides the application the proper gutter -->
-      <v-container class="ma-0" fluid>
-        <v-row>
-          <v-col cols="4">
-            <v-sheet
-              class="changing-view"
-              color="background"
-              min-height="70vh"
-              max-height="80vh"
-              rounded="lg"
+        <!-- Bottom Navigation -->
+        <v-bottom-navigation grow>
+            <v-btn
+                to="/run"
+                tonal
+                color="success"
+                prepend-icon="mdi-play"
+                value="run"
             >
-              <!-- TODO: add transition to router view -->
-              <router-view />
-            </v-sheet>
-          </v-col>
+                Start Capturing
+            </v-btn>
 
-          <v-col>
-            <v-sheet min-height="70vh" rounded="lg">
-              Video Element here
-              <VideoStreamVue />
-            </v-sheet>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-main>
+            <v-btn
+                to="/"
+                tonal
+                color="success"
+                prepend-icon="mdi-monitor"
+                value="source"
+            >
+                Source
+            </v-btn>
 
-    <!-- Bottom Navigation -->
-    <v-bottom-navigation grow>
-      <v-btn
-        to="/run"
-        tonal
-        color="success"
-        prepend-icon="mdi-play"
-        value="run"
-      >
-        Start Capturing
-      </v-btn>
-
-      <v-btn
-        to="/"
-        tonal
-        color="success"
-        prepend-icon="mdi-monitor"
-        value="source"
-      >
-        Source
-      </v-btn>
-
-      <v-btn
-        to="/regex"
-        tonal
-        color="success"
-        prepend-icon="mdi-regex"
-        value="regex"
-      >
-        Regex
-      </v-btn>
-    </v-bottom-navigation>
-  </v-app>
+            <v-btn
+                to="/regex"
+                tonal
+                color="success"
+                prepend-icon="mdi-regex"
+                value="regex"
+            >
+                Regex
+            </v-btn>
+        </v-bottom-navigation>
+    </v-app>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref } from 'vue';
 
-import VideoStreamVue from './components/VideoStream.vue'
+import MainVideoStream from './components/MainVideoStream.vue';
 
-const theme = ref('dark')
+const theme = ref('dark');
 
-// Screen Capture API things
-const isLoadingScreensAndWindows = ref(false)
-
-const desktopCaptureSources = ref([])
-const selectedSource = ref(null)
-
-const screenSources = computed(() =>
-  desktopCaptureSources.value.filter(
-    (source) => source.id.substring(0, source.id.indexOf(':')) === 'screen'
-  )
-)
-const applicationSources = computed(() =>
-  desktopCaptureSources.value.filter(
-    (source) => source.id.substring(0, source.id.indexOf(':')) === 'window'
-  )
-)
-
-// Handle System Bar Functions
+// Handle System Bar Functions for later
 async function minimizeScreen() {
-  await (window as any).electronAPI.minimizeScreen()
+    await (window as any).electronAPI.minimizeScreen();
 }
 
 async function fullScreen() {
-  await (window as any).electronAPI.fullScreen()
+    await (window as any).electronAPI.fullScreen();
 }
 
 async function closeApplication() {
-  await (window as any).electronAPI.closeApplication()
-}
-
-onMounted(() => {
-  // fetch currenty available screens and windows on startup
-  // aswell as the current selected source
-  fetchAllStreamsAndSetMainVideo()
-  console.log(useRouter())
-})
-
-/**
- * Clear the sources array
- */
-function clearSources() {
-  desktopCaptureSources.value = []
-  // Preview the source in a video element
-  const videoElement: HTMLVideoElement | null =
-    document.querySelector('#mainVideo')
-  videoElement!.srcObject = null
-}
-
-async function fetchAllStreamsAndSetMainVideo() {
-  // Fetch the screens and windows
-  await fetchAllStreams()
-
-  // Preview the source in a video element
-  const mainScreen = computed(() =>
-    desktopCaptureSources.value.find((source) => source.id === 'screen:0:0')
-  )
-  await selectSource(mainScreen.value)
-}
-
-/**
- * Get all available sources
- */
-async function fetchAllStreams() {
-  isLoadingScreensAndWindows.value = true
-  await getVideoSources()
-  console.log(desktopCaptureSources.value)
-  await loadStreamSources()
-  isLoadingScreensAndWindows.value = false
-}
-
-/**
- * Get all the video sources available on the system
- */
-async function getVideoSources() {
-  // TODO: is not called again if new sources showes up
-  // Get the available video sources
-  desktopCaptureSources.value = await (window as any).electronAPI.getMedia()
-}
-
-/**
- * Load the proper media stream source for the video element
- */
-async function loadStreamSources() {
-  // Is there a better way then this?
-  const videoElements: HTMLVideoElement | null =
-    document.querySelectorAll('.preview')
-
-  Array.from(videoElements).forEach(function (video, index) {
-    setSourceForVideoNode(desktopCaptureSources.value[index], video)
-  })
-}
-
-/**
- * Get the stream source
- * @param {string} sourceName
- */
-async function getStreamSource(source: any) {
-  const constraints: any = {
-    video: {
-      mandatory: {
-        chromeMediaSource: 'desktop',
-        chromeMediaSourceId: source.id,
-      },
-    },
-  }
-
-  // Create a Stream
-  const stream = await navigator.mediaDevices.getUserMedia(constraints)
-
-  return stream
-}
-
-/**
- * Load the stream sources
- * @param {any} source
- * @param {HTMLVideoElement} videoHTMLNode
- * @returns {Promise<void>}
- */
-async function setSourceForVideoNode(source: any, videoNode: HTMLVideoElement) {
-  const constraints: any = {
-    video: {
-      mandatory: {
-        chromeMediaSource: 'desktop',
-        chromeMediaSourceId: source.id,
-      },
-    },
-  }
-
-  // Create a Stream
-  const stream = await navigator.mediaDevices.getUserMedia(constraints)
-
-  // Preview the source in a video element
-  videoNode.srcObject = stream
-}
-
-/**
- * Load a specific stream source as main video
- *
- * @param {any} source
- */
-async function selectSource(source: any) {
-  // Set the selected source
-  selectedSource.value = source
-
-  // Preview the source in a video element
-  const videoElement: HTMLVideoElement | null =
-    document.querySelector('#mainVideo')
-
-  setSourceForVideoNode(source, videoElement)
+    await (window as any).electronAPI.closeApplication();
 }
 </script>
 
 <style lang="scss">
-@import './styles/variables.scss';
-
-// transforms the variables into css variables
-:root {
-  @each $colorname, $palette in $palettes {
-    @each $key, $value in $palette {
-      $keyname: '--palette-' + $colorname + '-' + $key;
-      #{$keyname}: #{$value};
-    }
-  }
-}
-
 *,
 :after,
 :before {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
 }
 
 body,
 html {
-  width: 100%;
-  height: 100%;
-  font-family: YouTube Sans, Roboto, sans-serif;
+    width: 100%;
+    height: 100%;
+    font-family: YouTube Sans, Roboto, sans-serif;
 }
 
 body {
-  position: relative;
-  min-height: 100%;
-  max-width: 100%;
-  margin: 0;
-  padding: 0;
-  user-select: none;
+    position: relative;
+    min-height: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    user-select: none;
 }
 
 .drag {
-  -webkit-app-region: drag;
+    -webkit-app-region: drag;
 }
 
 .no-drag {
-  -webkit-app-region: no-drag;
+    -webkit-app-region: no-drag;
 }
 
-// Video Sources PReview
-.video-stream {
-  width: 100%;
-  height: 77vh;
-  object-fit: cover;
-}
-.video {
-  width: 100%;
-}
-.preview {
-  width: 100%;
-  height: 180px;
-}
-.windows-wrapper {
-  display: grid;
-  gap: 8px;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-}
-.window {
-  width: 100%;
-  background-color: red;
-  margin: 5px 0;
-  cursor: pointer;
-}
 .changing-view {
-  overflow-y: scroll;
+    overflow-y: scroll;
+}
+.test {
+    min-width: 275px;
 }
 </style>

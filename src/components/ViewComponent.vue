@@ -1,5 +1,6 @@
+<!-- This is just a simple component for the panel side which enables a loading and -->
+<!-- Can be extended in the future -->
 <template>
-    <!-- Title thingy -->
     <v-card
         :loading="loading"
         :title="title"

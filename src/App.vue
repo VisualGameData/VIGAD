@@ -6,22 +6,21 @@
             <!-- Provides the application the proper gutter -->
             <v-container class="ma-0 pt-0 pb-0" fluid>
                 <v-row cols="12" no-gutters>
-                    <v-col cols="5">
+                    <v-col cols="2" class="test">
                         <v-sheet
                             class="changing-view"
-                            min-height="80vh"
-                            max-height="80vh"
+                            min-height="85vh"
+                            max-height="85vh"
                             rounded="lg"
                         >
-                            <!-- TODO: add transition to router view -->
                             <router-view />
                         </v-sheet>
                     </v-col>
 
                     <v-col>
                         <v-sheet
-                            min-height="80vh"
-                            max-height="80vh"
+                            min-height="85vh"
+                            max-height="85vh"
                             rounded="lg"
                         >
                             <MainVideoStream />
@@ -120,31 +119,10 @@ body {
     -webkit-app-region: no-drag;
 }
 
-// Video Sources PReview
-.video-stream {
-    width: 100%;
-    height: 77vh;
-    object-fit: cover;
-}
-.video {
-    width: 100%;
-}
-.preview {
-    width: 100%;
-    height: 180px;
-}
-.windows-wrapper {
-    display: grid;
-    gap: 8px;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-}
-.window {
-    width: 100%;
-    background-color: red;
-    margin: 5px 0;
-    cursor: pointer;
-}
 .changing-view {
     overflow-y: scroll;
+}
+.test {
+    min-width: 275px;
 }
 </style>

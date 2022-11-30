@@ -1,138 +1,45 @@
 <template>
-    <div class="windows-wrapper">
-        <v-card
-            v-for="(source, index) in desktopVideoStreamSources"
-            :key="source.id"
-            @click="streamHandler.setCurrentSelectedSource(streams[index])"
-            variant="tonal"
-            class="mb-2"
-        >
-            <v-card-title>{{ source.name }}</v-card-title>
-            <v-card-text>
-                <video
-                    autoplay
-                    :src-object.prop.camel="streams[index]"
-                    class="preview"
-                ></video>
-            </v-card-text>
-        </v-card>
-    </div>
-
-    <!-- <div class="pa-2">
-        <v-tabs v-model="tab" bg-color="primary" fixed-tabs class="rounded-lg">
-            <v-tab width="50%" value="screen">Screen</v-tab>
-            <v-tab width="50%" value="application">Application</v-tab>
-        </v-tabs>
-    </div>
-
-    <div class="content-container pa-2">
-        <v-window v-model="tab">
-            <v-window-item value="screen">
-                <v-progress-circular
-                    color="primary"
-                    indeterminate
-                    :size="128"
-                    :width="12"
-                ></v-progress-circular>
-                <div class="windows-wrapper">
-                    <v-card
-                        v-for="(source, index) in desktopVideoStreamSources"
-                        :key="source.id"
-                        @click="
-                            streamHandler.setCurrentSelectedSource(
-                                streams[index]
-                            )
-                        "
-                        variant="tonal"
-                        class="mb-2"
-                    >
-                        <v-card-title>{{ source.name }}</v-card-title>
-                        <v-card-text>
-                            <video
-                                autoplay
-                                :src-object.prop.camel="
-                                    streamHandler.getMediaStreamFromSource(
-                                        source
-                                    )
-                                "
-                                class="preview"
-                            ></video>
-                        </v-card-text>
-                    </v-card>
-                </div>
-            </v-window-item>
-
-            <v-window-item value="application">
-                <v-progress-circular
-                    v-if="isLoadingScreensAndWindows"
-                    color="primary"
-                    indeterminate
-                    :size="128"
-                    :width="12"
-                ></v-progress-circular>
-                <div
-                    v-show="!isLoadingScreensAndWindows"
-                    class="windows-wrapper"
+    <ViewComponent
+        title="Sources"
+        subtitle="Show you all the available screen and application sources"
+        :loading="true"
+    >
+        <template v-slot:default>
+            <div class="windows-wrapper">
+                <v-card
+                    v-for="(source, index) in desktopVideoStreamSources"
+                    :key="source.id"
+                    @click="
+                        streamHandler.setCurrentSelectedSource(streams[index])
+                    "
+                    variant="tonal"
+                    class="mb-2"
                 >
-                    <v-card
-                        v-for="(source, index) in desktopVideoStreamSources"
-                        :key="source.id"
-                        @click="
-                            streamHandler.setCurrentSelectedSource(
-                                streams[index]
-                            )
-                        "
-                        variant="tonal"
-                        class="mb-2"
-                    >
-                        <v-card-title>{{ source.name }}</v-card-title>
-                        <v-card-text>
-                            <video
-                                autoplay
-                                :src-object.camel.prop="streams[index]"
-                                class="preview"
-                            ></video>
-                        </v-card-text>
-                    </v-card>
-                </div>
-            </v-window-item>
-        </v-window>
-
-        <v-progress-circular
-          v-if="isLoadingScreensAndWindows"
-          color="primary"
-          indeterminate
-          :size="128"
-          :width="12"
-        ></v-progress-circular>
-        <div v-show="!isLoadingScreensAndWindows">
-          <v-card
-            v-for="source in desktopCaptureSources"
-            :key="source.id"
-            @click="streamHandler.setCurrentSelectedSource(source)"
-            variant="tonal"
-            class="mb-2"
-          >
-            <v-card-title>{{ source.name }}</v-card-title>
-            <v-card-text>
-              <video
-                autoplay
-                :src-object.camel.prop="streams[index]"
-                class="preview"
-              ></video>
-            </v-card-text>
-          </v-card>
-        </div>
-    </div> -->
-
-    <div class="pa-2">
-        <v-btn @click="fetchAllStreams()" color="primary" width="100%" tonal
-            >Refresh</v-btn
-        >
-    </div>
+                    <v-card-title>{{ source.name }}</v-card-title>
+                    <v-card-text>
+                        <video
+                            autoplay
+                            :src-object.prop.camel="streams[index]"
+                            class="preview"
+                        ></video>
+                    </v-card-text>
+                </v-card>
+            </div>
+            <div class="pa-2">
+                <v-btn
+                    @click="fetchAllStreams()"
+                    color="primary"
+                    width="100%"
+                    tonal
+                    >Refresh</v-btn
+                >
+            </div>
+        </template>
+    </ViewComponent>
 </template>
 
 <script setup lang="ts">
+import ViewComponent from '@/components/ViewComponent.vue';
 import { ref, computed, onMounted } from 'vue';
 import { StreamHandler } from '@/proc/StreamHandler';
 
@@ -184,4 +91,23 @@ async function setSourceForVideoNode(source: any) {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+// Video Sources PReview
+.video-stream {
+    width: 100%;
+    height: 80vh;
+    object-fit: cover;
+}
+.video {
+    width: 100%;
+}
+.preview {
+    width: 100%;
+    max-height: 180px;
+}
+.windows-wrapper {
+    display: grid;
+    gap: 8px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+</style>

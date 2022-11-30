@@ -43,8 +43,8 @@ const indexHtml = join(process.env.DIST, 'index.html');
 async function createWindow() {
     win = new BrowserWindow({
         title: 'Main window',
-        minWidth: 800,
-        minHeight: 500,
+        minWidth: 950,
+        minHeight: 750,
         frame: true, // still buggy cant select items from the custom titlebar
         autoHideMenuBar: true,
         icon: join(process.env.PUBLIC, '../src/assets/logo.png'),

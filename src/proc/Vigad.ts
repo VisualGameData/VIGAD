@@ -3,16 +3,16 @@ var stringSimilarity = require("string-similarity");
 
 export class Vigad {
     public main() {
-        let data:string = "Here we have some random text that was HP: 55 fetched fromPlayer: kartoffelMarc the image, including som data in between."
+        let data:string = "Here we have some random text that was HP: 55 fetched fromPloyer: kartoffelMarc the image, including som data in between."
         let dataSubstr = this.getAllSubstrings(data);
         console.log(dataSubstr);
 
-        let firstRegex: RegExp = /Here/;
+        let firstRegex: RegExp = /fetched/;
         let firstRegexMatch = this.approxMatching(dataSubstr, firstRegex, this.genMatches(firstRegex, 50000));
         console.log("Best Match first Regex: ");
         console.log(firstRegexMatch);
 
-        let secondRegex: RegExp = /between/;
+        let secondRegex: RegExp = /kartoffelMarc/;
         let secondRegexMatch = this.approxMatching(dataSubstr, secondRegex, this.genMatches(secondRegex, 50000));
         console.log("Best Match second Regex: ");
         console.log(secondRegexMatch);
@@ -24,27 +24,29 @@ export class Vigad {
         // Most error tolerant. 
         // Very Performance intensive
         // only reliable for very specific regex
-        // works with strict constraints only
+        // works with tight constraints only
         // may cut parts of the value to be extracted for unspecific regex (with variable length)
-        // -> for exact value matching, this is the way to go
-        let valueSubstrSubstr = this.getAllSubstrings(valueSubstr);
+        // -> for exact value matching, this is always the way to go
+        // -> for approximate value matching, this MAY BE the way to go if regex is very specific (and constraints are tight)
+        //let valueSubstrSubstr = this.getAllSubstrings(valueSubstr);
         // this is probably most useful for constraint-regex-matching (not for actually extracting the value) => if value is not very specific
 
         // Option 2: test against substrings sliced at spaces
         // Less error tolerant
         // Much less performance intensive
         // works with less specific regex
-        // works with less strict constraints
-        /*let valueSubstrSubstr:{index:number, element:string}[] = []; // only test substrings sliced at ' '
+        // works with less tight constraints
+        // -> for approximate value matching with lose constraints
+        let valueSubstrSubstr:{index:number, element:string}[] = []; // only test substrings sliced at ' '
         valueSubstr.split(" ").forEach(element => {
             valueSubstrSubstr.push({index: -1, element: element});
-        });*/
+        });
 
-        // Option 3: test against entire (sub)string
+        // ! PROBABLY IRRELEVANT ! Option 3: test against entire (sub)string
         // less error tolerant
         // least performance intensive
         // works with unspecific regex
-        // only works with very strict constraints
+        // only works with very tight constraints
         //let valueSubstrSubstr = [{index: -1, element: valueSubstr}];
 
         // apply similar letter-to-number conversion and vise versa here (for each substring)
@@ -54,17 +56,17 @@ export class Vigad {
         console.log(valueSubstrSubstr);
         // Option 1:
         // approximate value matching -> may result in values not exactly matching regex
-        //let valueRegexMatch = this.approxMatching(valueSubstrSubstr, valueRegex, this.genMatches(valueRegex, 100000));
+        let valueRegexMatch = this.approxMatching(valueSubstrSubstr, valueRegex, this.genMatches(valueRegex, 100000));
         // Option 2:
         // exact matching -> only accept values that definitely match the valueRegex
-        let valueRegexMatch = {rating: -1, match: {index: -1, element: ""}};
+        /*let valueRegexMatch = {rating: -1, match: {index: -1, element: ""}};
         valueSubstrSubstr.every(element => {
             let exactMatch = element.element.match(valueRegex);
             if (exactMatch !== null && valueRegexMatch.match.element.length < exactMatch[0].length) {
                 valueRegexMatch = {rating: 1, match: {index: -1, element: exactMatch[0]}};
             }
             return true;
-        });
+        });*/
         console.log("Best Match value Regex: ");
         console.log(valueRegexMatch);
         //this.match(data, regex);

@@ -70,16 +70,16 @@ export class Vigad {
         '"': ["(\")"],
         '#': ["#"],
         '€': ["(€|e)"],
-        '$': ["\$"],
+        '$': ["\\$"],
         '%': ["%"],
         '&': ["&"],
         '/': ["/"],
-        '(': ["\("],
-        ')': ["\)"],
+        '(': ["\\("],
+        ')': ["\\)"],
         '=': ["="],
-        '?': ["\?"],
-        '*': ["\*"],
-        '+': ["\+"],
+        '?': ["\\?"],
+        '*': ["\\*"],
+        '+': ["\\+"],
         '-': ["-"],
         '_': ["_"],
         '.': ["\."],
@@ -88,13 +88,13 @@ export class Vigad {
         ':': [":"],
         '<': ["<"],
         '>': [">"],
-        '[': ["\["],
-        ']': ["\]"],
-        '{': ["\{"],
-        '}': ["\}"],
-        '|': ["\|"],
+        '[': ["\\["],
+        ']': ["\\]"],
+        '{': ["\\{"],
+        '}': ["\\}"],
+        '|': ["\\|"],
         '\\': ["\\\\"],
-        '^': ["\^"],
+        '^': ["\\^"],
         '`': ["`"],
         '~': ["~"],
         '@': ["@"],
@@ -166,10 +166,10 @@ export class Vigad {
     ];
     public main() {
 
-        let data:string = "Here we have some random text that was HP: 55 fetched fromplazer: kartoffelMarc the image, including som data in between."
+        let data:string = "Here we have some random text that was HP? 55 fetched fromplazer: kartoffelMarc the image, including som data in between."
 
         // new approach
-        let regexInput = "HP:";
+        let regexInput = "HP?";
         let regex:RegExp = this.genRegex(regexInput);
         let match = data.match(regex);
         console.log(regex);

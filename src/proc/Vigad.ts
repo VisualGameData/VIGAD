@@ -2,8 +2,182 @@ import RandExp from "randexp";
 var stringSimilarity = require("string-similarity");
 
 export class Vigad {
+    private lookAlikes = {
+        'a': ["a"],
+        'b': ["(b|6)"],
+        'c': ["(c|e)"],
+        'd': ["d"],
+        'e': ["(e|c|€)"],
+        'f': ["f"],
+        'g': ["(g|q|9)"],
+        'h': ["h"],
+        'i': ["(i|!)"],
+        'j': ["j"],
+        'k': ["k"],
+        'l': ["(l|1|I|T|!)"],
+        'm': ["(m|n)"],
+        'n': ["(n|p|m)"],
+        'o': ["(o|0|O)"],
+        'p': ["(p|n)"],
+        'q': ["(q|g)"],
+        'r': ["r"],
+        's': ["s"],
+        't': ["t"],
+        'u': ["(u|v|U)"],
+        'v': ["(v|u|V)"],
+        'w': ["w"],
+        'x': ["x"],
+        'y': ["(y|z)"],
+        'z': ["(z|y)"],
+        'A': ["A"],
+        'B': ["(B|P|8)"],
+        'C': ["(C|G)"],
+        'D': ["(D|O|0)"],
+        'E': ["(E|F)"],
+        'F': ["(F|R|E|7)"],
+        'G': ["(G|C|6)"],
+        'H': ["H"],
+        'I': ["(I|l|L|!)"],
+        'J': ["J"],
+        'K': ["K"],
+        'L': ["(L|I)"],
+        'M': ["(M|N)"],
+        'N': ["(N|M)"],
+        'O': ["(O|D|U|0|o)"],
+        'P': ["(P|B)"],
+        'Q': ["(Q|2)"],
+        'R': ["(R|F)"],
+        'S': ["(S|5|8)"],
+        'T': ["(T|l|7)"],
+        'U': ["(U|O|V|0|4|u)"],
+        'V': ["(V|U|W|v)"],
+        'W': ["(W|V)"],
+        'X': ["(X|Y)"],
+        'Y': ["(Y|X|5)"],
+        'Z': ["(Z|2|7)"],
+        '0': ["(0|o|O|D|U|8)"],
+        '1': ["(1|l|7|!)"],
+        '2': ["(2|Z|Q)"],
+        '3': ["(3|9|8|5)"],
+        '4': ["(4|U|9)"],
+        '5': ["(5|S|Y|8|3)"],
+        '6': ["(6|b|G|8)"],
+        '7': ["(7|F|Z|T|1)"],
+        '8': ["(8|B|S|0|3|5|6)"],
+        '9': ["(9|g|q|3|4)"],
+        ' ': [" "],
+        '!': ["(!|1|i|l|I)"],
+        '"': ["(\")"],
+        '#': ["#"],
+        '€': ["(€|e)"],
+        '$': ["\$"],
+        '%': ["%"],
+        '&': ["&"],
+        '/': ["/"],
+        '(': ["\("],
+        ')': ["\)"],
+        '=': ["="],
+        '?': ["\?"],
+        '*': ["\*"],
+        '+': ["\+"],
+        '-': ["-"],
+        '_': ["_"],
+        '.': ["\."],
+        ',': [","],
+        ';': [";"],
+        ':': [":"],
+        '<': ["<"],
+        '>': [">"],
+        '[': ["\["],
+        ']': ["\]"],
+        '{': ["\{"],
+        '}': ["\}"],
+        '|': ["\|"],
+        '\\': ["\\\\"],
+        '^': ["\^"],
+        '`': ["`"],
+        '~': ["~"],
+        '@': ["@"],
+        '\'': ["\\'"],
+        '§': ["§"],
+        '°': ["°"],
+        'ß': ["ß"],
+        'Ä': ["Ä"],
+        'Ö': ["Ö"],
+        'Ü': ["Ü"],
+        'ä': ["ä"],
+        'ö': ["ö"],
+        'ü': ["ü"]
+    }
+
+    private lookAlikesC = [
+        ['g', 'q'],
+        ['p', 'n'],
+        ['m', 'n'],
+        ['y', 'z'],
+        ['u', 'v'],
+        ['c', 'e'],
+        ['l', 'I'],
+        ['T', 'I'],
+        ['D', 'O'],
+        ['C', 'G'],
+        ['L', 'I'],
+        ['M', 'N'],
+        ['P', 'B'],
+        ['F', 'R'],
+        ['U', 'O'],
+        ['U', 'V'],
+        ['E', 'F'],
+        ['V', 'W'],
+        ['X', 'Y'],
+        ['U', 'u'],
+        ['V', 'v']
+    ];
+    private lookAlikesNC = [
+        ['0', 'o'],
+        ['0', 'O'],
+        ['0', 'D'],
+        ['0', 'U'],
+        ['1', 'l'],
+        ['2', 'Z'],
+        ['2', 'Q'],
+        ['4', 'U'],
+        ['5', 'S'],
+        ['5', 'Y'],
+        ['6', 'b'],
+        ['6', 'G'],
+        ['7', 'F'],
+        ['7', 'Z'],
+        ['7', 'T'],
+        ['8', 'B'],
+        ['8', 'S'],
+        ['9', 'g'],
+        ['9', 'q']
+    ];
+    private lookAlikesN = [
+        ['0', '8'],
+        ['3', '9'],
+        ['3', '8'],
+        ['4', '9'],
+        ['5', '8'],
+        ['5', '3'],
+        ['6', '8'],
+        ['7', '1']
+    ];
     public main() {
-        let data:string = "Here we have some random text that was HP: 55 fetched fromPloyer: kartoffelMarc the image, including som data in between."
+
+        let data:string = "Here we have some random text that was HP: 55 fetched fromplazer: kartoffelMarc the image, including som data in between."
+
+        // new approach
+        let regexInput = "HP:";
+        let regex:RegExp = this.genRegex(regexInput);
+        let match = data.match(regex);
+        console.log(regex);
+        console.log(match);
+        // <<- new approach
+
+        /*
+
         let dataSubstr = this.getAllSubstrings(data);
         console.log(dataSubstr);
 
@@ -19,9 +193,9 @@ export class Vigad {
 
         let valueRegex = /[a-zA-Z]*Player/;
         let valueSubstr = data.slice(firstRegexMatch.match.index + firstRegexMatch.match.element.length, secondRegexMatch.match.index);
-        
-        // Option 1: test against all substrings. 
-        // Most error tolerant. 
+
+        // Option 1: test against all substrings.
+        // Most error tolerant.
         // Very Performance intensive
         // only reliable for very specific regex
         // works with tight constraints only
@@ -50,9 +224,12 @@ export class Vigad {
         //let valueSubstrSubstr = [{index: -1, element: valueSubstr}];
 
         // apply similar letter-to-number conversion and vise versa here (for each substring)
-        
-        
-        
+        valueSubstrSubstr.forEach((element, index) => {
+            valueSubstrSubstr[index] = {index: element.index, element: this.repSimLetNum(element.element)};
+        });
+
+
+
         console.log(valueSubstrSubstr);
         // Option 1:
         // approximate value matching -> may result in values not exactly matching regex
@@ -67,10 +244,10 @@ export class Vigad {
             }
             return true;
         });*/
-        console.log("Best Match value Regex: ");
-        console.log(valueRegexMatch);
-        //this.match(data, regex);
-        //console.log(this.bestMatch(data, regex));
+
+        //console.log("Best Match value Regex: ");
+        //console.log(valueRegexMatch);
+
     }
 
 
@@ -126,7 +303,7 @@ export class Vigad {
 
     private getAllSubstrings(str:string) {
         var i, j, result = [];
-      
+
         for (i = 0; i < str.length; i++) {
             for (j = i + 1; j < str.length + 1; j++) {
                 result.push({index: i, element: str.slice(i, j)});
@@ -154,5 +331,119 @@ export class Vigad {
         });
 
         return {match: highestRatingElem, rating: highestRating};
+    }
+
+    private repSimNumLet(str:string):string {
+        for (let i = 0; i < str.length; i++) {
+            switch (str.charAt(i)) {
+                case '0':
+                    str = this.replaceCharAt(str, i, 'o');
+                    break;
+                case '1':
+                    str = this.replaceCharAt(str, i, 'l');
+                    break;
+                case '4':
+                    str = this.replaceCharAt(str, i, 'U');
+                    break;
+                case '5':
+                    str = this.replaceCharAt(str, i, 'S');
+                    break;
+                case '6':
+                    str = this.replaceCharAt(str, i, 'b');
+                    break;
+                case '7':
+                    str = this.replaceCharAt(str, i, 'T');
+                    break;
+                case '8':
+                    str = this.replaceCharAt(str, i, 'B');
+                    break;
+                case '9':
+                    str = this.replaceCharAt(str, i, 'g');
+                    break;
+                default:
+                    break;
+            }
+        }
+        return str;
+    }
+
+    private repSimLetNum(str:string):string {
+        for (let i = 0; i < str.length; i++) {
+            switch (str.charAt(i)) {
+                case 'o':
+                    str = this.replaceCharAt(str, i, '0');
+                    break;
+                case 'O':
+                    str = this.replaceCharAt(str, i, '0');
+                    break;
+                case 'U':
+                    str = this.replaceCharAt(str, i, '0');
+                    break;
+                case 'u':
+                    str = this.replaceCharAt(str, i, '0');
+                    break;
+                case 'D':
+                    str = this.replaceCharAt(str, i, '0');
+                    break;
+                case 'l':
+                    str = this.replaceCharAt(str, i, '1');
+                    break;
+                case 'Z':
+                    str = this.replaceCharAt(str, i, '2');
+                    break;
+                case 'z':
+                    str = this.replaceCharAt(str, i, '2');
+                    break;
+                case 'Q':
+                    str = this.replaceCharAt(str, i, '2');
+                    break;
+                case 'S':
+                    str = this.replaceCharAt(str, i, '5');
+                    break;
+                case 'Y':
+                    str = this.replaceCharAt(str, i, '5');
+                    break;
+                case 'b':
+                    str = this.replaceCharAt(str, i, '6');
+                    break;
+                case 'G':
+                    str = this.replaceCharAt(str, i, '6');
+                    break;
+                case 'T':
+                    str = this.replaceCharAt(str, i, '7');
+                    break;
+                case 'F':
+                    str = this.replaceCharAt(str, i, '7');
+                    break;
+                case 'B':
+                    str = this.replaceCharAt(str, i, '8');
+                    break;
+                case 'g':
+                    str = this.replaceCharAt(str, i, '9');
+                    break;
+                case 'q':
+                    str = this.replaceCharAt(str, i, '9');
+                    break;
+                default:
+                    break;
+            }
+        }
+        return str;
+    }
+
+    private replaceCharAt(str:string, index:number, replacement:string) {
+        return str.substring(0, index) + replacement + str.substring(index + 1);
+    }
+
+    private genRegex(regex:string):RegExp {
+        for (let i = 0; i < regex.length; i++) {
+            let char:string = regex.charAt(i);
+            // don't ask me what this brackets notation is, I tried to understand this for hours... ts is weird
+            if (this.lookAlikes[char as keyof typeof this.lookAlikes].length > 0) {
+                regex = this.replaceCharAt(regex, i, this.lookAlikes[char as keyof typeof this.lookAlikes][0]);
+                i += this.lookAlikes[char as keyof typeof this.lookAlikes][0].length - 1;
+            }
+        }
+        return new RegExp(regex);
     }
 }

@@ -45,10 +45,10 @@ import { ref, computed, onMounted } from 'vue';
 import { Vigad } from '@/proc/Vigad';
 
 // Get singelton instance reference to vigad
-const vigad = Vigad.getInstance();
+const vigad = ref(Vigad.getInstance());
 
 // Get singelton instance reference to streamHandler
-const streamHandler = vigad.getStreamHandlerInstance();
+const streamHandler = vigad.value.getStreamHandlerInstance();
 
 // For the Screen / Application Tab
 const tab = ref(null);

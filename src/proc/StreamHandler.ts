@@ -2,7 +2,7 @@
 export class StreamHandler {
     private static instance: StreamHandler;
 
-    private currentSelectedSource: MediaStream;
+    private currentSelectedSource!: MediaStream;
     private desktopCaptureSources: Object[];
     private allMediaStreams: MediaStream[];
     private isLoadingScreensAndApplications: boolean;
@@ -11,7 +11,6 @@ export class StreamHandler {
      * Create a private constructor to prevent multiple instances
      */
     private constructor() {
-        this.currentSelectedSource = new MediaStream();
         this.desktopCaptureSources = [];
         this.allMediaStreams = [];
         this.isLoadingScreensAndApplications = false;
@@ -134,22 +133,6 @@ export class StreamHandler {
             document.querySelector('#mainVideo');
 
         videoElement!.srcObject = source;
-
-        // console.log('MediaStream properties');
-        // console.log(
-        //     'Device ID',
-        //     source.getVideoTracks()[0].getSettings().deviceId
-        // );
-        // console.log(
-        //     'Framerate',
-        //     source.getVideoTracks()[0].getSettings().frameRate
-        // );
-        // console.log('Height', source.getVideoTracks()[0].getSettings().height);
-        // console.log('Width', source.getVideoTracks()[0].getSettings().width);
-        // console.log(
-        //     'Apsectratio',
-        //     source.getVideoTracks()[0].getSettings().aspectRatio
-        // );
     }
 
     /**

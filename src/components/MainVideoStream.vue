@@ -44,21 +44,22 @@ import { Vigad } from '@/proc/Vigad';
 // @ts-ignore
 import VueDragResize from 'vue3-drag-resize';
 import { rerender } from './Rerender';
+import { Rectangle } from './Rectangle';
 
 /**
  * Get singelton instance reference to vigad
  */
-const vigad = Vigad.getInstance();
+const vigad = ref(Vigad.getInstance());
 
 /**
  * Get singelton instance reference to streamHandler
  */
-const streamHandler = vigad.getStreamHandlerInstance();
+const streamHandler = vigad.value.getStreamHandlerInstance();
 
 /**
  * Get reference to all the capture areas that are currently active
  */
-const captureAreas = reactive(vigad.getAllCaptureAreas());
+const captureAreas = vigad.value.getAllCaptureAreas();
 
 /**
  * Stream preview properties for the main video stream
@@ -72,16 +73,6 @@ const { width: wParent, height: hParent } = useElementSize(stream);
 async function setDefaultVideoStream() {
     // set the default video stream to the main screen
     await streamHandler.setDefaultVideoStream();
-}
-
-/**
- * Simple rectangle interface
- */
-interface Rectangle {
-    width: number;
-    height: number;
-    top: number;
-    left: number;
 }
 
 /**

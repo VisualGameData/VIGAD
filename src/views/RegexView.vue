@@ -47,18 +47,18 @@ import { rerender, forceRerender } from '@/components/Rerender';
 /**
  * Get singelton instance reference to vigad
  */
-const vigad = Vigad.getInstance();
+const vigad = ref(Vigad.getInstance());
 
 /**
  * Get a reactive reference to all of the capture areas
  */
-const captureAreas = ref(vigad.getAllCaptureAreas());
+const captureAreas = ref(vigad.value.getAllCaptureAreas());
 
 /**
  * Add a new capture area to the list of capture areas
  */
 async function addCaptureArea() {
-    vigad.addCaptureArea(100, 100, 0, 0);
+    vigad.value.addCaptureArea(100, 100, 0, 0);
     await forceRerender();
 }
 </script>

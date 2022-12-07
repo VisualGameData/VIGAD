@@ -14,7 +14,7 @@ export class Vigad {
     /**
      * This function gets the singelton instance of Vigad.ts
      *
-     * @returns the singelton instance of the StreamHandler
+     * @return Vigad
      */
     public static getInstance(): Vigad {
         if (!this.instance) {

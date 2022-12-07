@@ -41,10 +41,13 @@
 <script setup lang="ts">
 import ViewComponent from '@/components/ViewComponent.vue';
 import { ref, computed, onMounted } from 'vue';
-import { StreamHandler } from '@/proc/StreamHandler';
+import { Vigad } from '@/proc/Vigad';
 
-// Get singelton instance of DesktopVideoStream
-const streamHandler = StreamHandler.getInstance();
+// Get singelton instance reference to vigad
+const vigad = Vigad.getInstance();
+
+// Get singelton instance reference to streamHandler
+const streamHandler = vigad.getStreamHandlerInstance();
 
 // For the Screen / Application Tab
 const tab = ref(null);

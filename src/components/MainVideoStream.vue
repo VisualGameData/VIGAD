@@ -20,10 +20,13 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useMouseInElement, useElementSize } from '@vueuse/core';
-import { StreamHandler } from '@/proc/StreamHandler';
+import { Vigad } from '@/proc/Vigad';
 
-// Get singelton instance of streamHandler
-const streamHandler = StreamHandler.getInstance();
+// Get singelton instance reference to vigad
+const vigad = Vigad.getInstance();
+
+// Get singelton instance reference to streamHandler
+const streamHandler = vigad.getStreamHandlerInstance();
 
 // Mouse position relative to the element and is in and out
 const mainVideo = ref<HTMLVideoElement | null>(null);

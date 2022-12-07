@@ -1,5 +1,5 @@
 <template>
-    <v-app :theme="theme">
+    <v-app theme="dark">
         <!-- Main Content view-->
         <v-main>
             <v-container fluid> </v-container>
@@ -66,11 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-
 import MainVideoStream from './components/MainVideoStream.vue';
-
-const theme = ref('dark');
 
 // Handle System Bar Functions for later
 async function minimizeScreen() {

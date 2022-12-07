@@ -23,4 +23,36 @@ export class CaptureArea {
     public setId(id:number) {
         this.id = id;
     }
+
+    public getWidth(): number {
+        return this.width;
+    }
+
+    public setWidth(width:number) {
+        this.width = width;
+    }
+
+    public getHeight(): number {
+        return this.height;
+    }
+
+    public setHeight(height:number) {
+        this.height = height;
+    }
+
+    public getTop(): number {
+        return this.top;
+    }
+
+    public setTop(top:number) {
+        this.top = top;
+    }
+
+    public getLeft(): number {
+        return this.left;
+    }
+
+    public setLeft(left:number) {
+        this.left = left;
+    }
 }

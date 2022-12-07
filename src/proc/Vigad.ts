@@ -12,7 +12,7 @@ export class Vigad {
     }
 
     /**
-     * This function gets the singelton instance of the StreamHandler
+     * This function gets the singelton instance of Vigad.ts
      *
      * @returns the singelton instance of the StreamHandler
      */

@@ -26,8 +26,10 @@
         <VueDragResize
             v-for="item in captureAreaSelections"
             :isActive="false"
-            :w="200"
-            :h="200"
+            :w="width"
+            :h="height"
+            :x="left"
+            :y="top"
             :snapToGrid="false"
             :gridY="50"
             :parentScaleX="1"
@@ -36,18 +38,30 @@
             :preventActiveBehavior="false"
             :parentH="hParent"
             :parentLimitation="true"
-            v-on:resizing="resize"
-            v-on:dragging="resize"
+            v-on:resizing="changeSize($event)"
+            v-on:dragging="changePosition($event)"
             @click="logThings"
             :aspectRatio="false"
             class="background"
         >
-            <h3>Hello World!</h3>
             <p>Postioning {{ top }} x {{ left }}</p>
             <p>Capture Area Properties {{ width }} x {{ height }}</p>
-            <p>Parent properties{{ wParent }} x {{ hParent }}</p>
         </VueDragResize>
     </div>
+
+    <v-text-field v-model="top" label="Top" variant="outlined"></v-text-field>
+    <v-text-field v-model="left" label="Left" variant="outlined"></v-text-field>
+
+    <v-text-field
+        v-model="width"
+        label="Width"
+        variant="outlined"
+    ></v-text-field>
+    <v-text-field
+        v-model="height"
+        label="Height"
+        variant="outlined"
+    ></v-text-field>
 
     <v-btn @click="createNewCaptureArea">Create Dragable</v-btn>
 </template>
@@ -61,6 +75,7 @@ import { Vigad } from '@/proc/Vigad';
 // TODO: maybe fix this import type declaration problem
 // @ts-ignore
 import VueDragResize from 'vue3-drag-resize';
+import { valid } from 'semver';
 
 // Get singelton instance reference to vigad
 const vigad = Vigad.getInstance();
@@ -74,15 +89,6 @@ onMounted(() => {
     setDefaultVideoStream();
 });
 
-function createNewCaptureArea() {
-    captureAreaSelections.value.push(captureAreaSelections.value.length + 1);
-}
-
-const stream = ref(null);
-const { width: wParent, height: hParent } = useElementSize(stream);
-// const { x, y, top, right, bottom, left, width, height } =
-//     useElementBounding(stream);
-
 /**
  * fetches everything and sets the main video stream to the main screen
  */
@@ -91,14 +97,43 @@ async function setDefaultVideoStream() {
     await streamHandler.setDefaultVideoStream();
 }
 
-const width = ref(0);
-const height = ref(0);
-const top = ref(0);
+function createNewCaptureArea() {
+    captureAreaSelections.value.push(captureAreaSelections.value.length + 1);
+}
+
+const stream = ref(null);
+const { width: wParent, height: hParent } = useElementSize(stream);
+
+// Default vlaues
+const width = ref(100);
+const height = ref(100);
+// Center horizontal
+// wParent.value / 2 - width.value / 2
+const top = ref();
+//Center Vertically
+// hParent.value / 2 - height.value / 2
+const left = ref();
+// calculated by top and left
 const bottom = ref(0);
-const left = ref(0);
 const right = ref(0);
 
-function resize(newRect: any) {
+interface Rectangle {
+    width: number;
+    height: number;
+    top: number;
+    left: number;
+}
+
+function changePosition(newRect: Rectangle) {
+    console.log(newRect);
+    width.value = newRect.width;
+    height.value = newRect.height;
+    top.value = newRect.top;
+    left.value = newRect.left;
+    right.value = left.value + width.value - wParent.value;
+    bottom.value = top.value + height.value - hParent.value;
+}
+function changeSize(newRect: Rectangle) {
     width.value = newRect.width;
     height.value = newRect.height;
     top.value = newRect.top;
@@ -107,17 +142,28 @@ function resize(newRect: any) {
     bottom.value = top.value + height.value - hParent.value;
 }
 
+const newWidth = ref<number>(0);
+const newHeight = ref<number>(0);
+const newTop = ref<number>(0);
+const newLeft = ref<number>(0);
+
 function logThings() {
     // console.log('Rectangle Postion - top and left');
     // console.log(top.value + height.value);
-    console.log('left', left.value);
-    console.log('right', right.value);
-    console.log('widt', width.value);
-    console.log('total', left.value + width.value + right.value);
+    // console.log('left', left.value);
+    // console.log('right', right.value);
+    // console.log('widt', width.value);
+    // console.log('total', left.value + width.value + right.value);
     // console.log("Parent's width and height");
-    console.log(wParent.value);
+    // console.log(wParent.value);
     // console.log(hParent.value);
     // console.log('Ration', wParent.value / hParent.value);
+    changeSize({
+        width: width.value,
+        height: height.value,
+        top: top.value,
+        left: left.value,
+    });
 }
 
 watch(

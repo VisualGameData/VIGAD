@@ -135,21 +135,21 @@ export class StreamHandler {
 
         videoElement!.srcObject = source;
 
-        console.log('MediaStream properties');
-        console.log(
-            'Device ID',
-            source.getVideoTracks()[0].getSettings().deviceId
-        );
-        console.log(
-            'Framerate',
-            source.getVideoTracks()[0].getSettings().frameRate
-        );
-        console.log('Height', source.getVideoTracks()[0].getSettings().height);
-        console.log('Width', source.getVideoTracks()[0].getSettings().width);
-        console.log(
-            'Apsectratio',
-            source.getVideoTracks()[0].getSettings().aspectRatio
-        );
+        // console.log('MediaStream properties');
+        // console.log(
+        //     'Device ID',
+        //     source.getVideoTracks()[0].getSettings().deviceId
+        // );
+        // console.log(
+        //     'Framerate',
+        //     source.getVideoTracks()[0].getSettings().frameRate
+        // );
+        // console.log('Height', source.getVideoTracks()[0].getSettings().height);
+        // console.log('Width', source.getVideoTracks()[0].getSettings().width);
+        // console.log(
+        //     'Apsectratio',
+        //     source.getVideoTracks()[0].getSettings().aspectRatio
+        // );
     }
 
     /**

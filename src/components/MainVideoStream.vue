@@ -1,69 +1,61 @@
-<!-- TODO: rename component with a more appropirate name -->
 <template>
-    <div ref="stream" class="video-stream">
-        <v-responsive
-            aspect-ratio="16 / 9"
-            class="border capture-area-selection"
-        >
-            <video
-                id="mainVideo"
-                autoplay
-                class="video"
-                ref="mainVideo"
-            ></video>
+    <div class="video-stream">
+        <v-responsive class="capture-area-selection">
+            <video ref="stream" id="mainVideo" class="video" autoplay></video>
+            <VueDragResize
+                v-for="item in captureAreaSelections"
+                :w="item.width"
+                :h="item.height"
+                :x="item.top"
+                :y="item.top"
+                :parentW="wParent"
+                :parentH="hParent"
+                :parentScaleX="1"
+                :parentScaleY="1"
+                :isActive="false"
+                :snapToGrid="false"
+                :aspectRatio="false"
+                :preventActiveBehavior="false"
+                :parentLimitation="true"
+                @resizing="changeSize($event, item)"
+                @dragging="changePosition($event, item)"
+                class="background"
+            >
+                <p>Postioning {{ item.top }} x {{ item.left }}</p>
+                <p>
+                    Capture Area Properties {{ item.width }} x
+                    {{ item.height }}
+                </p>
+            </VueDragResize>
         </v-responsive>
-        <!-- <CaptureAreaSelectionVue
-            v-for="item in captureAreaSelections"
-            :x-parent="x"
-            :y-parent="y"
-            :width="width"
-            :height="height"
-            :bottom="bottom"
-            :top="top"
-            :left="left"
-            :right="right"
-        /> -->
-        <VueDragResize
-            v-for="item in captureAreaSelections"
-            :isActive="false"
-            :w="width"
-            :h="height"
-            :x="left"
-            :y="top"
-            :snapToGrid="false"
-            :gridY="50"
-            :parentScaleX="1"
-            :parentScaleY="1"
-            :parentW="wParent"
-            :preventActiveBehavior="false"
-            :parentH="hParent"
-            :parentLimitation="true"
-            v-on:resizing="changeSize($event)"
-            v-on:dragging="changePosition($event)"
-            @click="logThings"
-            :aspectRatio="false"
-            class="background"
-        >
-            <p>Postioning {{ top }} x {{ left }}</p>
-            <p>Capture Area Properties {{ width }} x {{ height }}</p>
-        </VueDragResize>
     </div>
 
-    <v-text-field v-model="top" label="Top" variant="outlined"></v-text-field>
-    <v-text-field v-model="left" label="Left" variant="outlined"></v-text-field>
-
-    <v-text-field
-        v-model="width"
-        label="Width"
+    <!-- <v-text-field
+        v-model="captureAreaSelections[0].top"
+        label="Top"
         variant="outlined"
     ></v-text-field>
     <v-text-field
-        v-model="height"
-        label="Height"
+        v-model="captureAreaSelections[0].left"
+        label="Left"
         variant="outlined"
     ></v-text-field>
 
-    <v-btn @click="createNewCaptureArea">Create Dragable</v-btn>
+    <v-text-field
+    v-model="captureAreaSelections[0].width"
+    label="Width of Capture Area"
+    variant="outlined"
+    ></v-text-field>
+    <v-text-field
+    v-model="captureAreaSelections[0].height"
+    label="Height of Capture Area"
+    variant="outlined"
+    ></v-text-field> -->
+    <!-- TODO: currently buggy -->
+
+    <!-- <v-btn @click="createNewCaptureArea">Create Dragable</v-btn> -->
+    {{ wParent }}
+    {{ hParent }}
 </template>
 
 <!-- https://www.youtube.com/watch?v=b13NSWyQ0tw -->
@@ -72,18 +64,17 @@
 import { ref, onMounted, watch } from 'vue';
 import { useElementSize } from '@vueuse/core';
 import { Vigad } from '@/proc/Vigad';
+// TODO: maybe abstract it late into its own component
+import CaptureAreaSelectionVue from './capture-area/CaptureAreaSelection.vue';
 // TODO: maybe fix this import type declaration problem
 // @ts-ignore
 import VueDragResize from 'vue3-drag-resize';
-import { valid } from 'semver';
 
 // Get singelton instance reference to vigad
 const vigad = Vigad.getInstance();
 
 // Get singelton instance reference to streamHandler
 const streamHandler = vigad.getStreamHandlerInstance();
-
-const captureAreaSelections = ref([1]);
 
 onMounted(() => {
     setDefaultVideoStream();
@@ -97,25 +88,11 @@ async function setDefaultVideoStream() {
     await streamHandler.setDefaultVideoStream();
 }
 
-function createNewCaptureArea() {
-    captureAreaSelections.value.push(captureAreaSelections.value.length + 1);
-}
-
+// Parent properties
 const stream = ref(null);
 const { width: wParent, height: hParent } = useElementSize(stream);
 
-// Default vlaues
-const width = ref(100);
-const height = ref(100);
-// Center horizontal
-// wParent.value / 2 - width.value / 2
-const top = ref();
-//Center Vertically
-// hParent.value / 2 - height.value / 2
-const left = ref();
-// calculated by top and left
-const bottom = ref(0);
-const right = ref(0);
+// Capture area properties
 
 interface Rectangle {
     width: number;
@@ -124,47 +101,48 @@ interface Rectangle {
     left: number;
 }
 
-function changePosition(newRect: Rectangle) {
-    console.log(newRect);
-    width.value = newRect.width;
-    height.value = newRect.height;
-    top.value = newRect.top;
-    left.value = newRect.left;
-    right.value = left.value + width.value - wParent.value;
-    bottom.value = top.value + height.value - hParent.value;
-}
-function changeSize(newRect: Rectangle) {
-    width.value = newRect.width;
-    height.value = newRect.height;
-    top.value = newRect.top;
-    left.value = newRect.left;
-    right.value = left.value + width.value - wParent.value;
-    bottom.value = top.value + height.value - hParent.value;
+const captureAreaSelections = ref<Rectangle[]>([
+    {
+        width: 100,
+        height: 100,
+        top: 100,
+        left: 100,
+    },
+]);
+
+function createNewCaptureArea() {
+    const newCaptureArea = ref<Rectangle>({
+        width: 100,
+        height: 100,
+        top: 0,
+        left: 0,
+    });
+
+    captureAreaSelections.value.push(newCaptureArea.value);
 }
 
+function changePosition(newRect: Rectangle, item: Rectangle) {
+    // TODO: later set the new values via the class setter and getter
+    item.width = newRect.width;
+    item.height = newRect.height;
+    item.top = newRect.top;
+    item.left = newRect.left;
+    // right.value = left.value + width.value - wParent.value;
+    // bottom.value = top.value + height.value - hParent.value;
+}
+function changeSize(newRect: Rectangle, item: Rectangle) {
+    // TODO: later set the new values via the class setter and getter
+    item.width = newRect.width;
+    item.height = newRect.height;
+    item.top = newRect.top;
+    item.left = newRect.left;
+}
+
+// currently not used
 const newWidth = ref<number>(0);
 const newHeight = ref<number>(0);
 const newTop = ref<number>(0);
 const newLeft = ref<number>(0);
-
-function logThings() {
-    // console.log('Rectangle Postion - top and left');
-    // console.log(top.value + height.value);
-    // console.log('left', left.value);
-    // console.log('right', right.value);
-    // console.log('widt', width.value);
-    // console.log('total', left.value + width.value + right.value);
-    // console.log("Parent's width and height");
-    // console.log(wParent.value);
-    // console.log(hParent.value);
-    // console.log('Ration', wParent.value / hParent.value);
-    changeSize({
-        width: width.value,
-        height: height.value,
-        top: top.value,
-        left: left.value,
-    });
-}
 
 watch(
     [wParent, hParent],
@@ -174,7 +152,12 @@ watch(
     ) => {
         // when this fires i can change adjust the size of the capture area
         console.log('Parent width changed', newParentWidth);
+        console.log('Parent width changed', prevParentWidth);
         console.log('Parent height changed', newParentHeight);
+        console.log('Parent height changed', prevParentHeight);
+
+        console.log('Parent difference', newParentWidth - prevParentWidth);
+        console.log('Parent difference', newParentHeight - prevParentHeight);
     }
 );
 </script>
@@ -182,12 +165,22 @@ watch(
 <style lang="scss" scoped>
 .video-stream {
     position: relative;
-    width: 100%;
-    height: 100%;
     overflow: hidden;
-    .video {
+    background-color: red;
+    min-height: inherit;
+    max-height: inherit;
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    .capture-area-selection {
         width: 100%;
-        height: 100%;
+        margin: auto;
+        max-height: inherit;
+        background-color: blue;
+        .video {
+            width: 100%;
+            height: 100%;
+        }
     }
 }
 .background {

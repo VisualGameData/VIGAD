@@ -15,4 +15,12 @@ export class CaptureArea {
         this.top = top;
         this.left = left;
     }
+
+    public getId(): number {
+        return this.id;
+    }
+
+    public setId(id:number) {
+        this.id = id;
+    }
 }

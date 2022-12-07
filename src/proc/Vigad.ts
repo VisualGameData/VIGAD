@@ -166,10 +166,12 @@ export class Vigad {
     ];
     public main() {
 
-        let data:string = "Here we have some random text that was HP? 55 fetched fromplazer: kartoffelMarc the image, including som data in between."
+        let data:string = "Here we have some random text that was HP: s5 fetched fromPlazer: kartoffelMarc the image, including som data in between."
 
         // new approach
-        let regexInput = "HP?";
+
+        //let constraint = /HP:/;
+        let regexInput = "HP:";
         let regex:RegExp = this.genRegex(regexInput);
         let match = data.match(regex);
         console.log(regex);
@@ -181,12 +183,12 @@ export class Vigad {
         let dataSubstr = this.getAllSubstrings(data);
         console.log(dataSubstr);
 
-        let firstRegex: RegExp = /fetched/;
+        let firstRegex: RegExp = /HP:/;
         let firstRegexMatch = this.approxMatching(dataSubstr, firstRegex, this.genMatches(firstRegex, 50000));
         console.log("Best Match first Regex: ");
         console.log(firstRegexMatch);
 
-        let secondRegex: RegExp = /kartoffelMarc/;
+        let secondRegex: RegExp = /kartoffel/;
         let secondRegexMatch = this.approxMatching(dataSubstr, secondRegex, this.genMatches(secondRegex, 50000));
         console.log("Best Match second Regex: ");
         console.log(secondRegexMatch);
@@ -225,7 +227,7 @@ export class Vigad {
 
         // apply similar letter-to-number conversion and vise versa here (for each substring)
         valueSubstrSubstr.forEach((element, index) => {
-            valueSubstrSubstr[index] = {index: element.index, element: this.repSimLetNum(element.element)};
+            valueSubstrSubstr[index] = {index: element.index, element: this.repSimNumLet(element.element)};
         });
 
 
@@ -233,10 +235,10 @@ export class Vigad {
         console.log(valueSubstrSubstr);
         // Option 1:
         // approximate value matching -> may result in values not exactly matching regex
-        let valueRegexMatch = this.approxMatching(valueSubstrSubstr, valueRegex, this.genMatches(valueRegex, 100000));
+        //let valueRegexMatch = this.approxMatching(valueSubstrSubstr, valueRegex, this.genMatches(valueRegex, 50000));
         // Option 2:
         // exact matching -> only accept values that definitely match the valueRegex
-        /*let valueRegexMatch = {rating: -1, match: {index: -1, element: ""}};
+        let valueRegexMatch = {rating: -1, match: {index: -1, element: ""}};
         valueSubstrSubstr.every(element => {
             let exactMatch = element.element.match(valueRegex);
             if (exactMatch !== null && valueRegexMatch.match.element.length < exactMatch[0].length) {
@@ -286,6 +288,9 @@ export class Vigad {
             let exp = randexp.gen();
             if (!regLev0.includes(exp)) {
                 regLev0.push(exp);
+                console.log(exp);
+            } else {
+                // i--; May be a good performance optimization, doesn't work however if max is greater than the number of possible matches
             }
         }
         console.log("generated");
@@ -400,6 +405,9 @@ export class Vigad {
                 case 'S':
                     str = this.replaceCharAt(str, i, '5');
                     break;
+                case 's':
+                    str = this.replaceCharAt(str, i, '5');
+                    break;
                 case 'Y':
                     str = this.replaceCharAt(str, i, '5');
                     break;
@@ -444,6 +452,8 @@ export class Vigad {
                 i += this.lookAlikes[char as keyof typeof this.lookAlikes][0].length - 1;
             }
         }
+        let test = new RegExp(/[(a|b)-z]/);
+        console.log("a".match(test));
         return new RegExp(regex);
     }
 }

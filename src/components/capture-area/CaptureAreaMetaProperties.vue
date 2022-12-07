@@ -12,7 +12,9 @@
 
         <v-card-text>
             <v-row class="mb-4" no-gutters>
-                <v-col class="text-center" cols="2">Size</v-col>
+                <v-col>Size</v-col>
+            </v-row>
+            <v-row class="mb-4" no-gutters>
                 <v-col class="pr-2"
                     ><v-text-field
                         label="Width"
@@ -29,18 +31,18 @@
                 ></v-col>
             </v-row>
 
+            <v-row class="mb-4" no-gutters><v-col> Position </v-col></v-row>
             <v-row class="mb-4" no-gutters>
-                <v-col cols="2"> Position </v-col>
                 <v-col class="pr-2"
                     ><v-text-field
-                        label="X"
+                        label="Top"
                         variant="outlined"
                         :rules="[(v) => !!v || 'X-coordinate is required']"
                     ></v-text-field
                 ></v-col>
                 <v-col
                     ><v-text-field
-                        label="Y"
+                        label="Left"
                         variant="outlined"
                         :rules="[(v) => !!v || 'Y-coordinate is required']"
                     ></v-text-field
@@ -78,7 +80,6 @@
                         >Save</v-btn
                     >
                 </v-col>
-                <v-spacer></v-spacer>
                 <v-col>
                     <v-btn
                         color="red"

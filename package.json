@@ -1,58 +1,59 @@
 {
-  "name": "Vigad",
-  "version": "0.1.0",
-  "main": "dist-electron/main/index.js",
-  "description": "A desktop application to read out data.",
-  "author": "Vigad Team",
-  "private": true,
-  "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build && electron-builder",
-    "gen-uml": "tplant --input src/proc/**/*.ts --output docs/proc-uml.svg -A"
-  },
-  "engines": {
-    "node": "^14.18.0 || >=16.0.0"
-  },
-  "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.44.0",
-    "@typescript-eslint/parser": "^5.44.0",
-    "@vitejs/plugin-vue": "^3.2.0",
-    "electron": "^21.3.0",
-    "electron-builder": "^23.6.0",
-    "eslint": "^8.28.0",
-    "eslint-plugin-vue": "^9.7.0",
-    "prettier": "^2.7.1",
-    "sass": "^1.56.1",
-    "typescript": "^4.9.3",
-    "vite": "^3.2.4",
-    "vite-electron-plugin": "^0.5.2",
-    "vue": "^3.2.45",
-    "vue-cli-plugin-vuetify": "^2.5.8",
-    "vue-tsc": "^1.0.9",
-    "vuetify-loader": "^2.0.0-alpha.9"
-  },
-  "debug": {
-    "env": {
-      "VITE_DEV_SERVER_URL": "http://127.0.0.1:3344"
+    "name": "Vigad",
+    "version": "0.1.0",
+    "main": "dist-electron/main/index.js",
+    "description": "A desktop application to read out data.",
+    "author": "Vigad Team",
+    "private": true,
+    "scripts": {
+        "dev": "vite",
+        "build": "vue-tsc --noEmit && vite build && electron-builder",
+        "gen-uml": "tplant --input src/proc/**/*.ts --output docs/proc-uml.svg -A"
+    },
+    "engines": {
+        "node": "^14.18.0 || >=16.0.0"
+    },
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^5.44.0",
+        "@typescript-eslint/parser": "^5.44.0",
+        "@vitejs/plugin-vue": "^3.2.0",
+        "electron": "^21.3.0",
+        "electron-builder": "^23.6.0",
+        "eslint": "^8.28.0",
+        "eslint-plugin-vue": "^9.7.0",
+        "prettier": "^2.7.1",
+        "sass": "^1.56.1",
+        "typescript": "^4.9.3",
+        "vite": "^3.2.4",
+        "vite-electron-plugin": "^0.5.2",
+        "vue": "^3.2.45",
+        "vue-cli-plugin-vuetify": "^2.5.8",
+        "vue-tsc": "^1.0.9",
+        "vuetify-loader": "^2.0.0-alpha.9"
+    },
+    "debug": {
+        "env": {
+            "VITE_DEV_SERVER_URL": "http://127.0.0.1:3344"
+        }
+    },
+    "keywords": [
+        "electron",
+        "rollup",
+        "vite",
+        "vue3",
+        "vue"
+    ],
+    "dependencies": {
+        "@electron/remote": "^2.0.8",
+        "@mdi/font": "^7.0.96",
+        "@types/webfontloader": "^1.6.35",
+        "@vueuse/components": "^9.4.0",
+        "@vueuse/core": "^9.4.0",
+        "roboto-fontface": "^0.10.0",
+        "tesseract.js": "^3.0.3",
+        "tplant": "^3.1.0",
+        "vue-router": "^4.1.6",
+        "vue3-drag-resize": "^2.0.5",
+        "vuetify": "^3.0.1"
     }
-  },
-  "keywords": [
-    "electron",
-    "rollup",
-    "vite",
-    "vue3",
-    "vue"
-  ],
-  "dependencies": {
-    "@electron/remote": "^2.0.8",
-    "@mdi/font": "^7.0.96",
-    "@types/webfontloader": "^1.6.35",
-    "@vueuse/components": "^9.4.0",
-    "@vueuse/core": "^9.4.0",
-    "roboto-fontface": "^0.10.0",
-    "tesseract.js": "^3.0.3",
-    "tplant": "^3.1.0",
-    "vue-router": "^4.1.6",
-    "vuetify": "^3.0.1"
-  }
 }

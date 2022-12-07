@@ -39,7 +39,12 @@ export class Vigad {
      * @param left
      * @return index: number
      */
-    public addCaptureArea(width:number, height:number, top:number, left:number): number {
+    public addCaptureArea(
+        width: number,
+        height: number,
+        top: number,
+        left: number
+    ): number {
         let ca = new CaptureArea(width, height, top, left);
         this.captureAreas.push(ca);
         ca.setId(this.captureAreas.length - 1);
@@ -62,5 +67,13 @@ export class Vigad {
      */
     public getCaptureArea(id: number): CaptureArea {
         return this.captureAreas[id];
+    }
+
+    /**
+     * Gets all capture area
+     * @return CaptureArea
+     */
+    public getAllCaptureAreas(): CaptureArea[] {
+        return this.captureAreas;
     }
 }

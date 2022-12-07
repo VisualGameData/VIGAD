@@ -2,7 +2,7 @@
 export class StreamHandler {
     private static instance: StreamHandler;
 
-    private currentSelectedSource: Object;
+    private currentSelectedSource!: MediaStream;
     private desktopCaptureSources: Object[];
     private allMediaStreams: MediaStream[];
     private isLoadingScreensAndApplications: boolean;
@@ -11,7 +11,6 @@ export class StreamHandler {
      * Create a private constructor to prevent multiple instances
      */
     private constructor() {
-        this.currentSelectedSource = {};
         this.desktopCaptureSources = [];
         this.allMediaStreams = [];
         this.isLoadingScreensAndApplications = false;
@@ -68,7 +67,7 @@ export class StreamHandler {
      *
      * @returns the current selected source Object
      */
-    public getCurrentSelectedSource(): Object {
+    public getCurrentSelectedSource(): MediaStream {
         return this.currentSelectedSource;
     }
 

@@ -4,6 +4,16 @@
         subtitle="Show you all the available screen and application sources"
         :loading="true"
     >
+        <template v-slot:actions>
+            <v-btn
+                @click="fetchAllStreams()"
+                color="primary"
+                width="100%"
+                prepend-icon="mdi-refresh"
+                variant="tonal"
+                >Refresh</v-btn
+            >
+        </template>
         <template v-slot:default>
             <div class="windows-wrapper">
                 <v-card
@@ -24,15 +34,6 @@
                         ></video>
                     </v-card-text>
                 </v-card>
-            </div>
-            <div class="pa-2">
-                <v-btn
-                    @click="fetchAllStreams()"
-                    color="primary"
-                    width="100%"
-                    tonal
-                    >Refresh</v-btn
-                >
             </div>
         </template>
     </ViewComponent>

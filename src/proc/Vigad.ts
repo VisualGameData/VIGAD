@@ -166,10 +166,10 @@ export class Vigad {
     ];
     public main() {
 
-        let data:string = "Here we have some random text that was HP: s5 fetched fromPlazer: kartoffelMarc the image, including som data in between."
+        let data:string = "s(hlsserverorls Level 6 and * v Here we have some random text that was HP: s5 fetched fromPlazer: kartoffelMarc the image, including som data in between."
 
         // new approach
-
+/*
         //let constraint = /HP:/;
         let regexInput = "HP:";
         let regex:RegExp = this.genRegex(regexInput);
@@ -177,23 +177,23 @@ export class Vigad {
         console.log(regex);
         console.log(match);
         // <<- new approach
+*/
 
-        /*
 
         let dataSubstr = this.getAllSubstrings(data);
         console.log(dataSubstr);
 
-        let firstRegex: RegExp = /HP:/;
+        let firstRegex: RegExp = /this server or is/;
         let firstRegexMatch = this.approxMatching(dataSubstr, firstRegex, this.genMatches(firstRegex, 50000));
         console.log("Best Match first Regex: ");
         console.log(firstRegexMatch);
 
-        let secondRegex: RegExp = /kartoffel/;
+        let secondRegex: RegExp = /Here/;
         let secondRegexMatch = this.approxMatching(dataSubstr, secondRegex, this.genMatches(secondRegex, 50000));
         console.log("Best Match second Regex: ");
         console.log(secondRegexMatch);
 
-        let valueRegex = /[a-zA-Z]*Player/;
+        let valueRegex = /Player/;
         let valueSubstr = data.slice(firstRegexMatch.match.index + firstRegexMatch.match.element.length, secondRegexMatch.match.index);
 
         // Option 1: test against all substrings.
@@ -204,7 +204,7 @@ export class Vigad {
         // may cut parts of the value to be extracted for unspecific regex (with variable length)
         // -> for exact value matching, this is always the way to go
         // -> for approximate value matching, this MAY BE the way to go if regex is very specific (and constraints are tight)
-        //let valueSubstrSubstr = this.getAllSubstrings(valueSubstr);
+        let valueSubstrSubstr = this.getAllSubstrings(valueSubstr);
         // this is probably most useful for constraint-regex-matching (not for actually extracting the value) => if value is not very specific
 
         // Option 2: test against substrings sliced at spaces
@@ -213,11 +213,12 @@ export class Vigad {
         // works with less specific regex
         // works with less tight constraints
         // -> for approximate value matching with lose constraints
-        let valueSubstrSubstr:{index:number, element:string}[] = []; // only test substrings sliced at ' '
+        /*let valueSubstrSubstr:{index:number, element:string}[] = []; // only test substrings sliced at ' '
         valueSubstr.split(" ").forEach(element => {
             valueSubstrSubstr.push({index: -1, element: element});
-        });
+        });*/
 
+        // NOT IRRELEVANT if you for example want to get everything (between constraints) that contains valueRegex
         // ! PROBABLY IRRELEVANT ! Option 3: test against entire (sub)string
         // less error tolerant
         // least performance intensive
@@ -245,10 +246,10 @@ export class Vigad {
                 valueRegexMatch = {rating: 1, match: {index: -1, element: exactMatch[0]}};
             }
             return true;
-        });*/
+        });
 
-        //console.log("Best Match value Regex: ");
-        //console.log(valueRegexMatch);
+        console.log("Best Match value Regex: ");
+        console.log(valueRegexMatch);
 
     }
 
@@ -288,7 +289,6 @@ export class Vigad {
             let exp = randexp.gen();
             if (!regLev0.includes(exp)) {
                 regLev0.push(exp);
-                console.log(exp);
             } else {
                 // i--; May be a good performance optimization, doesn't work however if max is greater than the number of possible matches
             }

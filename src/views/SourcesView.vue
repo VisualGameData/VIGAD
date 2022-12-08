@@ -5,7 +5,7 @@
         :loading="isLoadingScreensAndWindows"
     >
         <template v-slot:default>
-            <v-tabs v-model="tabs" class="mb-4" color="primary" grow>
+            <v-tabs v-model="tabs" class="mb-4 mr-2 ml-2" color="primary" grow>
                 <v-tooltip location="top" text="All screens">
                     <template v-slot:activator="{ props }">
                         <v-tab v-bind="props" value="screens">
@@ -23,7 +23,10 @@
                 </v-tooltip>
             </v-tabs>
 
-            <div v-if="!isLoadingScreensAndWindows" class="windows-wrapper">
+            <div
+                v-if="!isLoadingScreensAndWindows"
+                class="windows-wrapper mr-2 ml-2"
+            >
                 <v-window v-model="tabs">
                     <v-window-item value="screens">
                         <v-btn
@@ -104,7 +107,7 @@
                     </v-window-item>
                 </v-window>
             </div>
-            <div v-else>Loading ...</div>
+            <div v-else class="mr-2 ml-2">Loading ...</div>
         </template>
     </ViewComponent>
 </template>

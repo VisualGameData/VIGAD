@@ -39,7 +39,7 @@
                 prepend-icon="mdi-play"
                 value="run"
             >
-                Start Capturing
+                Capturing
             </v-btn>
 
             <v-btn

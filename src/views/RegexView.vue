@@ -2,7 +2,7 @@
     <ViewComponent
         title="Regular Expressions"
         subtitle="Define what values are search for and where they are found."
-        :loading="true"
+        :loading="false"
     >
         <template v-slot:actions>
             <v-btn

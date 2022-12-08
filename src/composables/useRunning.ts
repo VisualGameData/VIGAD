@@ -5,6 +5,9 @@ import { ref } from 'vue';
  */
 export const isRunning = ref(false);
 
+/**
+ * Function that can be used to start and stop the capturing.
+ */
 export const useRunning = () => {
     const start = () => {
         isRunning.value = true;

@@ -2,23 +2,18 @@
     <ViewComponent
         title="Run Capture areas"
         subtitle="This logs the captured areas to the console"
-        :loading="true"
+        :loading="isRunning"
     >
-        <template v-slot:default> Running ? </template>
+        <template v-slot:default>
+            <v-btn @click="useRunning().start()">Start running</v-btn
+            ><v-btn @click="useRunning().stop()">Stop running</v-btn></template
+        >
     </ViewComponent>
 </template>
 
 <script setup lang="ts">
 import ViewComponent from '@/components/ViewComponent.vue';
-import { onMounted, onUnmounted } from 'vue';
-
-onMounted(() => {
-    console.log('start Capturing');
-});
-
-onUnmounted(() => {
-    console.log('stop Capturing - close all');
-});
+import { useRunning, isRunning } from '@/composables/useRunning';
 </script>
 
 <style lang="scss" scoped></style>

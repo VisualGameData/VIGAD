@@ -118,6 +118,7 @@ body {
 .changing-view {
     overflow-y: scroll;
 }
+
 #panel {
     min-width: 300px;
     margin-right: 25px;

@@ -6,7 +6,7 @@
             <!-- Provides the application the proper gutter -->
             <v-container class="ma-0 pt-0 pb-0" fluid>
                 <v-row cols="12" no-gutters>
-                    <v-col cols="2" class="test">
+                    <v-col cols="2" id="panel">
                         <v-sheet
                             class="changing-view"
                             min-height="85vh"
@@ -118,7 +118,8 @@ body {
 .changing-view {
     overflow-y: scroll;
 }
-.test {
-    min-width: 275px;
+#panel {
+    min-width: 300px;
+    margin-right: 25px;
 }
 </style>

@@ -2,7 +2,7 @@
     <ViewComponent
         title="Sources"
         subtitle="Show you all the available screen and application sources"
-        :loading="true"
+        :loading="isLoadingScreensAndWindows"
     >
         <template v-slot:actions>
             <v-btn
@@ -15,7 +15,7 @@
             >
         </template>
         <template v-slot:default>
-            <div class="windows-wrapper">
+            <div v-if="!isLoadingScreensAndWindows" class="windows-wrapper">
                 <v-card
                     v-for="(source, index) in desktopVideoStreamSources"
                     :key="source.id"
@@ -59,9 +59,8 @@ const desktopVideoStreamSources = ref();
 // All MediaStream sources
 const streams = ref<MediaStream[]>([]);
 
-const isLoadingScreensAndWindows = computed(() => {
-    return streamHandler.getIsLoadingScreensAndApplications();
-});
+// Is the application loading the screens and windows local propertie
+const isLoadingScreensAndWindows = ref(false);
 
 onMounted(() => {
     fetchAllStreams();
@@ -71,6 +70,8 @@ onMounted(() => {
  * Get all available sources
  */
 async function fetchAllStreams() {
+    isLoadingScreensAndWindows.value = true;
+
     // wait for the fetched screens and windows
     desktopVideoStreamSources.value =
         await streamHandler.getScreenAndApplicationSources();
@@ -79,6 +80,8 @@ async function fetchAllStreams() {
     Array.from(desktopVideoStreamSources.value).forEach(function (element) {
         setSourceForVideoNode(element);
     });
+
+    isLoadingScreensAndWindows.value = false;
 }
 
 async function setSourceForVideoNode(source: any) {

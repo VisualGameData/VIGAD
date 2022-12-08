@@ -1,20 +1,41 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# Vigad
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+## Description
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+Welcome aboard fellow developers, this is an application where you are able to capture areas on your screen and search for a specific value inside of it. With the generated data, there are endless possibilities to use it for, as well as endless use cases for the application.
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+## Requirements
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+You need to have Node.js installed on your system.
+
+## How to Install and Run the Project
+
+Currently, we do not have a release ready version of Vigad, but if you are interested to see what is happening, you can install in locally onto your system.
+
+Foremost, you need to clone our repository.
+
+```sh
+git clone https://github.com/VisualGameData/VIGAD.git
+```
+
+Afterwards, you need to install the packages.
+
+```sh
+npm i
+```
+
+Then there are two possibilities, you can either start the application in developer mode via.
+
+```sh
+npm run dev
+```
+
+Or if you would like to properly install the application as a program onto your system, you can write
+
+```sh
+npm run build
+```
+
+and then execute the generated executable file (Windows) and you should be able to start the application and work with it.
+
+Keep in mind, the build version may contain some problems we didn't fix yet.

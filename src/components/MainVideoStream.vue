@@ -3,7 +3,7 @@
         <v-responsive id="stream" ref="stream" class="capture-area-selection">
             <video id="mainVideo" class="video" autoplay></video>
             <VueDragResize
-                v-if="rerender"
+                v-if="isRerendering"
                 v-for="captureArea in captureAreas"
                 :key="captureArea.getId()"
                 :w="captureArea.getWidth()"
@@ -43,7 +43,7 @@ import { useElementSize } from '@vueuse/core';
 import { Vigad } from '@/proc/Vigad';
 // @ts-ignore
 import VueDragResize from 'vue3-drag-resize';
-import { rerender } from './Rerender';
+import { isRerendering } from '@/composables/useForceRerender';
 import { Rectangle } from './Rectangle';
 
 /**

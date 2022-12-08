@@ -17,7 +17,7 @@
         <template v-slot:default>
             <v-expansion-panels class="mb-6" multiple>
                 <v-expansion-panel
-                    v-if="rerender"
+                    v-if="isRerendering"
                     v-for="captureArea in captureAreas"
                     :key="captureArea.getId()"
                 >
@@ -42,7 +42,10 @@ import ViewComponent from '@/components/ViewComponent.vue';
 import CaptureAreaMetaProperties from '@/components/capture-area/CaptureAreaMetaProperties.vue';
 import CaptureAreaSearchValue from '@/components/capture-area/CaptureAreaSearchValue.vue';
 import { Vigad } from '@/proc/Vigad';
-import { rerender, forceRerender } from '@/components/Rerender';
+import {
+    isRerendering,
+    useForceRerender,
+} from '@/composables/useForceRerender';
 
 /**
  * Get singelton instance reference to vigad
@@ -59,7 +62,7 @@ const captureAreas = ref(vigad.value.getAllCaptureAreas());
  */
 async function addCaptureArea() {
     vigad.value.addCaptureArea(100, 100, 0, 0);
-    await forceRerender();
+    await useForceRerender();
 }
 </script>
 

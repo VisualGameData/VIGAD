@@ -1,27 +1,21 @@
 <template>
-    <ViewComponent
-        title="Run Capture areas"
-        subtitle="This logs the captured areas to the console"
-        :loading="isRunning"
-    >
+    <ViewComponent title="Interpreting" :loading="isRunning">
         <template v-slot:actions>
             <v-btn
                 v-if="!isRunning"
-                color="primary"
-                width="100%"
+                class="rounded-pill"
                 prepend-icon="mdi-play"
                 variant="tonal"
                 @click="useRunning().start()"
-                >Start capturing</v-btn
+                >Start</v-btn
             >
             <v-btn
                 v-else
-                color="primary"
-                width="100%"
+                class="rounded-pill"
                 prepend-icon="mdi-stop"
                 variant="tonal"
                 @click="useRunning().stop()"
-                >Stop capturing</v-btn
+                >Stop</v-btn
             >
         </template>
         <template v-slot:default> Log here</template>

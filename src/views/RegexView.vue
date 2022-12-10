@@ -1,17 +1,12 @@
 <template>
-    <ViewComponent
-        title="Regular Expressions"
-        subtitle="Define what values are search for and where they are found."
-        :loading="false"
-    >
+    <ViewComponent title="Regex" :loading="false">
         <template v-slot:actions>
             <v-btn
-                color="primary"
-                width="100%"
+                class="rounded-pill"
                 prepend-icon="mdi-plus"
                 variant="tonal"
                 @click="addCaptureArea()"
-                >Create Capture Area</v-btn
+                >Add Capture Area</v-btn
             >
         </template>
         <template v-slot:default>
@@ -37,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, ref } from 'vue';
+import { ref } from 'vue';
 import ViewComponent from '@/components/ViewComponent.vue';
 import CaptureAreaMetaProperties from '@/components/capture-area/CaptureAreaMetaProperties.vue';
 import CaptureAreaSearchValue from '@/components/capture-area/CaptureAreaSearchValue.vue';

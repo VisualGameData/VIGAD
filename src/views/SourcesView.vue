@@ -1,43 +1,25 @@
 <template>
-    <ViewComponent
-        title="Sources"
-        subtitle="Show you all the available screen and application sources"
-        :loading="isLoadingScreensAndWindows"
-    >
+    <ViewComponent title="Sources" :loading="isLoadingScreensAndWindows">
+        <template v-slot:actions>
+            <v-btn
+                class="rounded-pill"
+                prepend-icon="mdi-refresh"
+                variant="tonal"
+                @click="fetchAllStreams()"
+                :disabled="isLoadingScreensAndWindows"
+                >Refresh</v-btn
+            >
+        </template>
         <template v-slot:default>
-            <v-tabs v-model="tabs" class="mb-4 mr-2 ml-2" color="primary" grow>
-                <v-tooltip location="top" text="All screens">
-                    <template v-slot:activator="{ props }">
-                        <v-tab v-bind="props" value="screens">
-                            <v-icon>mdi-monitor</v-icon>
-                        </v-tab>
-                    </template>
-                </v-tooltip>
+            <v-tabs v-model="tabs" class="mb-4" color="primary" grow>
+                <v-tab width="50%" value="screens"> Screens </v-tab>
 
-                <v-tooltip location="top" text="All applications">
-                    <template v-slot:activator="{ props }">
-                        <v-tab v-bind="props" value="applications">
-                            <v-icon>mdi-application</v-icon>
-                        </v-tab>
-                    </template>
-                </v-tooltip>
+                <v-tab width="50%" value="applications"> Applications </v-tab>
             </v-tabs>
 
-            <div
-                v-if="!isLoadingScreensAndWindows"
-                class="windows-wrapper mr-2 ml-2"
-            >
+            <div v-if="!isLoadingScreensAndWindows" class="windows-wrapper">
                 <v-window v-model="tabs">
                     <v-window-item value="screens">
-                        <v-btn
-                            class="mb-4"
-                            variant="plain"
-                            width="100%"
-                            prepend-icon="mdi-refresh"
-                            @click="fetchAllStreams()"
-                        >
-                            Refresh
-                        </v-btn>
                         <div
                             v-if="!isLoadingScreensAndWindows"
                             class="windows-wrapper"
@@ -50,7 +32,7 @@
                                         streams[index]
                                     )
                                 "
-                                variant="tonal"
+                                variant="outlined"
                                 class="mb-2"
                             >
                                 <v-card-title>{{ source.name }}</v-card-title>
@@ -66,15 +48,6 @@
                     </v-window-item>
 
                     <v-window-item value="applications">
-                        <v-btn
-                            class="mb-4"
-                            variant="plain"
-                            width="100%"
-                            prepend-icon="mdi-refresh"
-                            @click="fetchAllStreams()"
-                        >
-                            Refresh
-                        </v-btn>
                         <div
                             v-if="!isLoadingScreensAndWindows"
                             class="windows-wrapper"
@@ -89,7 +62,7 @@
                                         streams[lastScreenIndex + index]
                                     )
                                 "
-                                variant="tonal"
+                                variant="outlined"
                                 class="mb-2"
                             >
                                 <v-card-title>{{ source.name }}</v-card-title>

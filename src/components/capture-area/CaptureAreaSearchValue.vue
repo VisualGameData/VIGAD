@@ -1,27 +1,44 @@
 <template>
-    <v-card
-        rounded="lg"
-        color="background"
-        class="mb-4"
-        prepend-icon="mdi-magnify"
-    >
-        <template v-slot:title> Find Value </template>
+    <v-card rounded="lg" color="background" class="mb-4">
+        <template v-slot:title> Find value </template>
 
         <v-divider color="primary" class="mb-4"></v-divider>
 
         <v-card-text>
+            <v-checkbox label="Enable Search"></v-checkbox>
             <v-row class="mb-4" no-gutter>
                 <v-col
                     ><v-text-field
                         label="Regular Expression"
                         placeholder="Enter a regular expression"
                         variant="outlined"
-                        dense
                         clear-icon="mdi-close-circle"
                         :rules="[
                             (v) => !!v || 'Regular expression is required',
                         ]"
-                    ></v-text-field
+                    >
+                        <template v-slot:prepend-inner>
+                            <v-tooltip location="bottom">
+                                <template v-slot:activator="{ props }">
+                                    <v-icon
+                                        v-bind="props"
+                                        icon="mdi-help-circle-outline"
+                                    ></v-icon>
+                                </template>
+
+                                I'm a tooltip
+                            </v-tooltip>
+                        </template>
+                        <template v-slot:append-inner>
+                            <v-fade-transition leave-absolute>
+                                <v-progress-circular
+                                    v-if="true"
+                                    color="info"
+                                    indeterminate
+                                    size="24"
+                                ></v-progress-circular>
+                            </v-fade-transition>
+                        </template> </v-text-field
                 ></v-col>
             </v-row>
 

@@ -2,27 +2,17 @@
     <v-app theme="dark">
         <!-- Main Content view-->
         <v-main>
-            <v-container fluid> </v-container>
             <!-- Provides the application the proper gutter -->
-            <v-container class="ma-0 pt-0 pb-0" fluid>
+            <v-container fluid>
                 <v-row cols="12" no-gutters>
-                    <v-col cols="2" id="panel">
-                        <v-sheet
-                            class="changing-view"
-                            min-height="85vh"
-                            max-height="85vh"
-                            rounded="lg"
-                        >
+                    <v-col cols="2" md="4" id="panel">
+                        <v-sheet rounded="lg" class="proper-height">
                             <router-view />
                         </v-sheet>
                     </v-col>
 
                     <v-col>
-                        <v-sheet
-                            min-height="85vh"
-                            max-height="85vh"
-                            rounded="lg"
-                        >
+                        <v-sheet class="proper-height" rounded="lg">
                             <MainVideoStream />
                         </v-sheet>
                     </v-col>
@@ -31,34 +21,16 @@
         </v-main>
 
         <!-- Bottom Navigation -->
-        <v-bottom-navigation grow>
-            <v-btn
-                to="/run"
-                tonal
-                color="success"
-                prepend-icon="mdi-play"
-                value="run"
-            >
+        <v-bottom-navigation :elevation="24" bg-color="surface" grow>
+            <v-btn to="/run" tonal prepend-icon="mdi-play" value="run">
                 Capturing
             </v-btn>
 
-            <v-btn
-                to="/"
-                tonal
-                color="success"
-                prepend-icon="mdi-monitor"
-                value="source"
-            >
+            <v-btn to="/" tonal prepend-icon="mdi-monitor" value="source">
                 Source
             </v-btn>
 
-            <v-btn
-                to="/regex"
-                tonal
-                color="success"
-                prepend-icon="mdi-regex"
-                value="regex"
-            >
+            <v-btn to="/regex" tonal prepend-icon="mdi-regex" value="regex">
                 Regex
             </v-btn>
         </v-bottom-navigation>
@@ -96,6 +68,7 @@ html {
     width: 100%;
     height: 100%;
     font-family: YouTube Sans, Roboto, sans-serif;
+    overflow: hidden !important;
 }
 
 body {
@@ -115,12 +88,16 @@ body {
     -webkit-app-region: no-drag;
 }
 
-.changing-view {
-    overflow-y: scroll;
+.proper-height {
+    // 56px is the height of the bottom navigation
+    // 16px is the padding of the v-container which is at the bottom and top
+    min-height: calc(100vh - 56px - 16px - 16px);
+    max-height: calc(100vh - 56px - 16px - 16px);
 }
 
 #panel {
-    min-width: 300px;
-    margin-right: 25px;
+    overflow-y: auto;
+    min-width: 375px;
+    margin-right: 16px;
 }
 </style>

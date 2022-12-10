@@ -107,7 +107,7 @@ onMounted(() => {
 .video-stream {
     position: relative;
     overflow: hidden;
-    background-color: red;
+    // background-color: red;
     min-height: inherit;
     max-height: inherit;
     margin: 0 auto; /*centers the video*/
@@ -118,7 +118,7 @@ onMounted(() => {
         position: relative;
         // width: 100%;
         max-height: inherit;
-        background-color: blue;
+        // background-color: blue;
         display: flex;
         .video {
             position: relative;

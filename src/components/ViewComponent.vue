@@ -9,7 +9,7 @@
     </v-card>
 
     <v-container class="fill-height" fluid>
-        <div>
+        <div class="scrollable">
             <slot name="default"></slot>
         </div>
     </v-container>
@@ -26,5 +26,9 @@ const props = defineProps<{
 .header-container {
     display: flex;
     justify-content: space-between;
+}
+.scrollable {
+    max-height: calc(100vh - 56px - 16px - 16px - 68px - 16px);
+    overflow: auto;
 }
 </style>

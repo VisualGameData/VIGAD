@@ -32,7 +32,6 @@
                                         streams[index]
                                     )
                                 "
-                                variant="outlined"
                                 class="mb-2"
                             >
                                 <v-card-title>{{ source.name }}</v-card-title>
@@ -62,7 +61,6 @@
                                         streams[lastScreenIndex + index]
                                     )
                                 "
-                                variant="outlined"
                                 class="mb-2"
                             >
                                 <v-card-title>{{ source.name }}</v-card-title>

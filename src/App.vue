@@ -6,7 +6,11 @@
             <v-container fluid>
                 <v-row cols="12" no-gutters>
                     <v-col cols="2" md="4" id="panel">
-                        <v-sheet rounded="lg" class="proper-height">
+                        <v-sheet
+                            color="background"
+                            rounded="lg"
+                            class="proper-height"
+                        >
                             <router-view />
                         </v-sheet>
                     </v-col>
@@ -93,11 +97,13 @@ body {
     // 16px is the padding of the v-container which is at the bottom and top
     min-height: calc(100vh - 56px - 16px - 16px);
     max-height: calc(100vh - 56px - 16px - 16px);
+    overflow: hidden;
 }
 
 #panel {
     overflow-y: auto;
     min-width: 375px;
+    max-width: 375px;
     margin-right: 16px;
 }
 </style>

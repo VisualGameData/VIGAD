@@ -18,7 +18,67 @@
                 >Stop</v-btn
             >
         </template>
-        <template v-slot:default> Log here</template>
+        <template v-slot:default>
+            <v-alert density="compact" type="success" closable>
+                The interpretation was a success.
+            </v-alert>
+
+            <br />
+
+            <v-alert
+                border="start"
+                density="compact"
+                icon="mdi-information"
+                title="Success"
+                variant="elevated"
+                type="success"
+                closable
+            >
+                The interpretation was a success.
+            </v-alert>
+
+            <br />
+
+            <v-alert border="start" density="compact" type="info" closable>
+                I'm an info alert.
+            </v-alert>
+
+            <br />
+
+            <v-alert
+                border="start"
+                density="compact"
+                title="Info"
+                type="info"
+                closable
+            >
+                I'm an info alert.
+            </v-alert>
+
+            <br />
+
+            <v-alert
+                border="start"
+                density="compact"
+                title="Warning"
+                type="warning"
+                closable
+            >
+                I'm a warning alert.
+            </v-alert>
+
+            <br />
+
+            <v-alert
+                border="start"
+                density="compact"
+                title="Error"
+                type="error"
+                closable
+            >
+                Something whent wrong!
+            </v-alert>
+        </template>
     </ViewComponent>
 </template>
 

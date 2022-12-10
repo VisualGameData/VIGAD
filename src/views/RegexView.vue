@@ -10,13 +10,16 @@
             >
         </template>
         <template v-slot:default>
-            <v-expansion-panels class="mb-6" multiple>
+            <v-expansion-panels multiple>
                 <v-expansion-panel
                     v-if="isRerendering"
                     v-for="captureArea in captureAreas"
                     :key="captureArea.getId()"
                 >
-                    <v-expansion-panel-title expand-icon="mdi-menu-down">
+                    <v-expansion-panel-title
+                        class="pa-4"
+                        expand-icon="mdi-menu-down"
+                    >
                         Capture area
                         <!-- {{ captureArea.getId() }} -->
                     </v-expansion-panel-title>

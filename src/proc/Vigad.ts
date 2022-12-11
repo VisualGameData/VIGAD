@@ -12,6 +12,9 @@ export class Vigad {
     private tesseractInterval!: NodeJS.Timeout;
     private intervalRunning: boolean;
 
+    private previewWidth: number;
+    private previewHeight: number;
+
     /**
      * Create a private constructor to prevent multiple instances
      */
@@ -21,6 +24,8 @@ export class Vigad {
         this.regexHandler = RegexHandler.getInstance();
         this.captureAreas = [];
         this.intervalRunning = false;
+        this.previewWidth = 0;
+        this.previewHeight = 0;
     }
 
     /**
@@ -34,6 +39,14 @@ export class Vigad {
         }
 
         return this.instance;
+    }
+
+    public setPreviewWidth(width: number): void {
+        this.previewWidth = width;
+    }
+
+    public setPreviewHeight(height: number): void {
+        this.previewHeight = height;
     }
 
     public getStreamHandlerInstance(): StreamHandler {
@@ -102,9 +115,8 @@ export class Vigad {
                         } else if (regexGrp.getConstraintRegex()[1].getRegex().toString() === "/(?:)/") {
                             this.regexHandler.findValue(value.data, regexGrp.getValueRegex(), regexGrp.getConstraintRegex()[0]);
                         }
-
                     });
-                });
+                }, this.previewWidth, this.previewHeight);
             }, 500);
             this.intervalRunning = true;
             console.log("started tesseract");

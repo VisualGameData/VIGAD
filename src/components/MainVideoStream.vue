@@ -24,7 +24,9 @@
                 @resizing="changeSize($event, captureArea)"
                 @dragging="changePosition($event, captureArea)"
                 ref="drag"
+                class="center-text"
             >
+                CA: {{ captureArea.getId() }}
                 <!-- <p>
                     Postioning {{ captureArea.getTop() }} x
                     {{ captureArea.getLeft() }}
@@ -130,6 +132,7 @@ onMounted(() => {
     }
 }
 .draggable-capture-area {
+    text-align: center;
     background-color: rgba($color: #03dac6, $alpha: 0.15);
     border: 1.5px solid rgba($color: #ffffff, $alpha: 0.5);
 }

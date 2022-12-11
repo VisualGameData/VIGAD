@@ -35,21 +35,21 @@
         <div v-if="expand" class="pa-4">
             <v-combobox
                 v-model="currentMatchingOption"
-                label="Matching Options"
+                label="Matching"
                 :items="matchingOptions"
                 variant="underlined"
             ></v-combobox>
 
             <v-combobox
                 v-model="currentSlicingOption"
-                label="Slicing Options"
+                label="Slicing"
                 :items="slicingOptions"
                 variant="underlined"
             ></v-combobox>
 
             <v-combobox
                 v-model="currentSimilarityOption"
-                label="Similarity Options"
+                label="Similarity"
                 :items="similarityOptions"
                 variant="underlined"
             ></v-combobox>

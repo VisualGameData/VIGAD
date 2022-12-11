@@ -1,15 +1,15 @@
 <template>
     <v-text-field
         v-model="valueRegex"
-        :label="inputLabel"
-        :placeholder="inputPlaceholder"
+        label="Search value"
+        placeholder="Enter search value"
         variant="outlined"
         clear-icon="mdi-close-circle"
         :rules="[(v:string) => !!v || 'Regular expression is required']"
         hide-details="auto"
     >
         <template v-slot:prepend-inner>
-            <v-icon :icon="prependIcon"></v-icon>
+            <v-icon icon="mdi-table-column"></v-icon>
         </template>
         <template v-slot:append-inner>
             <v-fade-transition leave-absolute>
@@ -87,58 +87,113 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
+import { Vigad } from '@/proc/Vigad';
 
 // Later on we will use proper enums for these options
 const props = defineProps<{
-    inputLabel: string;
-    inputPlaceholder: string;
-    prependIcon: string;
-    matchingOption: string;
-    slicingOption: string;
-    similarityOption: string;
+    captureAreaId: number;
 }>();
+
+/**
+ * Get singelton instance reference to vigad
+ */
+const vigad = ref(Vigad.getInstance());
 
 const expand = ref(false);
 
-const valueRegex = ref('');
+const valueRegex = ref(
+    vigad.value
+        .getCaptureArea(props.captureAreaId)
+        .getRegexGroups()[0]
+        .getValueRegex()
+        .getRegex()
+);
 watch(valueRegex, (newValue) => {
-    // TODO: update capture area properties with new value
     console.log(newValue);
+    vigad.value
+        .getCaptureArea(props.captureAreaId)
+        .getRegexGroups()[0]
+        .getValueRegex()
+        .setRegex(newValue);
 });
 
-const defaultMatchingOption = ref(props.matchingOption);
+const defaultMatchingOption = ref(
+    vigad.value
+        .getCaptureArea(props.captureAreaId)
+        .getRegexGroups()[0]
+        .getValueRegex()
+        .getMatching()
+);
 const currentMatchingOption = ref(defaultMatchingOption.value);
 const matchingOptions = ref(['Approximate', 'Exact']);
 
 watch(currentMatchingOption, (newValue) => {
     // TODO: update capture area properties with new value
     console.log(newValue);
+    vigad.value
+        .getCaptureArea(props.captureAreaId)
+        .getRegexGroups()[0]
+        .getValueRegex()
+        .setMatching(newValue);
 });
 
-const defaultSlicingOptions = ref(props.slicingOption);
+const defaultSlicingOptions = ref(
+    vigad.value
+        .getCaptureArea(props.captureAreaId)
+        .getRegexGroups()[0]
+        .getValueRegex()
+        .getSlicing()
+);
 const currentSlicingOption = ref(defaultSlicingOptions.value);
 const slicingOptions = ref(['Substrings', 'Spaces', 'Entire string']);
 
 watch(currentSlicingOption, (newValue) => {
     // TODO: update capture area properties with new value
     console.log(newValue);
+    vigad.value
+        .getCaptureArea(props.captureAreaId)
+        .getRegexGroups()[0]
+        .getValueRegex()
+        .setSlicing(newValue);
 });
 
-const defaultSimilarityOptions = ref(props.similarityOption);
+const defaultSimilarityOptions = ref(
+    vigad.value
+        .getCaptureArea(props.captureAreaId)
+        .getRegexGroups()[0]
+        .getValueRegex()
+        .getSimilarity()
+);
 const currentSimilarityOption = ref(defaultSimilarityOptions.value);
 const similarityOptions = ref(['None', 'Number to Letter', 'Letter to Number']);
 
 watch(currentSimilarityOption, (newValue) => {
     // TODO: update capture area properties with new value
     console.log(newValue);
+    vigad.value
+        .getCaptureArea(props.captureAreaId)
+        .getRegexGroups()[0]
+        .getValueRegex()
+        .setSimilarity(newValue);
 });
 
-const defaultNumberOfMatches = ref(10000);
+const defaultNumberOfMatches = ref(
+    vigad.value
+        .getCaptureArea(props.captureAreaId)
+        .getRegexGroups()[0]
+        .getValueRegex()
+        .getMatchesNum()
+);
 const currentNumberOfMatches = ref(defaultNumberOfMatches.value);
 
 watch(currentNumberOfMatches, (newValue) => {
     // TODO: update capture area properties with new value
     console.log(newValue);
+    vigad.value
+        .getCaptureArea(props.captureAreaId)
+        .getRegexGroups()[0]
+        .getValueRegex()
+        .setMatchesNum(newValue);
 });
 
 function reset() {

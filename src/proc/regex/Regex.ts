@@ -1,5 +1,5 @@
-import RandExp from "randexp";
-import { RegexHandler } from "./RegexHandler";
+import RandExp from 'randexp';
+import { RegexHandler } from './RegexHandler';
 
 export abstract class Regex {
     protected id: number;
@@ -8,18 +8,21 @@ export abstract class Regex {
     protected slicing: Slicing;
     protected similarity: Similarity;
     protected matchesNum: number;
-    protected substrings: {index: number, element: string}[];
-    protected lastBestMatch: {rating: number, match: {index: number, element: string}};
+    protected substrings: { index: number; element: string }[];
+    protected lastBestMatch: {
+        rating: number;
+        match: { index: number; element: string };
+    };
 
-    protected constructor () {
+    protected constructor() {
         this.id = 0;
-        this.regex = new RegExp("");
+        this.regex = new RegExp('');
         this.matching = Matching.EXACT;
         this.slicing = Slicing.SUBSTR;
         this.similarity = Similarity.NONE;
         this.matchesNum = 10000;
         this.substrings = [];
-        this.lastBestMatch = {rating: -1, match: {index: -1, element: ""}}
+        this.lastBestMatch = { rating: -1, match: { index: -1, element: '' } };
     }
 
     public getId(): number {
@@ -66,15 +69,18 @@ export abstract class Regex {
         this.matchesNum = matchesNum;
     }
 
-    public getSubstrings(): {index: number, element: string}[] {
+    public getSubstrings(): { index: number; element: string }[] {
         return this.substrings;
     }
 
-    public setSubstrings(substrings: {index: number, element: string}[]) {
+    public setSubstrings(substrings: { index: number; element: string }[]) {
         this.substrings = substrings;
     }
 
-    public getLastBestMatch(): {rating: number, match: {index: number, element: string}} {
+    public getLastBestMatch(): {
+        rating: number;
+        match: { index: number; element: string };
+    } {
         return this.lastBestMatch;
     }
 
@@ -83,18 +89,21 @@ export abstract class Regex {
      * @param data
      * @return void
      */
-    public genSubstrings(data:string) {
+    public genSubstrings(data: string) {
         switch (this.slicing) {
             case Slicing.SUBSTR:
                 this.substrings = this.getAllSubstrings(data!);
                 break;
             case Slicing.SPACES:
-                data.split(" ").forEach(element => {
-                    this.substrings.push({index: this.indexOfFirst(data), element: element});
+                data.split(' ').forEach((element) => {
+                    this.substrings.push({
+                        index: this.indexOfFirst(data),
+                        element: element,
+                    });
                 });
                 break;
             case Slicing.ENTIRE_STR:
-                this.substrings.push({index: 0, element: data});
+                this.substrings.push({ index: 0, element: data });
                 break;
         }
     }
@@ -103,12 +112,18 @@ export abstract class Regex {
         switch (this.similarity) {
             case Similarity.NUM_LET:
                 this.substrings.forEach((element, index) => {
-                    this.substrings[index] = {index: element.index, element: this.repSimNumLet(element.element)};
+                    this.substrings[index] = {
+                        index: element.index,
+                        element: this.repSimNumLet(element.element),
+                    };
                 });
                 break;
             case Similarity.LET_NUM:
                 this.substrings.forEach((element, index) => {
-                    this.substrings[index] = {index: element.index, element: this.repSimLetNum(element.element)};
+                    this.substrings[index] = {
+                        index: element.index,
+                        element: this.repSimLetNum(element.element),
+                    };
                 });
                 break;
         }
@@ -119,7 +134,7 @@ export abstract class Regex {
      * @param max: number
      * @return string[]
      */
-    public genMatches(max:number = this.matchesNum) {
+    public genMatches(max: number = this.matchesNum) {
         let regLev0: string[] = [];
         let randexp = new RandExp(this.regex);
         for (let i = 0; i < max; i++) {
@@ -130,7 +145,7 @@ export abstract class Regex {
                 // i--; May be a good performance optimization, doesn't work however if max is greater than the number of possible matches
             }
         }
-        console.log("generated matches for regex: " + this.id);
+        console.log('generated matches for regex: ' + this.id);
         return regLev0;
     }
 
@@ -139,12 +154,16 @@ export abstract class Regex {
      * @param str: string
      * @return {index: number, element: string}[]
      */
-    private getAllSubstrings(str:string): {index: number, element: string}[] {
-        var i, j, result = [];
+    private getAllSubstrings(
+        str: string
+    ): { index: number; element: string }[] {
+        var i,
+            j,
+            result = [];
 
         for (i = 0; i < str.length; i++) {
             for (j = i + 1; j < str.length + 1; j++) {
-                result.push({index: i, element: str.slice(i, j)});
+                result.push({ index: i, element: str.slice(i, j) });
             }
         }
         return result;
@@ -155,19 +174,34 @@ export abstract class Regex {
      * @param data: string
      * @return {rating: number, match: {index: number, element: string}}
      */
-    public getBestMatch(data: string): {rating: number, match: {index: number, element: string}} {
-        let bestMatch = {rating: -1, match: {index: -1, element: ""}};
+    public getBestMatch(data: string): {
+        rating: number;
+        match: { index: number; element: string };
+    } {
+        let bestMatch = { rating: -1, match: { index: -1, element: '' } };
         switch (this.matching) {
             case Matching.EXACT:
-                this.substrings.every(element => {
+                this.substrings.every((element) => {
                     let exactMatch = element.element.match(this.regex);
-                    if (exactMatch !== null && bestMatch.match.element.length < exactMatch[0].length) {
-                        bestMatch = {rating: 1, match: {index: this.indexOfFirst(data), element: exactMatch[0]}};
+                    if (
+                        exactMatch !== null &&
+                        bestMatch.match.element.length < exactMatch[0].length
+                    ) {
+                        bestMatch = {
+                            rating: 1,
+                            match: {
+                                index: this.indexOfFirst(data),
+                                element: exactMatch[0],
+                            },
+                        };
                     }
                 });
                 break;
             case Matching.APPROX:
-                bestMatch = RegexHandler.approxMatching(this.substrings, this.genMatches());
+                bestMatch = RegexHandler.approxMatching(
+                    this.substrings,
+                    this.genMatches()
+                );
                 break;
         }
         this.lastBestMatch = bestMatch;
@@ -179,7 +213,7 @@ export abstract class Regex {
      * @param str: string
      * @return string
      */
-    private repSimNumLet(str:string):string {
+    private repSimNumLet(str: string): string {
         for (let i = 0; i < str.length; i++) {
             switch (str.charAt(i)) {
                 case '0':
@@ -218,7 +252,7 @@ export abstract class Regex {
      * @param str: string
      * @return string
      */
-    private repSimLetNum(str:string):string {
+    private repSimLetNum(str: string): string {
         for (let i = 0; i < str.length; i++) {
             switch (str.charAt(i)) {
                 case 'o':
@@ -292,7 +326,7 @@ export abstract class Regex {
      * @param replacement: string
      * @return string
      */
-    private replaceCharAt(str:string, index:number, replacement:string) {
+    private replaceCharAt(str: string, index: number, replacement: string) {
         return str.substring(0, index) + replacement + str.substring(index + 1);
     }
 
@@ -303,7 +337,7 @@ export abstract class Regex {
      * @param before: boolean
      * @return number
      */
-    private indexOfFirst(data:string, before:boolean = false):number {
+    private indexOfFirst(data: string, before: boolean = false): number {
         let match = data.match(this.regex);
         if (!match) {
             return -1;
@@ -317,18 +351,18 @@ export abstract class Regex {
 }
 
 export enum Matching {
-    EXACT = "Exact",
-    APPROX = "Approximate"
+    EXACT = 'Exact',
+    APPROX = 'Approximate',
 }
 
 export enum Slicing {
-    SUBSTR = "Substring",
-    SPACES = "Spaces",
-    ENTIRE_STR = "Entire String"
+    SUBSTR = 'Substring',
+    SPACES = 'Spaces',
+    ENTIRE_STR = 'Entire String',
 }
 
 export enum Similarity {
-    NONE = "None",
-    NUM_LET = "Numbers To Letters",
-    LET_NUM = "Letters To Numbers"
+    NONE = 'None',
+    NUM_LET = 'Numbers To Letters',
+    LET_NUM = 'Letters To Numbers',
 }

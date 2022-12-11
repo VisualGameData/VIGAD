@@ -52,12 +52,12 @@ export class TesseractHandler {
      * @return void
      */
     public async addWorker(): Promise<void> {
-        const worker = createWorker({cachePath: "."});
+        const worker = createWorker({ cachePath: '.' });
         await worker.load();
         await worker.loadLanguage('eng');
         await worker.initialize('eng');
         this.worker.push(worker);
-        console.log("added tesseract worker");
+        console.log('added tesseract worker');
     }
 
     /**
@@ -73,7 +73,12 @@ export class TesseractHandler {
      * @param stream: MediaStream
      * @return Promise<void>
      */
-    public async run(stream:MediaStream, callback:Function, previewWidth: number, previewHeight: number): Promise<void> {
+    public async run(
+        stream: MediaStream,
+        callback: Function,
+        previewWidth: number,
+        previewHeight: number
+    ): Promise<void> {
         if (!this.running) {
             this.running = true;
             await new Promise(async () => {
@@ -92,28 +97,50 @@ export class TesseractHandler {
                     const canvas = document.createElement('canvas');
                     canvas.height = video.videoHeight;
                     canvas.width = video.videoWidth;
-                    canvas.getContext('2d')!.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+                    canvas
+                        .getContext('2d')!
+                        .drawImage(
+                            video,
+                            0,
+                            0,
+                            video.videoWidth,
+                            video.videoHeight
+                        );
                     const img = canvas.toDataURL('image/png');
                     video.pause();
 
                     // create rectangles from capture areas
                     const rectangles = this.enabledCaptureAreas.map((ca) => {
-                        let streamScales = ca.getStreamScales(stream, previewWidth, previewHeight);
+                        let streamScales = ca.getStreamScales(
+                            stream,
+                            previewWidth,
+                            previewHeight
+                        );
                         return {
                             id: ca.getId(),
                             left: streamScales.left,
                             top: streamScales.top,
                             width: streamScales.width,
-                            height: streamScales.height
+                            height: streamScales.height,
                         };
                     });
 
                     // run tesseract
                     (async () => {
-                        const results: {ca_id: number, data: string}[] = [];
-                        await Promise.all(rectangles.map((rectangle) => (
-                            scheduler.addJob('recognize', img, {rectangle}).then((x) => results.push({ca_id: rectangle.id, data: x.data.text}))
-                        )));
+                        const results: { ca_id: number; data: string }[] = [];
+                        await Promise.all(
+                            rectangles.map((rectangle) =>
+                                scheduler
+                                    .addJob('recognize', img, { rectangle })
+                                    .then((x) =>
+                                        results.push({
+                                            ca_id: rectangle.id,
+                                            data: x.data.text,
+                                        })
+                                    )
+                            )
+                        );
+                        console.log(results);
                         callback(results);
                         this.running = false;
                     })();

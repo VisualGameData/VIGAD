@@ -1,155 +1,57 @@
 <template>
-    <v-card
-        rounded="lg"
-        color="background"
-        class="mb-4"
-        prepend-icon="mdi-magnify"
-    >
-        <template v-slot:title>
-            <v-row no-gutter>
-                <v-col>Find Value</v-col>
-                <v-spacer />
-                <v-col>
-                    <v-btn
-                        color="green"
-                        prepend-icon="mdi-plus"
-                        size="small"
-                        rounded="lg"
-                        variant="tonal"
-                        >Enable</v-btn
-                    ></v-col
-                >
-            </v-row>
-        </template>
+    <div>
+        <div class="pt-2 regex-definition">
+            <RegexInput
+                inputLabel="Search value"
+                inputPlaceholder="Enter search value"
+                prepend-icon="mdi-table-column"
+                matchingOption="Exact"
+                slicingOption="Substrings"
+                similarityOption="None"
+            />
+        </div>
 
-        <v-divider color="primary" class="mb-4"></v-divider>
+        <div class="mt-4 regex-constraint-before-definition">
+            <RegexInput
+                inputLabel="Before Constraint"
+                inputPlaceholder="Enter a constraint"
+                prepend-icon="mdi-table-column-plus-before"
+                matchingOption="Approximate"
+                slicingOption="Substrings"
+                similarityOption="None"
+            />
+        </div>
 
-        <v-card-text>
-            <v-row class="mb-4" no-gutter>
-                <v-col
-                    ><v-text-field
-                        label="Regular Expression"
-                        placeholder="Enter a regular expression"
-                        variant="outlined"
-                        dense
-                        clear-icon="mdi-close-circle"
-                        :rules="[
-                            (v) => !!v || 'Regular expression is required',
-                        ]"
-                    ></v-text-field
-                ></v-col>
-            </v-row>
+        <div class="mt-4 regex-constraint-after-definition">
+            <RegexInput
+                inputLabel="After Constraint"
+                inputPlaceholder="Enter a constraint"
+                prepend-icon="mdi-table-column-plus-after"
+                matchingOption="Approximate"
+                slicingOption="Substrings"
+                similarityOption="None"
+            />
+        </div>
 
-            <v-row class="mb-4" no-gutters cols="12">
-                <v-col cols="2">is</v-col>
-                <v-col cols="3"
-                    ><v-combobox
-                        class="pr-2 pl-2"
-                        label="Position"
-                        :items="['After', 'Before', 'Between']"
-                        variant="underlined"
-                    ></v-combobox
-                ></v-col>
-                <v-col cols="7"
-                    ><v-text-field
-                        cols="1"
-                        label="Regular Expression"
-                        placeholder="Enter a regular expression"
-                        variant="outlined"
-                        dense
-                        clear-icon="mdi-close-circle"
-                        :rules="[
-                            (v) => !!v || 'Regular expression is required',
-                        ]"
-                    ></v-text-field
-                ></v-col>
-            </v-row>
-
-            <v-row class="mb-4" no-gutters>
-                <v-col cols="2"
-                    ><v-combobox
-                        label="Logic"
-                        :items="['AND', 'OR', 'NOT']"
-                        variant="underlined"
-                    ></v-combobox
-                ></v-col>
-                <v-col cols="3"
-                    ><v-combobox
-                        class="pr-2 pl-2"
-                        label="Position"
-                        :items="['After', 'Before', 'Between']"
-                        variant="underlined"
-                    ></v-combobox
-                ></v-col>
-                <v-col cols="7"
-                    ><v-text-field
-                        label="Regular Expression"
-                        placeholder="Enter a regular expression"
-                        variant="outlined"
-                        dense
-                        clear-icon="mdi-close-circle"
-                        :rules="[
-                            (v) => !!v || 'Regular expression is required',
-                        ]"
-                    ></v-text-field
-                ></v-col>
-                <!-- <v-col
-          ><v-btn
-            color="red"
-            icon="mdi-delete"
-            rounded="lg"
-            variant="tonal"
-          ></v-btn
-        ></v-col> -->
-            </v-row>
-
-            <v-row class="mb-4" no-gutters align="center">
-                <v-col>
-                    <v-divider color="grey" />
-                </v-col>
-                <v-col>
-                    <v-btn
-                        color="grey"
-                        prepend-icon="mdi-plus"
-                        size="small"
-                        rounded="lg"
-                        variant="outlined"
-                        >Add constraints</v-btn
-                    >
-                </v-col>
-                <v-col>
-                    <v-divider color="grey" />
-                </v-col>
-            </v-row>
-        </v-card-text>
-        <v-card-actions>
-            <!-- TODO: proper layouting is missing -->
-            <v-row no-gutter>
-                <v-col>
-                    <v-btn
-                        color="green"
-                        prepend-icon="mdi-content-save"
-                        rounded="lg"
-                        variant="tonal"
-                        >Save</v-btn
-                    >
-                </v-col>
-                <v-spacer></v-spacer>
-                <v-col>
-                    <v-btn
-                        color="red"
-                        prepend-icon="mdi-delete"
-                        rounded="lg"
-                        variant="tonal"
-                        >Delete</v-btn
-                    >
-                </v-col>
-            </v-row>
-            <!-- TODO: add more constraints button missing -->
-        </v-card-actions>
-    </v-card>
+        <div class="mt-4 actions">
+            <v-btn
+                class="rounded-pill"
+                color="error"
+                prepend-icon="mdi-delete"
+                rounded="lg"
+                >Delete</v-btn
+            >
+        </div>
+    </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import RegexInput from './RegexInput.vue';
+</script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.actions {
+    display: flex;
+    justify-content: space-between;
+}
+</style>

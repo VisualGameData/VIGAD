@@ -3,9 +3,11 @@
         <v-responsive id="stream" ref="stream" class="capture-area-selection">
             <video id="mainVideo" class="video" autoplay></video>
             <VueDragResize
-                v-if="rerender"
+                v-if="isRerendering"
                 v-for="captureArea in captureAreas"
                 :key="captureArea.getId()"
+                :stickSize="10"
+                contentClass="draggable-capture-area"
                 :w="captureArea.getWidth()"
                 :h="captureArea.getHeight()"
                 :x="captureArea.getLeft()"
@@ -21,17 +23,18 @@
                 :parentLimitation="true"
                 @resizing="changeSize($event, captureArea)"
                 @dragging="changePosition($event, captureArea)"
-                class="background"
                 ref="drag"
+                class="center-text"
             >
-                <p>
+                CA: {{ captureArea.getId() }}
+                <!-- <p>
                     Postioning {{ captureArea.getTop() }} x
                     {{ captureArea.getLeft() }}
                 </p>
                 <p>
                     Capture Area Properties {{ captureArea.getWidth() }} x
                     {{ captureArea.getHeight() }}
-                </p>
+                </p> -->
             </VueDragResize>
         </v-responsive>
     </div>
@@ -43,7 +46,7 @@ import { useElementSize } from '@vueuse/core';
 import { Vigad } from '@/proc/Vigad';
 // @ts-ignore
 import VueDragResize from 'vue3-drag-resize';
-import { rerender } from './Rerender';
+import { isRerendering } from '@/composables/useForceRerender';
 import { Rectangle } from './Rectangle';
 
 /**
@@ -107,28 +110,30 @@ onMounted(() => {
 .video-stream {
     position: relative;
     overflow: hidden;
-    background-color: red;
+    // background-color: red;
     min-height: inherit;
     max-height: inherit;
     margin: 0 auto; /*centers the video*/
-    // display: flex;
-    // justify-content: center;
-    // align-content: center;
+    display: flex;
+    justify-content: center;
+    align-content: center;
     .capture-area-selection {
         position: relative;
-        // width: 100%;
+        width: 100%;
         max-height: inherit;
-        background-color: blue;
+        // background-color: blue;
         display: flex;
         .video {
             position: relative;
             width: 100%;
-            // max-height: inherit;
+            max-height: inherit;
             height: 100%;
         }
     }
 }
-.background {
-    background-color: rgba(0, 0, 0, 0.5);
+.draggable-capture-area {
+    text-align: center;
+    background-color: rgba($color: #03dac6, $alpha: 0.15);
+    border: 1.5px solid rgba($color: #ffffff, $alpha: 0.5);
 }
 </style>

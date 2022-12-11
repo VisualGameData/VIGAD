@@ -1,5 +1,5 @@
 <template>
-    <ViewComponent title="Interpreting" :loading="isRunning">
+    <ViewComponent title="Capturing" :loading="isRunning">
         <template v-slot:actions>
             <v-btn
                 v-if="!isRunning"

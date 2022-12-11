@@ -114,19 +114,19 @@ onMounted(() => {
     min-height: inherit;
     max-height: inherit;
     margin: 0 auto; /*centers the video*/
-    // display: flex;
-    // justify-content: center;
-    // align-content: center;
+    display: flex;
+    justify-content: center;
+    align-content: center;
     .capture-area-selection {
         position: relative;
-        // width: 100%;
+        width: 100%;
         max-height: inherit;
         // background-color: blue;
         display: flex;
         .video {
             position: relative;
             width: 100%;
-            // max-height: inherit;
+            max-height: inherit;
             height: 100%;
         }
     }

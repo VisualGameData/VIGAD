@@ -1,15 +1,36 @@
 <template>
     <div>
         <div class="pt-2 regex-definition">
-            <ValueRegex />
+            <RegexInput
+                inputLabel="Search value"
+                inputPlaceholder="Enter search value"
+                prepend-icon="mdi-table-column"
+                matchingOption="Exact"
+                slicingOption="Substrings"
+                similarityOption="None"
+            />
         </div>
 
         <div class="mt-4 regex-constraint-before-definition">
-            <BeforeConstraintRegexVue />
+            <RegexInput
+                inputLabel="Before Constraint"
+                inputPlaceholder="Enter a constraint"
+                prepend-icon="mdi-table-column-plus-before"
+                matchingOption="Approximate"
+                slicingOption="Substrings"
+                similarityOption="None"
+            />
         </div>
 
         <div class="mt-4 regex-constraint-after-definition">
-            <AfterConstraintRegexVue />
+            <RegexInput
+                inputLabel="After Constraint"
+                inputPlaceholder="Enter a constraint"
+                prepend-icon="mdi-table-column-plus-after"
+                matchingOption="Approximate"
+                slicingOption="Substrings"
+                similarityOption="None"
+            />
         </div>
 
         <div class="mt-4 actions">
@@ -25,9 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import ValueRegex from './ValueRegex.vue';
-import BeforeConstraintRegexVue from './BeforeConstraintRegex.vue';
-import AfterConstraintRegexVue from './AfterConstraintRegex.vue';
+import RegexInput from './RegexInput.vue';
 </script>
 
 <style lang="scss" scoped>

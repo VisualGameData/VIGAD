@@ -6,6 +6,8 @@
                 v-if="isRerendering"
                 v-for="captureArea in captureAreas"
                 :key="captureArea.getId()"
+                :stickSize="10"
+                contentClass="draggable-capture-area"
                 :w="captureArea.getWidth()"
                 :h="captureArea.getHeight()"
                 :x="captureArea.getLeft()"
@@ -21,17 +23,16 @@
                 :parentLimitation="true"
                 @resizing="changeSize($event, captureArea)"
                 @dragging="changePosition($event, captureArea)"
-                class="background"
                 ref="drag"
             >
-                <p>
+                <!-- <p>
                     Postioning {{ captureArea.getTop() }} x
                     {{ captureArea.getLeft() }}
                 </p>
                 <p>
                     Capture Area Properties {{ captureArea.getWidth() }} x
                     {{ captureArea.getHeight() }}
-                </p>
+                </p> -->
             </VueDragResize>
         </v-responsive>
     </div>
@@ -128,7 +129,8 @@ onMounted(() => {
         }
     }
 }
-.background {
-    background-color: rgba(0, 0, 0, 0.5);
+.draggable-capture-area {
+    background-color: rgba($color: #03dac6, $alpha: 0.15);
+    border: 1.5px solid rgba($color: #ffffff, $alpha: 0.5);
 }
 </style>

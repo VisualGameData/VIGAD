@@ -13,7 +13,7 @@
         <template v-slot:append-inner>
             <v-fade-transition leave-absolute>
                 <v-progress-circular
-                    v-if="true"
+                    v-if="false"
                     color="info"
                     indeterminate
                     size="24"
@@ -55,6 +55,7 @@
             ></v-combobox>
 
             <v-text-field
+                v-if="currentMatchingOption === 'Approximate'"
                 v-model="currentNumberOfMatches"
                 label="Number of Matches"
                 placeholder="Enter a number"
@@ -90,19 +91,19 @@ const expand = ref(false);
 
 const location = ref('Before');
 
-const defaultMatchingOption = ref('Exact');
+const defaultMatchingOption = ref('Approximate');
 const currentMatchingOption = ref(defaultMatchingOption.value);
 const matchingOptions = ref(['Approximate', 'Exact']);
 
 const defaultSlicingOptions = ref('At spaces');
 const currentSlicingOption = ref(defaultSlicingOptions.value);
-const slicingOptions = ref(['At spaces', 'Entire string']);
+const slicingOptions = ref(['Spaces', 'Substrings', 'Entire string']);
 
 const defaultSimilarityOptions = ref('None');
 const currentSimilarityOption = ref(defaultSimilarityOptions.value);
 const similarityOptions = ref(['None', 'Number to Letter', 'Letter to Number']);
 
-const defaultNumberOfMatches = ref(50000);
+const defaultNumberOfMatches = ref(10000);
 const currentNumberOfMatches = ref(defaultNumberOfMatches.value);
 
 function reset() {

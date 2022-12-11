@@ -13,7 +13,7 @@
         <template v-slot:append-inner>
             <v-fade-transition leave-absolute>
                 <v-progress-circular
-                    v-if="true"
+                    v-if="false"
                     color="info"
                     indeterminate
                     size="24"
@@ -55,6 +55,7 @@
             ></v-combobox>
 
             <v-text-field
+                v-if="currentMatchingOption === 'Approximate'"
                 v-model="currentNumberOfMatches"
                 label="Number of Matches"
                 placeholder="Enter a number"
@@ -88,13 +89,13 @@ import { ref } from 'vue';
 
 const expand = ref(false);
 
-const defaultMatchingOption = ref('Approximate');
+const defaultMatchingOption = ref('Exact');
 const currentMatchingOption = ref(defaultMatchingOption.value);
 const matchingOptions = ref(['Approximate', 'Exact']);
 
 const defaultSlicingOptions = ref('At spaces');
 const currentSlicingOption = ref(defaultSlicingOptions.value);
-const slicingOptions = ref(['At spaces', 'Entire string']);
+const slicingOptions = ref(['Spaces', 'Substrings', 'Entire string']);
 
 const defaultSimilarityOptions = ref('Number to Letter');
 const currentSimilarityOption = ref(defaultSimilarityOptions.value);

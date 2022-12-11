@@ -11,8 +11,6 @@
 </template>
 
 <script setup lang="ts">
-import { type } from 'os';
-
 const props = defineProps<{
     title: string;
     log: string;

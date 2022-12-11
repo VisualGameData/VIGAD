@@ -93,11 +93,11 @@ const defaultMatchingOption = ref('Exact');
 const currentMatchingOption = ref(defaultMatchingOption.value);
 const matchingOptions = ref(['Approximate', 'Exact']);
 
-const defaultSlicingOptions = ref('At spaces');
+const defaultSlicingOptions = ref('Substrings');
 const currentSlicingOption = ref(defaultSlicingOptions.value);
-const slicingOptions = ref(['Spaces', 'Substrings', 'Entire string']);
+const slicingOptions = ref(['Substrings', 'Spaces', 'Entire string']);
 
-const defaultSimilarityOptions = ref('Number to Letter');
+const defaultSimilarityOptions = ref('None');
 const currentSimilarityOption = ref(defaultSimilarityOptions.value);
 const similarityOptions = ref(['None', 'Number to Letter', 'Letter to Number']);
 

@@ -1,3 +1,7 @@
+import { ConstraintRegex } from "./ConstraintRegex";
+import { Regex, Slicing } from "./Regex";
+import { ValueRegex } from "./ValueRegex";
+
 var stringSimilarity = require("string-similarity");
 
 export class RegexHandler {
@@ -19,20 +23,83 @@ export class RegexHandler {
         return this.instance;
     }
 
-    /**
-     * Get all substrings from str
-     * @param str: string
-     * @return {index: number, element: string}[]
-     */
-    private getAllSubstrings(str:string) {
-        var i, j, result = [];
+    public findValue(data:string, valueRegex: ValueRegex, cRegexBefore?: ConstraintRegex, cRegexAfter?: ConstraintRegex): {rating: number, match: {index: number, element: string}} {
+        let constraintRegex: ConstraintRegex[] = [];
+        if (typeof cRegexBefore !== 'undefined') {
+            constraintRegex.push(cRegexBefore);
+        }
+        if (typeof cRegexAfter !== 'undefined') {
+            constraintRegex.push(cRegexAfter);
+        }
 
-        for (i = 0; i < str.length; i++) {
-            for (j = i + 1; j < str.length + 1; j++) {
-                result.push({index: i, element: str.slice(i, j)});
+        let allSubstrings: {index:number, element:string}[] = [];
+        let spacesSubstrings: {index:number, element:string}[] = [];
+
+        // set required substrings for constraint regex & apply similarity conversion
+        for (let i = 0; i < constraintRegex.length; i++) {
+            if (constraintRegex[i].getSubstrings().length === 0) {  // if substrings are not already set
+                if (constraintRegex[i].getSlicing() === Slicing.SUBSTR && allSubstrings.length !== 0) {
+                    constraintRegex[i].setSubstrings(allSubstrings.slice());   // clone array
+                } else if (constraintRegex[i].getSlicing() === Slicing.SPACES && spacesSubstrings.length !== 0) {
+                    constraintRegex[i].setSubstrings(spacesSubstrings.slice());   // clone array
+                } else {
+                    constraintRegex[i].genSubstrings(data);
+                }
+            }
+            if (constraintRegex[i].getSlicing() === Slicing.SUBSTR) {
+                allSubstrings = constraintRegex[i].getSubstrings(); // cache substrings
+            } else if (constraintRegex[i].getSlicing() === Slicing.SPACES) {
+                spacesSubstrings = constraintRegex[i].getSubstrings(); // cache substrings
+            }
+
+            constraintRegex[i].applySimilarity();
+        }
+
+        // gen best matches for constraint regex
+        for (let i = 0; i < constraintRegex.length; i++) {
+            constraintRegex[i].getBestMatch(data);
+        }
+
+        // determine constraint indexes
+        let lowestHighIndex = 0;
+        let highestLowIndex = 0;
+        constraintRegex.forEach(regex => {
+            switch (regex.getLocation()) {
+                case "Before":
+                    if (regex.getLastBestMatch().match.index > highestLowIndex) {
+                        highestLowIndex = regex.getLastBestMatch().match.index;
+                    }
+                    break;
+                case "After":
+                    if (regex.getLastBestMatch().match.index < lowestHighIndex) {
+                        lowestHighIndex = regex.getLastBestMatch().match.index;
+                    }
+                    break;
+            }
+        });
+        if (lowestHighIndex === 0) {
+            lowestHighIndex = data.length;
+        }
+
+        // set required substrings for value regex & apply similarity conversion
+        if (valueRegex.getSubstrings().length === 0) {  // if substrings are not already set
+            if (highestLowIndex === 0 && lowestHighIndex === data.length) { // if no constraint regex
+                if (valueRegex.getSlicing() === Slicing.SUBSTR && allSubstrings.length !== 0) {
+                    valueRegex.setSubstrings(allSubstrings.slice());   // clone array
+                } else if (valueRegex.getSlicing() === Slicing.SPACES && spacesSubstrings.length !== 0) {
+                    valueRegex.setSubstrings(spacesSubstrings.slice());   // clone array
+                } else {
+                    valueRegex.genSubstrings(data);
+                }
+            } else {
+                valueRegex.genSubstrings(data.slice(highestLowIndex, lowestHighIndex));
             }
         }
-        return result;
+
+        valueRegex.applySimilarity();
+
+        // gen best match for value regex
+        return valueRegex.getBestMatch(data);
     }
 
     /**
@@ -41,7 +108,7 @@ export class RegexHandler {
      * @param genMatches: string[]
      * @return {bestMatch: {target: string, rating: number}, ratings: {target: string, rating: number}[]}
      */
-    private bestMatch(data:string, genMatches:string[]) {
+    public static bestMatch(data:string, genMatches:string[]) {
         let matches = stringSimilarity.findBestMatch(data, genMatches);
         return matches.bestMatch;
     }
@@ -52,11 +119,11 @@ export class RegexHandler {
      * @param regexMatches: string[]
      * @return {match: {index: number, element: string}, rating: number}
      */
-    private approxMatching(substrings:{index:number, element:string}[], regexMatches:string[]) {
+    public static approxMatching(substrings:{index:number, element:string}[], regexMatches:string[]): {match: {index: number, element: string}, rating: number} {
         let highestRating = 0;
         let highestRatingElem = {index:-1, element: ""};
         substrings.every(element => {
-            let bestMatch = this.bestMatch(element.element, regexMatches);
+            let bestMatch = RegexHandler.bestMatch(element.element, regexMatches);
             if (bestMatch.rating > highestRating) {
                 highestRating = bestMatch.rating;
                 highestRatingElem = element;
@@ -72,125 +139,4 @@ export class RegexHandler {
         return {match: highestRatingElem, rating: highestRating};
     }
 
-    /**
-     * Replace char at specific index in string
-     * @param str: string
-     * @param index: number
-     * @param replacement: string
-     * @return string
-     */
-    private replaceCharAt(str:string, index:number, replacement:string) {
-        return str.substring(0, index) + replacement + str.substring(index + 1);
-    }
-
-    /**
-     * Replace numbers with similar looking letters
-     * @param str: string
-     * @return string
-     */
-    private repSimNumLet(str:string):string {
-        for (let i = 0; i < str.length; i++) {
-            switch (str.charAt(i)) {
-                case '0':
-                    str = this.replaceCharAt(str, i, 'o');
-                    break;
-                case '1':
-                    str = this.replaceCharAt(str, i, 'l');
-                    break;
-                case '4':
-                    str = this.replaceCharAt(str, i, 'U');
-                    break;
-                case '5':
-                    str = this.replaceCharAt(str, i, 'S');
-                    break;
-                case '6':
-                    str = this.replaceCharAt(str, i, 'b');
-                    break;
-                case '7':
-                    str = this.replaceCharAt(str, i, 'T');
-                    break;
-                case '8':
-                    str = this.replaceCharAt(str, i, 'B');
-                    break;
-                case '9':
-                    str = this.replaceCharAt(str, i, 'g');
-                    break;
-                default:
-                    break;
-            }
-        }
-        return str;
-    }
-
-    /**
-     * Replace letters with similar looking numbers
-     * @param str: string
-     * @return string
-     */
-    private repSimLetNum(str:string):string {
-        for (let i = 0; i < str.length; i++) {
-            switch (str.charAt(i)) {
-                case 'o':
-                    str = this.replaceCharAt(str, i, '0');
-                    break;
-                case 'O':
-                    str = this.replaceCharAt(str, i, '0');
-                    break;
-                case 'U':
-                    str = this.replaceCharAt(str, i, '0');
-                    break;
-                case 'u':
-                    str = this.replaceCharAt(str, i, '0');
-                    break;
-                case 'D':
-                    str = this.replaceCharAt(str, i, '0');
-                    break;
-                case 'l':
-                    str = this.replaceCharAt(str, i, '1');
-                    break;
-                case 'Z':
-                    str = this.replaceCharAt(str, i, '2');
-                    break;
-                case 'z':
-                    str = this.replaceCharAt(str, i, '2');
-                    break;
-                case 'Q':
-                    str = this.replaceCharAt(str, i, '2');
-                    break;
-                case 'S':
-                    str = this.replaceCharAt(str, i, '5');
-                    break;
-                case 's':
-                    str = this.replaceCharAt(str, i, '5');
-                    break;
-                case 'Y':
-                    str = this.replaceCharAt(str, i, '5');
-                    break;
-                case 'b':
-                    str = this.replaceCharAt(str, i, '6');
-                    break;
-                case 'G':
-                    str = this.replaceCharAt(str, i, '6');
-                    break;
-                case 'T':
-                    str = this.replaceCharAt(str, i, '7');
-                    break;
-                case 'F':
-                    str = this.replaceCharAt(str, i, '7');
-                    break;
-                case 'B':
-                    str = this.replaceCharAt(str, i, '8');
-                    break;
-                case 'g':
-                    str = this.replaceCharAt(str, i, '9');
-                    break;
-                case 'q':
-                    str = this.replaceCharAt(str, i, '9');
-                    break;
-                default:
-                    break;
-            }
-        }
-        return str;
-    }
 }

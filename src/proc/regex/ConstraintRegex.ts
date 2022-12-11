@@ -9,6 +9,10 @@ export class ConstraintRegex extends Regex {
         this.matching = Matching.APPROX;
     }
 
+    public getLocation(): Location {
+        return this.location;
+    }
+
 }
 
 export enum Location {

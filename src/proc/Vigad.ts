@@ -95,7 +95,14 @@ export class Vigad {
                     result.forEach((value: {ca_id: number, data: string}, index: number) => {
                         let ca = this.getCaptureArea(value.ca_id);
                         let regexGrp = ca.getRegexGroups()[0];
-                        this.regexHandler.findValue(value.data, regexGrp.getValueRegex(), regexGrp.getConstraintRegex()[0], regexGrp.getConstraintRegex()[1]);
+                        if (regexGrp.getConstraintRegex()[0].getRegex().toString() === "/(?:)/" && regexGrp.getConstraintRegex()[1].getRegex().toString() === "/(?:)/") {
+                            this.regexHandler.findValue(value.data, regexGrp.getValueRegex());
+                        } else if (regexGrp.getConstraintRegex()[0].getRegex().toString() === "/(?:)/") {
+                            this.regexHandler.findValue(value.data, regexGrp.getValueRegex(), regexGrp.getConstraintRegex()[1]);
+                        } else if (regexGrp.getConstraintRegex()[1].getRegex().toString() === "/(?:)/") {
+                            this.regexHandler.findValue(value.data, regexGrp.getValueRegex(), regexGrp.getConstraintRegex()[0]);
+                        }
+
                     });
                 });
             }, 500);

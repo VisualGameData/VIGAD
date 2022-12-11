@@ -21,11 +21,9 @@
                         expand-icon="mdi-menu-down"
                     >
                         Capture area
-                        <!-- {{ captureArea.getId() }} -->
+                        {{ captureArea.getId() }}
                     </v-expansion-panel-title>
                     <v-expansion-panel-text>
-                        <!-- Used components -->
-                        <!-- <CaptureAreaMetaProperties /> -->
                         <CaptureAreaSearchValue />
                     </v-expansion-panel-text>
                 </v-expansion-panel>
@@ -37,7 +35,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import ViewComponent from '@/components/ViewComponent.vue';
-import CaptureAreaMetaProperties from '@/components/capture-area/CaptureAreaMetaProperties.vue';
 import CaptureAreaSearchValue from '@/components/capture-area/CaptureAreaSearchValue.vue';
 import { Vigad } from '@/proc/Vigad';
 import {

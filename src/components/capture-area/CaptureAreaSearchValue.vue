@@ -15,13 +15,6 @@
         <div class="mt-4 actions">
             <v-btn
                 class="rounded-pill"
-                color="success"
-                prepend-icon="mdi-content-save"
-                rounded="lg"
-                >Save</v-btn
-            >
-            <v-btn
-                class="rounded-pill"
                 color="error"
                 prepend-icon="mdi-delete"
                 rounded="lg"

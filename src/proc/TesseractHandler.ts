@@ -5,6 +5,7 @@ export class TesseractHandler {
     private static instance: TesseractHandler;
     private worker: Worker[];
     private enabledCaptureAreas: CaptureArea[];
+    private running: boolean;
 
     /**
      * Create a private constructor to prevent multiple instances
@@ -12,6 +13,7 @@ export class TesseractHandler {
     private constructor() {
         this.worker = [];
         this.enabledCaptureAreas = [];
+        this.running = false;
     }
 
     /**
@@ -25,6 +27,14 @@ export class TesseractHandler {
         }
 
         return this.instance;
+    }
+
+    public isRunning(): boolean {
+        return this.running;
+    }
+
+    public setRunning(running: boolean): void {
+        this.running = running;
     }
 
     public async enableCaptureArea(ca: CaptureArea): Promise<void> {
@@ -46,7 +56,8 @@ export class TesseractHandler {
     }
 
     public async run(stream:MediaStream): Promise<void> {
-        while (true) {
+        if (!this.running) {
+            this.running = true;
             await new Promise(async (resolve) => {
                 const scheduler = createScheduler();
                 this.worker.forEach((worker) => {
@@ -82,6 +93,7 @@ export class TesseractHandler {
                         const results = await Promise.all(rectangles.map((rectangle) => (
                             scheduler.addJob('recognize', img, {rectangle}).then((x) => console.log(x.data.text))
                         )));
+                        this.running = false;
                     })();
                 });
             });

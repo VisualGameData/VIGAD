@@ -7,6 +7,8 @@ export class Vigad {
     private streamHandler: StreamHandler;
     private tesseractHandler: TesseractHandler;
     private captureAreas: CaptureArea[];
+    private tesseractInterval!: NodeJS.Timeout;
+    private intervalRunning: boolean;
 
     /**
      * Create a private constructor to prevent multiple instances
@@ -15,6 +17,7 @@ export class Vigad {
         this.streamHandler = StreamHandler.getInstance();
         this.tesseractHandler = TesseractHandler.getInstance();
         this.captureAreas = [];
+        this.intervalRunning = false;
     }
 
     /**
@@ -51,9 +54,7 @@ export class Vigad {
         let ca = new CaptureArea(width, height, top, left);
         this.captureAreas.push(ca);
         ca.setId(this.captureAreas.length - 1);
-        this.tesseractHandler.enableCaptureArea(ca).then(() => {
-            this.startTesseract();
-        });
+        this.tesseractHandler.enableCaptureArea(ca);
         return ca.getId();
     }
 
@@ -85,11 +86,18 @@ export class Vigad {
     }
 
     public startTesseract(): void {
-        this.tesseractHandler.run(this.streamHandler.getCurrentSelectedSource());
-        console.log("started tesseract");
+        if (!this.intervalRunning) {
+            this.tesseractInterval = setInterval(() => {
+                this.tesseractHandler.run(this.streamHandler.getCurrentSelectedSource())
+            }, 500);
+            this.intervalRunning = true;
+            console.log("started tesseract");
+        }
     }
 
     public stopTesseract(): void {
-
+        clearInterval(this.tesseractInterval);
+        this.intervalRunning = false;
+        console.log("stopped tesseract");
     }
 }

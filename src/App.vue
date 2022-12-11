@@ -16,7 +16,7 @@
                     </v-col>
 
                     <v-col>
-                        <v-sheet class="proper-height" rounded="lg">
+                        <v-sheet class="proper-height center" rounded="lg">
                             <MainVideoStream />
                         </v-sheet>
                     </v-col>
@@ -98,6 +98,12 @@ body {
     min-height: calc(100vh - 56px - 16px - 16px);
     max-height: calc(100vh - 56px - 16px - 16px);
     overflow: hidden;
+}
+
+.center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #panel {

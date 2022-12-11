@@ -1,4 +1,5 @@
 import { CaptureArea } from './CaptureArea';
+import { RegexHandler } from './regex/RegexHandler';
 import { StreamHandler } from './StreamHandler';
 import { TesseractHandler } from './TesseractHandler';
 
@@ -6,6 +7,7 @@ export class Vigad {
     private static instance: Vigad;
     private streamHandler: StreamHandler;
     private tesseractHandler: TesseractHandler;
+    private regexHandler: RegexHandler;
     private captureAreas: CaptureArea[];
     private tesseractInterval!: NodeJS.Timeout;
     private intervalRunning: boolean;
@@ -16,6 +18,7 @@ export class Vigad {
     private constructor() {
         this.streamHandler = StreamHandler.getInstance();
         this.tesseractHandler = TesseractHandler.getInstance();
+        this.regexHandler = RegexHandler.getInstance();
         this.captureAreas = [];
         this.intervalRunning = false;
     }
@@ -88,10 +91,11 @@ export class Vigad {
     public startTesseract(): void {
         if (!this.intervalRunning) {
             this.tesseractInterval = setInterval(() => {
-                this.tesseractHandler.run(this.streamHandler.getCurrentSelectedSource(), (result: string[]) => {
-                    result.forEach((value: string, index: number) => {
-                        // do regex recognition here
-                        console.log(value);
+                this.tesseractHandler.run(this.streamHandler.getCurrentSelectedSource(), (result: {ca_id: number, data: string}[]) => {
+                    result.forEach((value: {ca_id: number, data: string}, index: number) => {
+                        let ca = this.getCaptureArea(value.ca_id);
+                        let regexGrp = ca.getRegexGroups()[0];
+                        this.regexHandler.findValue(value.data, regexGrp.getValueRegex(), regexGrp.getConstraintRegex()[0], regexGrp.getConstraintRegex()[1]);
                     });
                 });
             }, 500);

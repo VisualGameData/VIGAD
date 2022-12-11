@@ -1,7 +1,13 @@
-import { Regex } from "./Regex";
+import { Regex, Matching, Slicing, Similarity } from "./Regex";
 
 export class ConstraintRegex extends Regex {
-    private location: Location = Location.BEFORE;
+    private location: Location;
+
+    public constructor() {
+        super();
+        this.location = Location.BEFORE;
+        this.matching = Matching.APPROX;
+    }
 
 }
 

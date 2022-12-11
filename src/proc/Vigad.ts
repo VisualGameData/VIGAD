@@ -12,6 +12,9 @@ export class Vigad {
     private tesseractInterval!: NodeJS.Timeout;
     private intervalRunning: boolean;
 
+    private previewWidth: number;
+    private previewHeight: number;
+
     /**
      * Create a private constructor to prevent multiple instances
      */
@@ -21,6 +24,8 @@ export class Vigad {
         this.regexHandler = RegexHandler.getInstance();
         this.captureAreas = [];
         this.intervalRunning = false;
+        this.previewWidth = 0;
+        this.previewHeight = 0;
     }
 
     /**
@@ -34,6 +39,14 @@ export class Vigad {
         }
 
         return this.instance;
+    }
+
+    public setPreviewWidth(width: number): void {
+        this.previewWidth = width;
+    }
+
+    public setPreviewHeight(height: number): void {
+        this.previewHeight = height;
     }
 
     public getStreamHandlerInstance(): StreamHandler {
@@ -95,9 +108,15 @@ export class Vigad {
                     result.forEach((value: {ca_id: number, data: string}, index: number) => {
                         let ca = this.getCaptureArea(value.ca_id);
                         let regexGrp = ca.getRegexGroups()[0];
-                        this.regexHandler.findValue(value.data, regexGrp.getValueRegex(), regexGrp.getConstraintRegex()[0], regexGrp.getConstraintRegex()[1]);
+                        if (regexGrp.getConstraintRegex()[0].getRegex().toString() === "/(?:)/" && regexGrp.getConstraintRegex()[1].getRegex().toString() === "/(?:)/") {
+                            this.regexHandler.findValue(value.data, regexGrp.getValueRegex());
+                        } else if (regexGrp.getConstraintRegex()[0].getRegex().toString() === "/(?:)/") {
+                            this.regexHandler.findValue(value.data, regexGrp.getValueRegex(), regexGrp.getConstraintRegex()[1]);
+                        } else if (regexGrp.getConstraintRegex()[1].getRegex().toString() === "/(?:)/") {
+                            this.regexHandler.findValue(value.data, regexGrp.getValueRegex(), regexGrp.getConstraintRegex()[0]);
+                        }
                     });
-                });
+                }, this.previewWidth, this.previewHeight);
             }, 500);
             this.intervalRunning = true;
             console.log("started tesseract");

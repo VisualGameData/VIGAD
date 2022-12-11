@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive } from 'vue';
+import { ref, onMounted, reactive, watch } from 'vue';
 import { useElementSize } from '@vueuse/core';
 import { Vigad } from '@/proc/Vigad';
 // @ts-ignore
@@ -61,6 +61,14 @@ const captureAreas = vigad.value.getAllCaptureAreas();
  */
 const stream = ref(null);
 const { width: wParent, height: hParent } = useElementSize(stream);
+
+watch(wParent, (newValue) => {
+    vigad.value.setPreviewWidth(newValue);
+});
+
+watch(hParent, (newValue) => {
+    vigad.value.setPreviewHeight(newValue);
+});
 
 /**
  * fetches everything and sets the main video stream to the main screen

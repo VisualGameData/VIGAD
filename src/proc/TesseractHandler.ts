@@ -73,7 +73,7 @@ export class TesseractHandler {
      * @param stream: MediaStream
      * @return Promise<void>
      */
-    public async run(stream:MediaStream, callback:Function): Promise<void> {
+    public async run(stream:MediaStream, callback:Function, previewWidth: number, previewHeight: number): Promise<void> {
         if (!this.running) {
             this.running = true;
             await new Promise(async () => {
@@ -98,12 +98,13 @@ export class TesseractHandler {
 
                     // create rectangles from capture areas
                     const rectangles = this.enabledCaptureAreas.map((ca) => {
+                        let streamScales = ca.getStreamScales(stream, previewWidth, previewHeight);
                         return {
                             id: ca.getId(),
-                            left: ca.getLeft(),
-                            top: ca.getTop(),
-                            width: ca.getWidth(),
-                            height: ca.getHeight(),
+                            left: streamScales.left,
+                            top: streamScales.top,
+                            width: streamScales.width,
+                            height: streamScales.height
                         };
                     });
 

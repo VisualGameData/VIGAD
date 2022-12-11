@@ -88,7 +88,12 @@ export class Vigad {
     public startTesseract(): void {
         if (!this.intervalRunning) {
             this.tesseractInterval = setInterval(() => {
-                this.tesseractHandler.run(this.streamHandler.getCurrentSelectedSource())
+                this.tesseractHandler.run(this.streamHandler.getCurrentSelectedSource(), (result: string[]) => {
+                    result.forEach((value: string, index: number) => {
+                        // do regex recognition here
+                        console.log(value);
+                    });
+                });
             }, 500);
             this.intervalRunning = true;
             console.log("started tesseract");

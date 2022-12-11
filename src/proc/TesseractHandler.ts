@@ -37,11 +37,20 @@ export class TesseractHandler {
         this.running = running;
     }
 
+    /**
+     * Enable a capture area so it will be considered by tesseract
+     * @param ca
+     * @return void
+     */
     public async enableCaptureArea(ca: CaptureArea): Promise<void> {
         this.enabledCaptureAreas.push(ca);
         await this.addWorker();
     }
 
+    /**
+     * Add and initialize a new tesseract worker
+     * @return void
+     */
     public async addWorker(): Promise<void> {
         const worker = createWorker({cachePath: "."});
         await worker.load();
@@ -51,14 +60,23 @@ export class TesseractHandler {
         console.log("added tesseract worker");
     }
 
+    /**
+     * Remove a tesseract worker
+     * @return void
+     */
     public removeWorker(): void {
         this.worker.pop();
     }
 
-    public async run(stream:MediaStream): Promise<void> {
+    /**
+     * Run tesseract image-to-text-recognition on the given stream utilizing the enabled capture areas
+     * @param stream: MediaStream
+     * @return Promise<void>
+     */
+    public async run(stream:MediaStream, callback:Function): Promise<void> {
         if (!this.running) {
             this.running = true;
-            await new Promise(async (resolve) => {
+            await new Promise(async () => {
                 const scheduler = createScheduler();
                 this.worker.forEach((worker) => {
                     scheduler.addWorker(worker);
@@ -90,9 +108,11 @@ export class TesseractHandler {
 
                     // run tesseract
                     (async () => {
-                        const results = await Promise.all(rectangles.map((rectangle) => (
-                            scheduler.addJob('recognize', img, {rectangle}).then((x) => console.log(x.data.text))
+                        const results: string[] = [];
+                        await Promise.all(rectangles.map((rectangle) => (
+                            scheduler.addJob('recognize', img, {rectangle}).then((x) => results.push(x.data.text))
                         )));
+                        callback(results);
                         this.running = false;
                     })();
                 });

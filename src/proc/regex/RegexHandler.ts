@@ -1,5 +1,5 @@
 import { ConstraintRegex } from "./ConstraintRegex";
-import { Regex, Slicing } from "./Regex";
+import { Slicing } from "./Regex";
 import { ValueRegex } from "./ValueRegex";
 
 var stringSimilarity = require("string-similarity");
@@ -13,7 +13,7 @@ export class RegexHandler {
     /**
      * This function gets the singelton instance of RegexHandler.ts
      *
-     * @return Vigad
+     * @return RegexHandler
      */
     public static getInstance(): RegexHandler {
         if (!this.instance) {

@@ -99,6 +99,7 @@ export class TesseractHandler {
                     // create rectangles from capture areas
                     const rectangles = this.enabledCaptureAreas.map((ca) => {
                         return {
+                            id: ca.getId(),
                             left: ca.getLeft(),
                             top: ca.getTop(),
                             width: ca.getWidth(),
@@ -108,9 +109,9 @@ export class TesseractHandler {
 
                     // run tesseract
                     (async () => {
-                        const results: string[] = [];
+                        const results: {ca_id: number, data: string}[] = [];
                         await Promise.all(rectangles.map((rectangle) => (
-                            scheduler.addJob('recognize', img, {rectangle}).then((x) => results.push(x.data.text))
+                            scheduler.addJob('recognize', img, {rectangle}).then((x) => results.push({ca_id: rectangle.id, data: x.data.text}))
                         )));
                         callback(results);
                         this.running = false;

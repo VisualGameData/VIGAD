@@ -1,7 +1,7 @@
 <template>
     <div class="video-stream">
         <v-responsive id="stream" ref="stream" class="capture-area-selection">
-            <video id="mainVideo" class="video" autoplay></video>
+            <video preload="none" id="mainVideo" class="video" autoplay></video>
             <VueDragResize
                 v-if="isRerendering"
                 v-for="captureArea in captureAreas"
@@ -27,14 +27,6 @@
                 class="center-text"
             >
                 CA: {{ captureArea.getId() }}
-                <!-- <p>
-                    Postioning {{ captureArea.getTop() }} x
-                    {{ captureArea.getLeft() }}
-                </p>
-                <p>
-                    Capture Area Properties {{ captureArea.getWidth() }} x
-                    {{ captureArea.getHeight() }}
-                </p> -->
             </VueDragResize>
         </v-responsive>
     </div>
@@ -108,26 +100,15 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .video-stream {
-    position: relative;
-    overflow: hidden;
-    // background-color: red;
-    min-height: inherit;
-    max-height: inherit;
-    margin: 0 auto; /*centers the video*/
-    display: flex;
-    justify-content: center;
-    align-content: center;
+    width: inherit;
+    height: inherit;
+    align-self: center;
     .capture-area-selection {
-        position: relative;
-        width: 100%;
-        max-height: inherit;
-        // background-color: blue;
-        display: flex;
+        margin: 0 auto;
+        width: fit-content;
         .video {
-            position: relative;
             width: 100%;
-            max-height: inherit;
-            height: 100%;
+            max-height: calc(100vh - 56px - 16px - 16px);
         }
     }
 }

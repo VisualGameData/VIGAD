@@ -17,7 +17,7 @@ export abstract class Regex {
         this.matching = Matching.EXACT;
         this.slicing = Slicing.SUBSTR;
         this.similarity = Similarity.NONE;
-        this.matchesNum = 0;
+        this.matchesNum = 10000;
         this.substrings = [];
         this.lastBestMatch = {rating: -1, match: {index: -1, element: ""}}
     }
@@ -30,20 +30,40 @@ export abstract class Regex {
         return this.regex;
     }
 
+    public setRegex(regex: string) {
+        this.regex = new RegExp(regex);
+    }
+
     public getMatching(): Matching {
         return this.matching;
+    }
+
+    public setMatching(matching: Matching) {
+        this.matching = matching;
     }
 
     public getSlicing(): Slicing {
         return this.slicing;
     }
 
+    public setSlicing(slicing: Slicing) {
+        this.slicing = slicing;
+    }
+
     public getSimilarity(): Similarity {
         return this.similarity;
     }
 
+    public setSimilarity(similarity: Similarity) {
+        this.similarity = similarity;
+    }
+
     public getMatchesNum(): number {
         return this.matchesNum;
+    }
+
+    public setMatchesNum(matchesNum: number) {
+        this.matchesNum = matchesNum;
     }
 
     public getSubstrings(): {index: number, element: string}[] {
@@ -119,7 +139,7 @@ export abstract class Regex {
      * @param str: string
      * @return {index: number, element: string}[]
      */
-    private getAllSubstrings(str:string) {
+    private getAllSubstrings(str:string): {index: number, element: string}[] {
         var i, j, result = [];
 
         for (i = 0; i < str.length; i++) {

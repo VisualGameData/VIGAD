@@ -1,8 +1,7 @@
 import { ConstraintRegex } from "./ConstraintRegex";
 import { Slicing } from "./Regex";
 import { ValueRegex } from "./ValueRegex";
-
-var stringSimilarity = require("string-similarity");
+import { StringSimilarity } from "../stringSimilarity";
 
 export class RegexHandler {
     private static instance: RegexHandler;
@@ -23,6 +22,14 @@ export class RegexHandler {
         return this.instance;
     }
 
+    /**
+     * Find best match for value regex in given string (data). Takes optional constraint regex before and after value regex.
+     * @param data
+     * @param valueRegex
+     * @param cRegexBefore
+     * @param cRegexAfter
+     * @return {rating: number, match: {index: number, element: string}}
+     */
     public findValue(data:string, valueRegex: ValueRegex, cRegexBefore?: ConstraintRegex, cRegexAfter?: ConstraintRegex): {rating: number, match: {index: number, element: string}} {
         let constraintRegex: ConstraintRegex[] = [];
         if (typeof cRegexBefore !== 'undefined') {
@@ -109,7 +116,7 @@ export class RegexHandler {
      * @return {bestMatch: {target: string, rating: number}, ratings: {target: string, rating: number}[]}
      */
     public static bestMatch(data:string, genMatches:string[]) {
-        let matches = stringSimilarity.findBestMatch(data, genMatches);
+        let matches = StringSimilarity.findBestMatch(data, genMatches);
         return matches.bestMatch;
     }
 

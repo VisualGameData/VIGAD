@@ -51,7 +51,6 @@
         "@vueuse/core": "^9.4.0",
         "randexp": "^0.5.3",
         "roboto-fontface": "^0.10.0",
-        "string-similarity": "^4.0.4",
         "tesseract.js": "^3.0.3",
         "tplant": "^3.1.0",
         "vue-router": "^4.1.6",

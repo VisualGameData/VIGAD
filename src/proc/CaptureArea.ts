@@ -7,13 +7,15 @@ export class CaptureArea {
     private top: number = 0;
     private left: number = 0;
     private regexGroups: RegexGroup[] = [];
-    private enabled: boolean = true;
+    private enabled: boolean;
 
     public constructor(width:number, height:number, top:number, left:number) {
         this.width = width;
         this.height = height;
         this.top = top;
         this.left = left;
+        this.regexGroups.push(new RegexGroup());
+        this.enabled = true;
     }
 
     public getId(): number {
@@ -54,5 +56,9 @@ export class CaptureArea {
 
     public setLeft(left:number) {
         this.left = left;
+    }
+
+    public getRegexGroups(): RegexGroup[] {
+        return this.regexGroups;
     }
 }

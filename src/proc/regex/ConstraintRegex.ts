@@ -1,4 +1,4 @@
-import { Regex, Matching, Slicing, Similarity } from "./Regex";
+import { Regex, Matching } from "./Regex";
 
 export class ConstraintRegex extends Regex {
     private location: Location;

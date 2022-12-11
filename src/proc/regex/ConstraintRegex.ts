@@ -13,6 +13,10 @@ export class ConstraintRegex extends Regex {
         return this.location;
     }
 
+    public setLocation(location: Location): void {
+        this.location = location;
+    }
+
 }
 
 export enum Location {

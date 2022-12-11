@@ -1,4 +1,4 @@
-import { ConstraintRegex } from "./ConstraintRegex";
+import { ConstraintRegex, Location } from "./ConstraintRegex";
 import { ValueRegex } from "./ValueRegex";
 
 export class RegexGroup {
@@ -12,6 +12,7 @@ export class RegexGroup {
         this.valueRegex = new ValueRegex();
         this.constraintRegex.push(new ConstraintRegex());
         this.constraintRegex.push(new ConstraintRegex());
+        this.constraintRegex[1].setLocation(Location.AFTER);
         this.enabled = true;
     }
 

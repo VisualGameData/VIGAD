@@ -1,17 +1,23 @@
 import { CaptureArea } from './CaptureArea';
 import { StreamHandler } from './StreamHandler';
+import { TesseractHandler } from './TesseractHandler';
 
 export class Vigad {
     private static instance: Vigad;
     private streamHandler: StreamHandler;
+    private tesseractHandler: TesseractHandler;
     private captureAreas: CaptureArea[];
+    private tesseractInterval!: NodeJS.Timeout;
+    private intervalRunning: boolean;
 
     /**
      * Create a private constructor to prevent multiple instances
      */
     private constructor() {
         this.streamHandler = StreamHandler.getInstance();
+        this.tesseractHandler = TesseractHandler.getInstance();
         this.captureAreas = [];
+        this.intervalRunning = false;
     }
 
     /**
@@ -48,6 +54,7 @@ export class Vigad {
         let ca = new CaptureArea(width, height, top, left);
         this.captureAreas.push(ca);
         ca.setId(this.captureAreas.length - 1);
+        this.tesseractHandler.enableCaptureArea(ca);
         return ca.getId();
     }
 
@@ -58,6 +65,7 @@ export class Vigad {
      */
     public deleteCaptureArea(id: number): void {
         this.captureAreas.splice(id, 1);
+        this.tesseractHandler.removeWorker();
     }
 
     /**
@@ -75,5 +83,26 @@ export class Vigad {
      */
     public getAllCaptureAreas(): CaptureArea[] {
         return this.captureAreas;
+    }
+
+    public startTesseract(): void {
+        if (!this.intervalRunning) {
+            this.tesseractInterval = setInterval(() => {
+                this.tesseractHandler.run(this.streamHandler.getCurrentSelectedSource(), (result: string[]) => {
+                    result.forEach((value: string, index: number) => {
+                        // do regex recognition here
+                        console.log(value);
+                    });
+                });
+            }, 500);
+            this.intervalRunning = true;
+            console.log("started tesseract");
+        }
+    }
+
+    public stopTesseract(): void {
+        clearInterval(this.tesseractInterval);
+        this.intervalRunning = false;
+        console.log("stopped tesseract");
     }
 }

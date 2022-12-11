@@ -5,7 +5,7 @@
             <!-- Provides the application the proper gutter -->
             <v-container fluid>
                 <v-row cols="12" no-gutters>
-                    <v-col cols="2" md="4" id="panel">
+                    <v-col cols="2" md="4" id="side-panel-container">
                         <v-sheet
                             color="background"
                             rounded="lg"
@@ -16,8 +16,10 @@
                     </v-col>
 
                     <v-col>
-                        <v-sheet class="proper-height center" rounded="lg">
-                            <MainVideoStream />
+                        <v-sheet class="proper-height" rounded="lg">
+                            <div id="video-stream-container">
+                                <MainVideoStream />
+                            </div>
                         </v-sheet>
                     </v-col>
                 </v-row>
@@ -100,16 +102,18 @@ body {
     overflow: hidden;
 }
 
-.center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#panel {
+#side-panel-container {
     overflow-y: auto;
     min-width: 375px;
     max-width: 375px;
     margin-right: 16px;
+}
+
+#video-stream-container {
+    min-height: calc(100vh - 56px - 16px - 16px);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 </style>

@@ -100,17 +100,14 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .video-stream {
-    // background-color: red;
-    // margin: 0 auto; /*centers the video*/
     width: inherit;
     height: inherit;
+    align-self: center;
     .capture-area-selection {
         margin: 0 auto;
         width: fit-content;
         .video {
-            background-color: red;
             width: 100%;
-            // height: 500px;
             max-height: calc(100vh - 56px - 16px - 16px);
         }
     }

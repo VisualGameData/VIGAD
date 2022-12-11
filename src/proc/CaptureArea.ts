@@ -61,4 +61,19 @@ export class CaptureArea {
     public getRegexGroups(): RegexGroup[] {
         return this.regexGroups;
     }
+
+    public getStreamScales(stream: MediaStream, previewWidth: number, previewHeight: number): {width: number, height: number, left: number, top: number} {
+        let streamWidth = stream.getVideoTracks()[0].getSettings().width;
+        let streamHeight = stream.getVideoTracks()[0].getSettings().height;
+
+        let scaleX = streamWidth! / previewWidth;
+        let scaleY = streamHeight! / previewHeight;
+
+        let scaledWidth = this.width * scaleX;
+        let scaledHeight = this.height * scaleY;
+        let scaledLeft = this.left * scaleX;
+        let scaledTop = this.top * scaleY;
+
+        return {width: scaledWidth, height: scaledHeight, left: scaledLeft, top: scaledTop};
+    }
 }

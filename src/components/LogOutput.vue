@@ -11,10 +11,35 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
+
 const props = defineProps<{
-    title: string;
-    log: string;
+    captureAreaId: number;
 }>();
+
+const title = ref(`Capture Area ${props.captureAreaId} Output`);
+const log = ref('');
+
+// vigad.getCaptureArea(id).getRegexGroups()[0].getValueRegex().getLastBestMatch()
+
+// const testd = ref(
+//     vigad.value
+//         .getCaptureArea(0)
+//         .getRegexGroups()[0]
+//         .getValueRegex()
+//         .getLastBestMatch()
+// );
+
+function abc() {
+    // console.log(
+    //     '->',
+    //     vigad.value
+    //         .getCaptureArea(0)
+    //         .getRegexGroups()[0]
+    //         .getValueRegex()
+    //         .getLastBestMatch()
+    // );
+}
 </script>
 
 <style lang="scss" scoped>

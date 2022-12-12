@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import { Vigad } from '@/proc/Vigad';
 import ValueRegex from './ValueRegex.vue';
 import BeforeConstraint from './BeforeConstraint.vue';
@@ -40,32 +40,6 @@ const props = defineProps<{
  * Get singelton instance reference to vigad
  */
 const vigad = ref(Vigad.getInstance());
-
-onMounted(() => {
-    console.log(
-        'Value Regex',
-        vigad.value
-            .getCaptureArea(props.captureAreaId)
-            .getRegexGroups()[0]
-            .getValueRegex()
-    );
-
-    console.log(
-        'Before',
-        vigad.value
-            .getCaptureArea(props.captureAreaId)
-            .getRegexGroups()[0]
-            .getConstraintRegex()[0]
-    );
-
-    console.log(
-        'After',
-        vigad.value
-            .getCaptureArea(props.captureAreaId)
-            .getRegexGroups()[0]
-            .getConstraintRegex()[1]
-    );
-});
 </script>
 
 <style lang="scss" scoped>

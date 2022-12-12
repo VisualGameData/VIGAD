@@ -145,7 +145,6 @@ export abstract class Regex {
                 // i--; May be a good performance optimization, doesn't work however if max is greater than the number of possible matches
             }
         }
-        console.log('generated matches for regex: ' + this.id);
         return regLev0;
     }
 

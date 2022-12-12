@@ -43,6 +43,7 @@
                 color="error"
                 prepend-icon="mdi-delete"
                 rounded="lg"
+                @click="vigad.deleteCaptureArea(captureAreaId)"
                 >Delete</v-btn
             >
         </div>

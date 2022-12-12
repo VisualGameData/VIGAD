@@ -17,6 +17,13 @@
                 @click="useRunning().stop()"
                 >Stop</v-btn
             >
+            <v-btn
+                class="rounded-pill"
+                prepend-icon="mdi-stop"
+                variant="tonal"
+                @click="abc()"
+                >awdw</v-btn
+            >
         </template>
         <template v-slot:default>
             <LogOutput
@@ -44,6 +51,17 @@ const vigad = ref(Vigad.getInstance());
  * Get a reactive reference to all of the capture areas
  */
 const captureAreas = ref(vigad.value.getAllCaptureAreas());
+
+function abc() {
+    console.log(
+        '->',
+        vigad.value
+            .getCaptureArea(0)
+            .getRegexGroups()[0]
+            .getValueRegex()
+            .getLastBestMatch()
+    );
+}
 
 function test() {
     useRunning().start();

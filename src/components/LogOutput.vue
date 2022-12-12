@@ -7,7 +7,7 @@
                     <v-icon color="primary" icon="mdi-information"></v-icon>
                 </template>
 
-                <v-list-item-title> Iteration: {{ i }}</v-list-item-title>
+                <v-list-item-title> {{ getCurrentTime() }}</v-list-item-title>
                 <v-list-item-subtitle>
                     <div>Element: {{ item.match.element }}</div>
                     <div>Rating: {{ item.rating }}</div>
@@ -31,33 +31,46 @@ const props = defineProps<{
  */
 const vigad = ref(Vigad.getInstance());
 
-const title = ref(`Capture Area ${props.captureAreaId}`);
+// local interface otherwise typescript is complaining
+interface MatchedElement {
+    match: {
+        index: number;
+        element: string;
+    };
+    rating: number;
+}
 
-const log = ref('');
-
-const matchedElements = ref<Object[]>([]);
+const matchedElements = ref<MatchedElement[]>([]);
 
 let timerId: string | number | NodeJS.Timeout | undefined;
 
+// watch for changes in isRunning and start/stop the timer
 watch(isRunning, (newValue) => {
     if (newValue) {
-        log.value += 'start timer' + '\n';
         timerId = setTimeout(function tick() {
-            let newValue = vigad.value
+            let newValue: MatchedElement = vigad.value
                 .getCaptureArea(0)
                 .getRegexGroups()[0]
                 .getValueRegex()
                 .getLastBestMatch();
-            console.log(newValue);
-            console.log(newValue.match);
+            console.log(Math.floor(Date.now() / 1000));
             matchedElements.value.push(newValue);
             timerId = setTimeout(tick, 1000);
         }, 1000);
     } else {
         clearTimeout(timerId);
-        log.value += 'end timer';
     }
 });
+
+function getCurrentTime() {
+    let date = new Date();
+    let hours = date.getHours();
+    let minutes = '0' + date.getMinutes();
+    let seconds = '0' + date.getSeconds();
+    let formattedTime =
+        hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    return formattedTime;
+}
 </script>
 
 <style lang="scss" scoped>

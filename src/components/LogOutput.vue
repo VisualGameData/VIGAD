@@ -53,7 +53,6 @@ watch(isRunning, (newValue) => {
                 .getRegexGroups()[0]
                 .getValueRegex()
                 .getLastBestMatch();
-            console.log(Math.floor(Date.now() / 1000));
             matchedElements.value.push(newValue);
             timerId = setTimeout(tick, 1000);
         }, 1000);

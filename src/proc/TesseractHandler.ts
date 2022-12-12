@@ -140,7 +140,6 @@ export class TesseractHandler {
                                     )
                             )
                         );
-                        console.log(results);
                         callback(results);
                         this.running = false;
                     })();

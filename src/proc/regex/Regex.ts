@@ -157,9 +157,7 @@ export abstract class Regex {
     private getAllSubstrings(
         str: string
     ): { index: number; element: string }[] {
-        var i,
-            j,
-            result = [];
+        var i, j, result = [];
 
         for (i = 0; i < str.length; i++) {
             for (j = i + 1; j < str.length + 1; j++) {

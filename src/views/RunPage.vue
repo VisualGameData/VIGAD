@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import ViewComponent from '@/components/ViewComponent.vue';
 import { useRunning, isRunning } from '@/composables/useRunning';
 import LogOutput from '@/components/LogOutput.vue';

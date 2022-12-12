@@ -1,20 +1,7 @@
 <template>
-    <!-- <v-alert
-        border="start"
-        icon="mdi-information"
-        :title="title"
-        type="success"
-        class="log-output-container"
-        variant="outlined"
-    >
-        {{ log }}
-    </v-alert> -->
     <v-card class="log-output-container mb-4">
-        <v-list lines="three" disabled>
-            <v-list-subheader>{{
-                `Capture Area ${captureAreaId}`
-            }}</v-list-subheader>
-
+        <v-card-title>{{ `Capture Area ${captureAreaId}` }}</v-card-title>
+        <v-list lines="three" disabled class="reverse">
             <v-list-item v-for="(item, i) in matchedElements" :key="i">
                 <template v-slot:prepend>
                     <v-icon color="primary" icon="mdi-information"></v-icon>
@@ -22,7 +9,7 @@
 
                 <v-list-item-title> Iteration: {{ i }}</v-list-item-title>
                 <v-list-item-subtitle>
-                    <div>Element: {{ item.element }}</div>
+                    <div>Element: {{ item.match.element }}</div>
                     <div>Rating: {{ item.rating }}</div>
                 </v-list-item-subtitle>
             </v-list-item>
@@ -61,7 +48,9 @@ watch(isRunning, (newValue) => {
                 .getRegexGroups()[0]
                 .getValueRegex()
                 .getLastBestMatch();
-            matchedElements.value.push(newValue.match);
+            console.log(newValue);
+            console.log(newValue.match);
+            matchedElements.value.push(newValue);
             timerId = setTimeout(tick, 1000);
         }, 1000);
     } else {
@@ -75,5 +64,9 @@ watch(isRunning, (newValue) => {
 .log-output-container {
     max-height: 400px;
     overflow-y: auto;
+}
+.reverse {
+    display: flex;
+    flex-direction: column-reverse;
 }
 </style>

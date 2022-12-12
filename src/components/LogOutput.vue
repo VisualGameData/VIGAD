@@ -9,9 +9,11 @@
     >
         {{ log }}
     </v-alert> -->
-    <v-card class="log-output-container mb-8">
+    <v-card class="log-output-container mb-4">
         <v-list lines="three" disabled>
-            <v-list-subheader>{{ title.toUpperCase() }}</v-list-subheader>
+            <v-list-subheader>{{
+                `Capture Area ${captureAreaId}`
+            }}</v-list-subheader>
 
             <v-list-item v-for="(item, i) in matchedElements" :key="i">
                 <template v-slot:prepend>
@@ -29,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { Vigad } from '@/proc/Vigad';
 import { isRunning } from '@/composables/useRunning';
 
@@ -46,12 +48,6 @@ const title = ref(`Capture Area ${props.captureAreaId}`);
 
 const log = ref('');
 
-const items = [
-    { text: 'Real-Time', icon: 'mdi-clock' },
-    { text: 'Audience', icon: 'mdi-account' },
-    { text: 'Conversions', icon: 'mdi-flag' },
-];
-
 const matchedElements = ref<Object[]>([]);
 
 let timerId: string | number | NodeJS.Timeout | undefined;
@@ -61,16 +57,11 @@ watch(isRunning, (newValue) => {
     if (newValue) {
         log.value += 'start timer' + '\n';
         timerId = setTimeout(function tick() {
-            // Update the value of the reactive variable
             let newValue = vigad.value
                 .getCaptureArea(0)
                 .getRegexGroups()[0]
                 .getValueRegex()
                 .getLastBestMatch();
-            console.log('Match Object', newValue.match);
-            console.log('Match Index', newValue.match.index);
-            console.log('Matched Element', newValue.match.element);
-            console.log('Rating', newValue.rating);
             matchedElements.value.push(newValue.match);
             timerId = setTimeout(tick, 1000);
         }, 1000);

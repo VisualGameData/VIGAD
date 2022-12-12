@@ -6,7 +6,7 @@
                 class="rounded-pill"
                 prepend-icon="mdi-play"
                 variant="tonal"
-                @click="test()"
+                @click="useRunning().start()"
                 >Start</v-btn
             >
             <v-btn
@@ -16,13 +16,6 @@
                 variant="tonal"
                 @click="useRunning().stop()"
                 >Stop</v-btn
-            >
-            <v-btn
-                class="rounded-pill"
-                prepend-icon="mdi-stop"
-                variant="tonal"
-                @click="abc()"
-                >awdw</v-btn
             >
         </template>
         <template v-slot:default>
@@ -36,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { onUpdated, ref } from 'vue';
+import { ref } from 'vue';
 import ViewComponent from '@/components/ViewComponent.vue';
 import { useRunning, isRunning } from '@/composables/useRunning';
 import LogOutput from '@/components/LogOutput.vue';
@@ -51,21 +44,6 @@ const vigad = ref(Vigad.getInstance());
  * Get a reactive reference to all of the capture areas
  */
 const captureAreas = ref(vigad.value.getAllCaptureAreas());
-
-function abc() {
-    console.log(
-        '->',
-        vigad.value
-            .getCaptureArea(0)
-            .getRegexGroups()[0]
-            .getValueRegex()
-            .getLastBestMatch()
-    );
-}
-
-function test() {
-    useRunning().start();
-}
 </script>
 
 <style lang="scss" scoped></style>

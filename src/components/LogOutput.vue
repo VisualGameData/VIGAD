@@ -53,7 +53,6 @@ const matchedElements = ref<Object[]>([]);
 let timerId: string | number | NodeJS.Timeout | undefined;
 
 watch(isRunning, (newValue) => {
-    console.log(newValue);
     if (newValue) {
         log.value += 'start timer' + '\n';
         timerId = setTimeout(function tick() {

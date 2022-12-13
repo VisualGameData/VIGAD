@@ -114,6 +114,8 @@ export class Vigad {
                             this.regexHandler.findValue(value.data, regexGrp.getValueRegex(), regexGrp.getConstraintRegex()[1]);
                         } else if (regexGrp.getConstraintRegex()[1].getRegex().toString() === "/(?:)/") {
                             this.regexHandler.findValue(value.data, regexGrp.getValueRegex(), regexGrp.getConstraintRegex()[0]);
+                        } else {
+                            this.regexHandler.findValue(value.data, regexGrp.getValueRegex(), regexGrp.getConstraintRegex()[0], regexGrp.getConstraintRegex()[1]);
                         }
                     });
                 }, this.previewWidth, this.previewHeight);

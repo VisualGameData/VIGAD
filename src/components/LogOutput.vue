@@ -47,9 +47,10 @@ let timerId: string | number | NodeJS.Timeout | undefined;
 // watch for changes in isRunning and start/stop the timer
 watch(isRunning, (newValue) => {
     if (newValue) {
+        matchedElements.value = [];
         timerId = setTimeout(function tick() {
             let newValue: MatchedElement = vigad.value
-                .getCaptureArea(0)
+                .getCaptureArea(props.captureAreaId)
                 .getRegexGroups()[0]
                 .getValueRegex()
                 .getLastBestMatch();

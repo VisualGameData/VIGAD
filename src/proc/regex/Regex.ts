@@ -198,6 +198,7 @@ export abstract class Regex {
                             },
                         };
                     }
+                    return true;
                 });
                 break;
             case Matching.APPROX:

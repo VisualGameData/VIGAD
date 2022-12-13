@@ -7,7 +7,7 @@
                     <v-icon color="primary" icon="mdi-information"></v-icon>
                 </template>
 
-                <v-list-item-title> {{ getCurrentTime() }}</v-list-item-title>
+                <v-list-item-title> {{ item.timestamp }}</v-list-item-title>
                 <v-list-item-subtitle>
                     <div>Element: {{ item.match.element }}</div>
                     <div>Rating: {{ item.rating }}</div>
@@ -38,6 +38,7 @@ interface MatchedElement {
         element: string;
     };
     rating: number;
+    timestamp?: string;
 }
 
 const matchedElements = ref<MatchedElement[]>([]);
@@ -49,12 +50,20 @@ watch(isRunning, (newValue) => {
     if (newValue) {
         matchedElements.value = [];
         timerId = setTimeout(function tick() {
-            let newValue: MatchedElement = vigad.value
+            let newFoundMatch: MatchedElement = vigad.value
                 .getCaptureArea(props.captureAreaId)
                 .getRegexGroups()[0]
                 .getValueRegex()
                 .getLastBestMatch();
-            matchedElements.value.push(newValue);
+            // add timestamp to the new value
+            let date = new Date();
+            let hours = date.getHours();
+            let minutes = '0' + date.getMinutes();
+            let seconds = '0' + date.getSeconds();
+            newFoundMatch.timestamp =
+                hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+            // add new value to the array
+            matchedElements.value.push(newFoundMatch);
             timerId = setTimeout(tick, 1000);
         }, 1000);
     } else {

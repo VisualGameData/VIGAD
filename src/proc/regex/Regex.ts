@@ -13,6 +13,9 @@ export abstract class Regex {
         rating: number;
         match: { index: number; element: string };
     };
+    protected lastRegex: RegExp; // used for checking whether regex has changed -> regenerating matches
+    protected lastMatchesNum: number; // used for checking whether matchesNum has changed -> regenerating matches
+    protected generatedMatches: string[]; // generated matches
 
     protected constructor() {
         this.id = 0;
@@ -23,6 +26,9 @@ export abstract class Regex {
         this.matchesNum = 10000;
         this.substrings = [];
         this.lastBestMatch = { rating: -1, match: { index: -1, element: '' } };
+        this.lastRegex = new RegExp('');
+        this.lastMatchesNum = this.matchesNum;
+        this.generatedMatches = [];
     }
 
     public getId(): number {
@@ -195,9 +201,14 @@ export abstract class Regex {
                 });
                 break;
             case Matching.APPROX:
+                if (this.generatedMatches.length === 0 || this.lastRegex.toString() !== this.regex.toString() || this.matchesNum !== this.lastMatchesNum) {
+                    this.generatedMatches = this.genMatches();
+                    this.lastRegex = this.regex;
+                    this.lastMatchesNum = this.matchesNum;
+                }
                 bestMatch = RegexHandler.approxMatching(
                     this.substrings,
-                    this.genMatches()
+                    this.generatedMatches
                 );
                 break;
         }

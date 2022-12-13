@@ -44,14 +44,12 @@ export class RegexHandler {
 
         // set required substrings for constraint regex & apply similarity conversion
         for (let i = 0; i < constraintRegex.length; i++) {
-            if (constraintRegex[i].getSubstrings().length === 0) {  // if substrings are not already set
-                if (constraintRegex[i].getSlicing() === Slicing.SUBSTR && allSubstrings.length !== 0) {
-                    constraintRegex[i].setSubstrings(allSubstrings.slice());   // clone array
-                } else if (constraintRegex[i].getSlicing() === Slicing.SPACES && spacesSubstrings.length !== 0) {
-                    constraintRegex[i].setSubstrings(spacesSubstrings.slice());   // clone array
-                } else {
-                    constraintRegex[i].genSubstrings(data);
-                }
+            if (constraintRegex[i].getSlicing() === Slicing.SUBSTR && allSubstrings.length !== 0) {
+                constraintRegex[i].setSubstrings(allSubstrings.slice());   // clone array
+            } else if (constraintRegex[i].getSlicing() === Slicing.SPACES && spacesSubstrings.length !== 0) {
+                constraintRegex[i].setSubstrings(spacesSubstrings.slice());   // clone array
+            } else {
+                constraintRegex[i].genSubstrings(data);
             }
             if (constraintRegex[i].getSlicing() === Slicing.SUBSTR) {
                 allSubstrings = constraintRegex[i].getSubstrings(); // cache substrings
@@ -89,18 +87,16 @@ export class RegexHandler {
         }
 
         // set required substrings for value regex & apply similarity conversion
-        if (valueRegex.getSubstrings().length === 0) {  // if substrings are not already set
-            if (highestLowIndex === 0 && lowestHighIndex === data.length) { // if no constraint regex
-                if (valueRegex.getSlicing() === Slicing.SUBSTR && allSubstrings.length !== 0) {
-                    valueRegex.setSubstrings(allSubstrings.slice());   // clone array
-                } else if (valueRegex.getSlicing() === Slicing.SPACES && spacesSubstrings.length !== 0) {
-                    valueRegex.setSubstrings(spacesSubstrings.slice());   // clone array
-                } else {
-                    valueRegex.genSubstrings(data);
-                }
+        if (highestLowIndex === 0 && lowestHighIndex === data.length) { // if no constraint regex
+            if (valueRegex.getSlicing() === Slicing.SUBSTR && allSubstrings.length !== 0) {
+                valueRegex.setSubstrings(allSubstrings.slice());   // clone array
+            } else if (valueRegex.getSlicing() === Slicing.SPACES && spacesSubstrings.length !== 0) {
+                valueRegex.setSubstrings(spacesSubstrings.slice());   // clone array
             } else {
-                valueRegex.genSubstrings(data.slice(highestLowIndex, lowestHighIndex));
+                valueRegex.genSubstrings(data);
             }
+        } else {
+            valueRegex.genSubstrings(data.slice(highestLowIndex, lowestHighIndex));
         }
 
         valueRegex.applySimilarity();

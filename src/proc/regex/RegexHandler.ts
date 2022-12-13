@@ -70,13 +70,15 @@ export class RegexHandler {
         }
 
         // determine constraint indexes
-        let lowestHighIndex = 0;
         let highestLowIndex = 0;
+        let hLIPlus = 0; // highestLowIndex plus length of match
+        let lowestHighIndex = data.length;
         constraintRegex.forEach(regex => {
             switch (regex.getLocation()) {
                 case "Before":
-                    if (regex.getLastBestMatch().match.index > highestLowIndex) {
+                    if (regex.getLastBestMatch().match.index >= highestLowIndex) {
                         highestLowIndex = regex.getLastBestMatch().match.index;
+                        hLIPlus = highestLowIndex + regex.getLastBestMatch().match.element.length;
                     }
                     break;
                 case "After":
@@ -86,24 +88,18 @@ export class RegexHandler {
                     break;
             }
         });
-        if (lowestHighIndex === 0) {
-            lowestHighIndex = data.length;
-        }
-        console.log("here");
         // set required substrings for value regex & apply similarity conversion
         if (highestLowIndex === 0 && lowestHighIndex === data.length) { // if no constraint regex
             if (valueRegex.getSlicing() === Slicing.SUBSTR && allSubstrings.length !== 0) {
-                console.log("used cached substrings");
                 valueRegex.setSubstrings(allSubstrings.slice());   // clone array
             } else if (valueRegex.getSlicing() === Slicing.SPACES && spacesSubstrings.length !== 0) {
                 valueRegex.setSubstrings(spacesSubstrings.slice());   // clone array
             } else {
-                console.log("regenerated substrings");
                 valueRegex.genSubstrings(data);
             }
         } else {
-            console.log("regenerated substrings 2");
-            valueRegex.genSubstrings(data.slice(highestLowIndex, lowestHighIndex));
+            // this may be cached as well in the future, however performance optimization won't be as high
+            valueRegex.genSubstrings(data.slice(hLIPlus, lowestHighIndex));
         }
 
         valueRegex.applySimilarity();

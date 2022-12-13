@@ -101,6 +101,7 @@ export abstract class Regex {
                 this.substrings = this.getAllSubstrings(data!);
                 break;
             case Slicing.SPACES:
+                this.substrings = [];
                 data.split(' ').forEach((element) => {
                     this.substrings.push({
                         index: this.indexOfFirst(data),
@@ -109,6 +110,7 @@ export abstract class Regex {
                 });
                 break;
             case Slicing.ENTIRE_STR:
+                this.substrings = [];
                 this.substrings.push({ index: 0, element: data });
                 break;
         }

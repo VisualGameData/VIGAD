@@ -1,36 +1,15 @@
 <template>
     <div>
         <div class="pt-2 regex-definition">
-            <RegexInput
-                inputLabel="Search value"
-                inputPlaceholder="Enter search value"
-                prepend-icon="mdi-table-column"
-                matchingOption="Exact"
-                slicingOption="Substrings"
-                similarityOption="None"
-            />
+            <ValueRegex :captureAreaId="captureAreaId" />
         </div>
 
         <div class="mt-4 regex-constraint-before-definition">
-            <RegexInput
-                inputLabel="Before Constraint"
-                inputPlaceholder="Enter a constraint"
-                prepend-icon="mdi-table-column-plus-before"
-                matchingOption="Approximate"
-                slicingOption="Substrings"
-                similarityOption="None"
-            />
+            <BeforeConstraint :captureAreaId="captureAreaId" />
         </div>
 
         <div class="mt-4 regex-constraint-after-definition">
-            <RegexInput
-                inputLabel="After Constraint"
-                inputPlaceholder="Enter a constraint"
-                prepend-icon="mdi-table-column-plus-after"
-                matchingOption="Approximate"
-                slicingOption="Substrings"
-                similarityOption="None"
-            />
+            <AfterConstraint :captureAreaId="captureAreaId" />
         </div>
 
         <div class="mt-4 actions">
@@ -39,6 +18,7 @@
                 color="error"
                 prepend-icon="mdi-delete"
                 rounded="lg"
+                @click="vigad.deleteCaptureArea(captureAreaId)"
                 >Delete</v-btn
             >
         </div>
@@ -46,7 +26,20 @@
 </template>
 
 <script setup lang="ts">
-import RegexInput from './RegexInput.vue';
+import { ref } from 'vue';
+import { Vigad } from '@/proc/Vigad';
+import ValueRegex from './ValueRegex.vue';
+import BeforeConstraint from './BeforeConstraint.vue';
+import AfterConstraint from './AfterConstraint.vue';
+
+const props = defineProps<{
+    captureAreaId: number;
+}>();
+
+/**
+ * Get singelton instance reference to vigad
+ */
+const vigad = ref(Vigad.getInstance());
 </script>
 
 <style lang="scss" scoped>

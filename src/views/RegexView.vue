@@ -24,7 +24,9 @@
                         {{ captureArea.getId() }}
                     </v-expansion-panel-title>
                     <v-expansion-panel-text>
-                        <CaptureAreaSearchValue />
+                        <CaptureAreaSearchValue
+                            :capture-area-id="captureArea.getId()"
+                        />
                     </v-expansion-panel-text>
                 </v-expansion-panel>
             </v-expansion-panels>

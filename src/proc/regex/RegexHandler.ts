@@ -31,6 +31,10 @@ export class RegexHandler {
      * @return {rating: number, match: {index: number, element: string}}
      */
     public findValue(data:string, valueRegex: ValueRegex, cRegexBefore?: ConstraintRegex, cRegexAfter?: ConstraintRegex): {rating: number, match: {index: number, element: string}} {
+
+        // replace all occurences of \n in data with spaces
+        data = data.replace(/\n/g, " ");
+
         let constraintRegex: ConstraintRegex[] = [];
         if (typeof cRegexBefore !== 'undefined') {
             constraintRegex.push(cRegexBefore);
@@ -85,17 +89,20 @@ export class RegexHandler {
         if (lowestHighIndex === 0) {
             lowestHighIndex = data.length;
         }
-
+        console.log("here");
         // set required substrings for value regex & apply similarity conversion
         if (highestLowIndex === 0 && lowestHighIndex === data.length) { // if no constraint regex
             if (valueRegex.getSlicing() === Slicing.SUBSTR && allSubstrings.length !== 0) {
+                console.log("used cached substrings");
                 valueRegex.setSubstrings(allSubstrings.slice());   // clone array
             } else if (valueRegex.getSlicing() === Slicing.SPACES && spacesSubstrings.length !== 0) {
                 valueRegex.setSubstrings(spacesSubstrings.slice());   // clone array
             } else {
+                console.log("regenerated substrings");
                 valueRegex.genSubstrings(data);
             }
         } else {
+            console.log("regenerated substrings 2");
             valueRegex.genSubstrings(data.slice(highestLowIndex, lowestHighIndex));
         }
 

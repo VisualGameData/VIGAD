@@ -1,24 +1,33 @@
 <template>
-    <v-card class="log-output-container mb-4">
-        <v-card-title>{{ `Capture Area ${captureAreaId}` }}</v-card-title>
-        <v-list lines="three" disabled class="reverse">
-            <v-list-item v-for="(item, i) in matchedElements" :key="i">
-                <template v-slot:prepend>
-                    <v-icon color="primary" icon="mdi-information"></v-icon>
-                </template>
+    <v-expansion-panel class="log-output-container">
+        <v-expansion-panel-title class="pa-4" expand-icon="mdi-menu-down">
+            Capture area
+            {{ captureAreaId }}
+        </v-expansion-panel-title>
+        <v-expansion-panel-text>
+            <p v-if="matchedElementsIsEmpty">Start capturing first!</p>
+            <v-list v-else lines="three" disabled class="reverse">
+                <v-list-item v-for="(item, i) in matchedElements" :key="i">
+                    <template v-slot:prepend>
+                        <v-icon
+                            :color="item.rating > 0 ? 'success' : 'error'"
+                            icon="mdi-information"
+                        ></v-icon>
+                    </template>
 
-                <v-list-item-title> {{ item.timestamp }}</v-list-item-title>
-                <v-list-item-subtitle>
+                    <v-list-item-title expand-icon="mdi-menu-down">
+                        {{ item.timestamp }}</v-list-item-title
+                    >
                     <div>Element: {{ item.match.element }}</div>
                     <div>Rating: {{ item.rating }}</div>
-                </v-list-item-subtitle>
-            </v-list-item>
-        </v-list>
-    </v-card>
+                </v-list-item>
+            </v-list>
+        </v-expansion-panel-text>
+    </v-expansion-panel>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { Vigad } from '@/proc/Vigad';
 import { isRunning } from '@/composables/useRunning';
 
@@ -40,6 +49,10 @@ interface MatchedElement {
     rating: number;
     timestamp?: string;
 }
+
+const matchedElementsIsEmpty = computed(() => {
+    return matchedElements.value.length === 0;
+});
 
 const matchedElements = ref<MatchedElement[]>([]);
 
@@ -70,16 +83,6 @@ watch(isRunning, (newValue) => {
         clearTimeout(timerId);
     }
 });
-
-function getCurrentTime() {
-    let date = new Date();
-    let hours = date.getHours();
-    let minutes = '0' + date.getMinutes();
-    let seconds = '0' + date.getSeconds();
-    let formattedTime =
-        hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
-    return formattedTime;
-}
 </script>
 
 <style lang="scss" scoped>

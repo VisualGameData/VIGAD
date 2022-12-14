@@ -28,7 +28,9 @@
                 ref="drag"
                 class="center-text"
             >
-                CA: {{ captureArea.getId() }}
+                <v-tooltip activator="parent" location="top"
+                    >Capture area: {{ captureArea.getId() }}</v-tooltip
+                >
             </VueDragResize>
         </v-responsive>
     </div>

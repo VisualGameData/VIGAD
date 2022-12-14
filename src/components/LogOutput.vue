@@ -6,7 +6,7 @@
         </v-expansion-panel-title>
         <v-expansion-panel-text>
             <p v-if="matchedElementsIsEmpty">
-                Start the capturing to get some values!
+                Start capturing first!
             </p>
             <v-list v-else lines="three" disabled class="reverse">
                 <v-list-item v-for="(item, i) in matchedElements" :key="i">

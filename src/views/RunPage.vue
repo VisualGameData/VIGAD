@@ -19,10 +19,6 @@
             >
         </template>
         <template v-slot:default>
-            <v-alert v-if="isRunning" class="mb-4" type="warning"
-                >While capturing you are unable to switch changes sources or
-                adjust regex, please stop if you want to change those!</v-alert
-            >
             <v-expansion-panels multiple>
                 <LogOutput
                     v-for="captureArea in captureAreas"

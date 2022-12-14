@@ -28,15 +28,33 @@
 
         <!-- Bottom Navigation -->
         <v-bottom-navigation :elevation="24" bg-color="surface" grow>
-            <v-btn to="/run" tonal prepend-icon="mdi-play" value="run">
+            <v-btn
+                :disabled="isRunning"
+                to="/run"
+                tonal
+                prepend-icon="mdi-play"
+                value="run"
+            >
                 Capturing
             </v-btn>
 
-            <v-btn to="/" tonal prepend-icon="mdi-monitor" value="source">
+            <v-btn
+                :disabled="isRunning"
+                to="/"
+                tonal
+                prepend-icon="mdi-monitor"
+                value="source"
+            >
                 Source
             </v-btn>
 
-            <v-btn to="/regex" tonal prepend-icon="mdi-regex" value="regex">
+            <v-btn
+                :disabled="isRunning"
+                to="/regex"
+                tonal
+                prepend-icon="mdi-regex"
+                value="regex"
+            >
                 Regex
             </v-btn>
         </v-bottom-navigation>
@@ -45,6 +63,7 @@
 
 <script setup lang="ts">
 import MainVideoStream from './components/MainVideoStream.vue';
+import { isRunning } from './composables/useRunning';
 
 // Handle System Bar Functions for later
 async function minimizeScreen() {

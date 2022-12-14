@@ -19,11 +19,17 @@
             >
         </template>
         <template v-slot:default>
-            <LogOutput
-                v-for="captureArea in captureAreas"
-                :key="captureArea.getId()"
-                :captureAreaId="captureArea.getId()"
-            />
+            <v-alert v-if="isRunning" class="mb-4" type="warning"
+                >While capturing you are unable to switch changes sources or
+                adjust regex, please stop if you want to change those!</v-alert
+            >
+            <v-expansion-panels multiple>
+                <LogOutput
+                    v-for="captureArea in captureAreas"
+                    :key="captureArea.getId()"
+                    :captureAreaId="captureArea.getId()"
+                />
+            </v-expansion-panels>
         </template>
     </ViewComponent>
 </template>
@@ -46,4 +52,9 @@ const vigad = ref(Vigad.getInstance());
 const captureAreas = ref(vigad.value.getAllCaptureAreas());
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.output {
+    display: flex;
+    justify-content: row;
+}
+</style>

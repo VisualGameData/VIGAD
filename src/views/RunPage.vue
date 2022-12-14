@@ -19,17 +19,19 @@
             >
         </template>
         <template v-slot:default>
-            <LogOutput
-                v-for="captureArea in captureAreas"
-                :key="captureArea.getId()"
-                :captureAreaId="captureArea.getId()"
-            />
+            <v-expansion-panels v-model="defaultOpenPanel" multiple>
+                <LogOutput
+                    v-for="captureArea in captureAreas"
+                    :key="captureArea.getId()"
+                    :captureAreaId="captureArea.getId()"
+                />
+            </v-expansion-panels>
         </template>
     </ViewComponent>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import ViewComponent from '@/components/ViewComponent.vue';
 import { useRunning, isRunning } from '@/composables/useRunning';
 import LogOutput from '@/components/LogOutput.vue';
@@ -44,6 +46,13 @@ const vigad = ref(Vigad.getInstance());
  * Get a reactive reference to all of the capture areas
  */
 const captureAreas = ref(vigad.value.getAllCaptureAreas());
+
+const defaultOpenPanel = ref<number[]>([0]);
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.output {
+    display: flex;
+    justify-content: row;
+}
+</style>

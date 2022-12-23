@@ -1,8 +1,8 @@
 ![Vigad](https://user-images.githubusercontent.com/58397976/209412078-1a7f2dfc-3ce8-4a7c-9ad6-2ca19a4e764d.png)
 
 [![GitHub version](https://badge.fury.io/gh/VisualGameData%2FVigad.svg)](https://github.com/VisualGameData/VIGAD)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/VisualGameData/VIGAD/blob/main/LICENSE)
-[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/VisualGameData/VIGAD/main/LICENSE)
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/VisualGameData/VIGAD/pulls)
 
 ## Description
 

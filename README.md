@@ -6,7 +6,7 @@
 
 ## Description
 
-Vigad is a desktop application built using Electron+Vue.js. Its primary function is to extract live data from one or more specified areas on the screen. For this image-to-text conversion, Vigad relies on ![TesseractJS](https://tesseract.projectnaptha.com/). Additional configuration options allow to filter for specific (regular) expressions.
+Vigad is a desktop application built using Electron+Vue.js. Its primary function is to extract live data from one or more specified areas on the screen. For this image-to-text conversion, Vigad relies on [TesseractJS](https://tesseract.projectnaptha.com/). Additional configuration options allow to filter for specific (regular) expressions.
 
 A common use case would be for example to extract the players health points from a shooter game and create a chart out of that data. Since Vigad provides a live-data-flow, it may also be possible to draw a live-map using coordinates provided on the screen.
 

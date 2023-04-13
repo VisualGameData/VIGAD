@@ -32,7 +32,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import ViewComponent from '@/components/ViewComponent.vue';
+import ViewComponent from '@/components/ViewComponent/ViewComponent.vue';
 import { useRunning, isRunning } from '@/composables/useRunning';
 import LogOutput from '@/components/LogOutput.vue';
 import { Vigad } from '@/proc/Vigad';

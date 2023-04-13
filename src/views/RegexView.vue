@@ -36,7 +36,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import ViewComponent from '@/components/ViewComponent.vue';
+import ViewComponent from '@/components/ViewComponent/ViewComponent.vue';
 import CaptureAreaSearchValue from '@/components/capture-area/CaptureAreaSearchValue.vue';
 import { Vigad } from '@/proc/Vigad';
 import {

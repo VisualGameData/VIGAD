@@ -64,9 +64,9 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { isRunning } from './composables/useRunning';
+import { isRunning } from '@/composables/useRunning';
 
-import MainVideoStream from '/components/MainVideoStream/MainVideoStream.vue';
+import MainVideoStream from '@/components/MainVideoStream/MainVideoStream.vue';
 
 // Handle System Bar Functions for later
 async function minimizeScreen() {

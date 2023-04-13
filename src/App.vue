@@ -145,10 +145,4 @@ body {
     align-items: center;
     justify-content: center;
 }
-
-// Dialog Fade
-.dialog-bottom-transition-enter-active,
-.dialog-bottom-transition-leave-active {
-    transition: transform 0.2s ease-in-out;
-}
 </style>

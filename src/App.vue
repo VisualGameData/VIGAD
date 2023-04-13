@@ -62,8 +62,11 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, ref } from 'vue';
+
 import MainVideoStream from './components/MainVideoStream.vue';
 import { isRunning } from './composables/useRunning';
+import { useRouter } from 'vue-router';
 
 // Handle System Bar Functions for later
 async function minimizeScreen() {
@@ -77,6 +80,13 @@ async function fullScreen() {
 async function closeApplication() {
     await (window as any).electronAPI.closeApplication();
 }
+
+// Force the application to navigate to the default route
+const router = useRouter();
+onMounted(() => {
+    // navigate to the default route
+    router.push('/');
+});
 </script>
 
 <style lang="scss">
@@ -134,5 +144,11 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+// Dialog Fade
+.dialog-bottom-transition-enter-active,
+.dialog-bottom-transition-leave-active {
+    transition: transform 0.2s ease-in-out;
 }
 </style>

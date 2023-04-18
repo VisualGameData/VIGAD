@@ -6,7 +6,7 @@
 - [ ] a developer is assigned
 - [ ] the PR is NOT estimated
 - [ ] the PR is labeled
-- [ ] the PR is assigned to the current sprint
+- [ ] the PR is NOT assigned to the current sprint
 - [ ] a meaningful title has been set according to https://www.conventionalcommits.org/
 - [ ] the PR is described in detail
 - [ ] the PR links to an issue

@@ -1,6 +1,6 @@
 import { fileURLToPath, URL } from 'url';
 import { rmSync } from 'fs';
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 import vue from '@vitejs/plugin-vue';
 import electron from 'vite-electron-plugin';
 import { customStart } from 'vite-electron-plugin/plugin';
@@ -10,6 +10,13 @@ rmSync('dist-electron', { recursive: true, force: true });
 
 // https://vitejs.dev/config/
 export default defineConfig({
+    test: {
+        coverage: {
+            provider: 'c8',
+            reporter: ['text', 'html'],
+            reportsDirectory: './tests/unit/coverage',
+        },
+    },
     plugins: [
         vue(),
         electron({

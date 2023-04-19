@@ -84,7 +84,7 @@
 </template>
 
 <script setup lang="ts">
-import ViewComponent from '@/components/ViewComponent.vue';
+import ViewComponent from '@/components/ViewComponent/ViewComponent.vue';
 import { ref, computed, onMounted } from 'vue';
 import { Vigad } from '@/proc/Vigad';
 

@@ -28,9 +28,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { Vigad } from '@/proc/Vigad';
-import ValueRegex from './ValueRegex.vue';
-import BeforeConstraint from './BeforeConstraint.vue';
-import AfterConstraint from './AfterConstraint.vue';
+import ValueRegex from '@/components/capture-area/ValueRegex/ValueRegex.vue';
+import BeforeConstraint from '@/components/capture-area/BeforeConstraint/BeforeConstraint.vue';
+import AfterConstraint from '@/components/capture-area/AfterConstraint/AfterConstraint.vue';
 
 const props = defineProps<{
     captureAreaId: number;

@@ -3,7 +3,7 @@ import { shallowMount } from '@vue/test-utils';
 import ViewComponent from '@/components/ViewComponent/ViewComponent.vue';
 
 describe('ViewComponent', () => {
-  it('renders the title prop', () => {
+  it('Render title prop', () => {
     const title = 'Test Title'
     const wrapper = shallowMount(ViewComponent, {
       props: 
@@ -15,14 +15,14 @@ describe('ViewComponent', () => {
     expect(wrapper.find('.header-container').text()).toContain(title)
   })
 
-  it('renders default slot content', () => {
+  it('Render default slot content', () => {
     const wrapper = shallowMount(ViewComponent, {
       slots: { default: '<div class="my-slot-content"></div>' }
     })
     expect(wrapper.find('.my-slot-content').exists()).toBe(true)
   })
 
-  it('renders actions slot content', () => {
+  it('Render action slot content', () => {
     const wrapper = shallowMount(ViewComponent, {
       slots: { actions: '<div class="my-actions-content"></div>' }
     })

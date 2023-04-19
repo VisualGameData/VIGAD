@@ -24,3 +24,6 @@ dist-ssr
 release
 .vscode/.debug.env
 dist-electron
+
+# Ignore coverage folder from Unit Tests
+/tests/unit/coverage/*

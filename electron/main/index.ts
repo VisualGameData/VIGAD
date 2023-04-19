@@ -47,7 +47,7 @@ async function createWindow() {
         minHeight: 750,
         frame: true, // still buggy cant select items from the custom titlebar
         autoHideMenuBar: true,
-        icon: join(process.env.PUBLIC, '../src/assets/logo.png'),
+        icon: join(process.env.PUBLIC, '../src/assets/images/logo.png'),
         webPreferences: {
             preload,
             // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production

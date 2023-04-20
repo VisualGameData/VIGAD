@@ -58,6 +58,7 @@
             <v-dialog
                 v-model="dialog"
                 transition="dialog-bottom-transition"
+                persistent
                 fullscreen
                 scrim
             >
@@ -66,7 +67,7 @@
                         Session Settings
                     </v-btn>
                 </template>
-                <v-card>
+                <v-card :loading="isSessionActive">
                     <v-toolbar color="primary">
                         <v-btn variant="tonal" icon @click="dialog = false">
                             <v-icon>mdi-close</v-icon>
@@ -81,7 +82,7 @@
                             class="rounded-pill"
                             prepend-icon="mdi-play"
                             variant="tonal"
-                            @click="isSessionActive = true"
+                            @click="startSession()"
                             >Start Session</v-btn
                         >
 
@@ -90,7 +91,7 @@
                             class="rounded-pill"
                             prepend-icon="mdi-stop"
                             variant="tonal"
-                            @click="isSessionActive = false"
+                            @click="stopSession()"
                             >Stop Session</v-btn
                         >
                     </v-toolbar>
@@ -234,6 +235,22 @@ const isSessionActive = ref(false);
 const tokenVisibility = ref(false);
 const streamData = ref(false);
 const streamRegexAndCaptureAreaSettings = ref(false);
+
+/**
+ * Start the session
+ */
+function startSession() {
+    isSessionActive.value = true;
+    // TODO: Start session functionality
+}
+
+/**
+ * Stop the session
+ */
+function stopSession() {
+    isSessionActive.value = false;
+    // TODO: Stop session functionality
+}
 
 /**
  * Function which will toggle the visibility of the access token

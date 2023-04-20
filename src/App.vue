@@ -31,7 +31,6 @@
             <v-btn
                 :disabled="isRunning"
                 to="/run"
-                tonal
                 prepend-icon="mdi-play"
                 value="run"
             >
@@ -41,7 +40,6 @@
             <v-btn
                 :disabled="isRunning"
                 to="/"
-                tonal
                 prepend-icon="mdi-monitor"
                 value="source"
             >
@@ -51,12 +49,128 @@
             <v-btn
                 :disabled="isRunning"
                 to="/regex"
-                tonal
                 prepend-icon="mdi-regex"
                 value="regex"
             >
                 Regex
             </v-btn>
+
+            <v-dialog
+                v-model="dialog"
+                fullscreen
+                :scrim="false"
+                transition="dialog-bottom-transition"
+            >
+                <template v-slot:activator="{ props }">
+                    <v-btn v-bind="props" prepend-icon="mdi-regex">
+                        Settings
+                    </v-btn>
+                </template>
+                <v-card>
+                    <v-toolbar color="primary">
+                        <v-btn icon dark @click="dialog = false">
+                            <v-icon>mdi-close</v-icon>
+                        </v-btn>
+                        <v-toolbar-title>Settings</v-toolbar-title>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                            @click="dialog = false"
+                            color="primary"
+                            prepend-icon="mdi-play"
+                            variant="tonal"
+                            class="rounded-pill"
+                            >Start session</v-btn
+                        >
+                    </v-toolbar>
+
+                    <!-- Access Token -->
+                    <v-list lines="one" subheader>
+                        <v-list-subheader
+                            >WebAPI access and key</v-list-subheader
+                        >
+                        <v-list-item>
+                            <v-list-title
+                                >Here is your personal access token which
+                                enables others to access the data you are
+                                providing.
+                                <v-btn
+                                    color="primary"
+                                    class="rounded-pill ml-4"
+                                    prepend-icon="mdi-refresh"
+                                    variant="tonal"
+                                    >Generate new Token</v-btn
+                                >
+                            </v-list-title>
+                        </v-list-item>
+
+                        <v-list-item>
+                            <v-list-title>
+                                <!-- TODO: Input field only shows text when selected -->
+                                <v-text-field
+                                    v-model="accessToken"
+                                    style="width: 450px"
+                                    class="pt-2"
+                                    variant="outlined"
+                                    label="Access Token"
+                                    name="apiAccessToken"
+                                    append-icon="mdi-content-copy"
+                                    :append-inner-icon="
+                                        tokenVisibility
+                                            ? 'mdi-eye-outline'
+                                            : 'mdi-eye-off-outline'
+                                    "
+                                    :type="
+                                        tokenVisibility ? 'text' : 'password'
+                                    "
+                                    @click:append-inner="toggleTokenVisibility"
+                                    @click:append="copyToClipboard"
+                                    persistent-placeholder
+                                    hide-details
+                                    readonly
+                                ></v-text-field>
+                            </v-list-title>
+                        </v-list-item>
+                    </v-list>
+
+                    <v-divider />
+
+                    <!-- Switches for data -->
+                    <v-list lines="two" subheader>
+                        <v-list-subheader
+                            >What data will you share?</v-list-subheader
+                        >
+                        <v-list-item
+                            class="pb-0 pt-0"
+                            title="Stream Data"
+                            subtitle="Stream data will be shared with the server"
+                        >
+                            <template v-slot:prepend>
+                                <v-switch
+                                    v-model="streamData"
+                                    class="mr-4"
+                                    color="primary"
+                                    inset
+                                ></v-switch>
+                            </template>
+                        </v-list-item>
+
+                        <v-list-item
+                            class="pb-0 pt-0"
+                            title="Stream Regex & Capture Area Settings"
+                            subtitle="Streams the regex and capture area settings to the server"
+                        >
+                            <template v-slot:prepend>
+                                <v-switch
+                                    v-model="streamRegexAndCaptureAreaSettings"
+                                    class="mr-4"
+                                    color="primary"
+                                    inset
+                                ></v-switch>
+                            </template>
+                        </v-list-item>
+                    </v-list>
+                </v-card>
+            </v-dialog>
         </v-bottom-navigation>
     </v-app>
 </template>
@@ -87,6 +201,35 @@ onMounted(() => {
     // navigate to the default route
     router.push('/');
 });
+
+// Dialog for settings
+const dialog = ref(false);
+
+// Sample UUID for access token testing
+const accessToken = ref('17fe8fa2-1dc1-49ca-b7b2-b6ecf9068252');
+const tokenVisibility = ref(false);
+const streamData = ref(false);
+const streamRegexAndCaptureAreaSettings = ref(false);
+
+/**
+ * Function which will toggle the visibility of the access token
+ */
+function toggleTokenVisibility() {
+    tokenVisibility.value = !tokenVisibility.value;
+}
+
+/**
+ * Function which will copy the access token to the clipboard
+ */
+async function copyToClipboard() {
+    // TODO: Copy to clipboard functionality
+    try {
+        await navigator.clipboard.writeText(accessToken.value);
+    } catch (err) {
+        // TODO: Handle error with warning system
+        console.error('Failed to copy access token: ', err);
+    }
+}
 </script>
 
 <style lang="scss">

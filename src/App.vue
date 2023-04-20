@@ -68,18 +68,29 @@
                 </template>
                 <v-card>
                     <v-toolbar color="primary">
-                        <v-btn icon dark @click="dialog = false">
+                        <v-btn icon @click="dialog = false">
                             <v-icon>mdi-close</v-icon>
                         </v-btn>
+
                         <v-toolbar-title>Settings</v-toolbar-title>
-                        <v-spacer></v-spacer>
+
+                        <v-spacer />
+
                         <v-btn
-                            @click="dialog = false"
-                            color="primary"
+                            v-if="!isSessionActive"
+                            class="rounded-pill"
                             prepend-icon="mdi-play"
                             variant="tonal"
+                            @click="isSessionActive = true"
+                            >Start Session</v-btn
+                        >
+                        <v-btn
+                            v-else
                             class="rounded-pill"
-                            >Start session</v-btn
+                            prepend-icon="mdi-stop"
+                            variant="tonal"
+                            @click="isSessionActive = false"
+                            >Stop Session</v-btn
                         >
                     </v-toolbar>
 
@@ -207,6 +218,7 @@ const dialog = ref(false);
 
 // Sample UUID for access token testing
 const accessToken = ref('17fe8fa2-1dc1-49ca-b7b2-b6ecf9068252');
+const isSessionActive = ref(false);
 const tokenVisibility = ref(false);
 const streamData = ref(false);
 const streamRegexAndCaptureAreaSettings = ref(false);

@@ -57,22 +57,22 @@
 
             <v-dialog
                 v-model="dialog"
-                fullscreen
-                :scrim="false"
                 transition="dialog-bottom-transition"
+                fullscreen
+                scrim
             >
                 <template v-slot:activator="{ props }">
-                    <v-btn v-bind="props" prepend-icon="mdi-regex">
-                        Settings
+                    <v-btn v-bind="props" prepend-icon="mdi-cog">
+                        Session Settings
                     </v-btn>
                 </template>
                 <v-card>
                     <v-toolbar color="primary">
-                        <v-btn icon @click="dialog = false">
+                        <v-btn variant="tonal" icon @click="dialog = false">
                             <v-icon>mdi-close</v-icon>
                         </v-btn>
 
-                        <v-toolbar-title>Settings</v-toolbar-title>
+                        <v-toolbar-title>Session Settings</v-toolbar-title>
 
                         <v-spacer />
 
@@ -84,6 +84,7 @@
                             @click="isSessionActive = true"
                             >Start Session</v-btn
                         >
+
                         <v-btn
                             v-else
                             class="rounded-pill"
@@ -95,28 +96,10 @@
                     </v-toolbar>
 
                     <!-- Access Token -->
-                    <v-list lines="one" subheader>
-                        <v-list-subheader
-                            >WebAPI access and key</v-list-subheader
-                        >
+                    <v-list lines="one">
+                        <v-list-subheader>WebAPI Access Token</v-list-subheader>
                         <v-list-item>
-                            <v-list-title
-                                >Here is your personal access token which
-                                enables others to access the data you are
-                                providing.
-                                <v-btn
-                                    color="primary"
-                                    class="rounded-pill ml-4"
-                                    prepend-icon="mdi-refresh"
-                                    variant="tonal"
-                                    >Generate new Token</v-btn
-                                >
-                            </v-list-title>
-                        </v-list-item>
-
-                        <v-list-item>
-                            <v-list-title>
-                                <!-- TODO: Input field only shows text when selected -->
+                            <v-list-item-title>
                                 <v-text-field
                                     v-model="accessToken"
                                     style="width: 450px"
@@ -124,7 +107,6 @@
                                     variant="outlined"
                                     label="Access Token"
                                     name="apiAccessToken"
-                                    append-icon="mdi-content-copy"
                                     :append-inner-icon="
                                         tokenVisibility
                                             ? 'mdi-eye-outline'
@@ -134,26 +116,56 @@
                                         tokenVisibility ? 'text' : 'password'
                                     "
                                     @click:append-inner="toggleTokenVisibility"
-                                    @click:append="copyToClipboard"
                                     persistent-placeholder
                                     hide-details
                                     readonly
-                                ></v-text-field>
-                            </v-list-title>
+                                >
+                                    <template v-slot:append>
+                                        <v-tooltip location="bottom">
+                                            <template
+                                                v-slot:activator="{ props }"
+                                            >
+                                                <v-icon
+                                                    v-bind="props"
+                                                    icon="mdi-content-copy"
+                                                    @click="copyToClipboard"
+                                                ></v-icon>
+                                            </template>
+
+                                            Copy to clipboard
+                                        </v-tooltip>
+                                    </template>
+                                    <template v-slot:prepend>
+                                        <v-tooltip location="bottom">
+                                            <template
+                                                v-slot:activator="{ props }"
+                                            >
+                                                <v-icon
+                                                    v-bind="props"
+                                                    icon="mdi-refresh"
+                                                    @click="
+                                                        regenerateAccessToken
+                                                    "
+                                                ></v-icon>
+                                            </template>
+
+                                            Generate new token
+                                        </v-tooltip>
+                                    </template>
+                                </v-text-field>
+                            </v-list-item-title>
                         </v-list-item>
                     </v-list>
 
                     <v-divider />
 
                     <!-- Switches for data -->
-                    <v-list lines="two" subheader>
-                        <v-list-subheader
-                            >What data will you share?</v-list-subheader
-                        >
+                    <v-list lines="two">
+                        <v-list-subheader>Share</v-list-subheader>
                         <v-list-item
                             class="pb-0 pt-0"
-                            title="Stream Data"
-                            subtitle="Stream data will be shared with the server"
+                            title="Captured Data"
+                            subtitle="The server will have access to the streamed data"
                         >
                             <template v-slot:prepend>
                                 <v-switch
@@ -167,8 +179,8 @@
 
                         <v-list-item
                             class="pb-0 pt-0"
-                            title="Stream Regex & Capture Area Settings"
-                            subtitle="Streams the regex and capture area settings to the server"
+                            title="Regex & Capture Area Settings"
+                            subtitle="The server will have access to the regex and capture area settings"
                         >
                             <template v-slot:prepend>
                                 <v-switch
@@ -242,6 +254,13 @@ async function copyToClipboard() {
         console.error('Failed to copy access token: ', err);
     }
 }
+
+/**
+ * Function which will regenerate a new access token
+ */
+async function regenerateAccessToken() {
+    // TODO: Regenerate access token functionality
+}
 </script>
 
 <style lang="scss">
@@ -299,5 +318,11 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+// Dialog Animation for Settings
+.dialog-bottom-transition-enter-active,
+.dialog-bottom-transition-leave-active {
+    transition: transform 0.2s ease-in-out;
 }
 </style>

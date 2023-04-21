@@ -10,7 +10,7 @@
             >
         </template>
         <template v-slot:default>
-            <v-expansion-panels multiple>
+            <v-expansion-panels v-if="captureAreas.length !== 0" multiple>
                 <v-expansion-panel
                     v-if="isRerendering"
                     v-for="captureArea in captureAreas"
@@ -30,6 +30,13 @@
                     </v-expansion-panel-text>
                 </v-expansion-panel>
             </v-expansion-panels>
+            <v-alert
+                v-else
+                type="info"
+                variant="tonal"
+                prominent
+                text="In order to locate a value within the stream, you must create a capture area."
+            ></v-alert>
         </template>
     </ViewComponent>
 </template>

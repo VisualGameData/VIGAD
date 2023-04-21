@@ -6,6 +6,7 @@
                 class="rounded-pill"
                 prepend-icon="mdi-play"
                 variant="tonal"
+                :disabled="captureAreas.length === 0"
                 @click="useRunning().start()"
                 >Start</v-btn
             >
@@ -21,10 +22,18 @@
         <template v-slot:default>
             <v-expansion-panels v-model="defaultOpenPanel" multiple>
                 <LogOutput
+                    v-if="captureAreas.length !== 0"
                     v-for="captureArea in captureAreas"
                     :key="captureArea.getId()"
                     :captureAreaId="captureArea.getId()"
                 />
+                <v-alert
+                    v-else
+                    type="info"
+                    variant="tonal"
+                    prominent
+                    text="To commence capturing, you must first define at least one capture area."
+                ></v-alert>
             </v-expansion-panels>
         </template>
     </ViewComponent>

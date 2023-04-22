@@ -18,13 +18,14 @@ export default defineConfig(({ command }) => {
     const sourcemap = isServe || !!process.env.VSCODE_DEBUG;
 
     return {
-        // test: {
-        //     coverage: {
-        //         provider: 'c8',
-        //         reporter: ['text', 'html'],
-        //         reportsDirectory: './tests/unit/coverage',
-        //     },
-        // },
+        test: {
+            // Unit-Test coverage report settings and output directory
+            coverage: {
+                provider: 'c8',
+                reporter: ['text', 'html'],
+                reportsDirectory: './tests/unit/coverage',
+            },
+        },
         plugins: [
             vue(),
             electron([
@@ -64,7 +65,7 @@ export default defineConfig(({ command }) => {
                     },
                     vite: {
                         build: {
-                            sourcemap: sourcemap ? 'inline' : undefined, // #332
+                            sourcemap: sourcemap ? 'inline' : undefined,
                             minify: isBuild,
                             outDir: 'dist-electron/preload',
                             rollupOptions: {

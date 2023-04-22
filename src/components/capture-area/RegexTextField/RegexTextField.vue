@@ -3,6 +3,8 @@
         v-model="valueRegex"
         :label="label"
         :placeholder="placeholder"
+        :error="!isRegexValid"
+        :rules="[(v:string) => isRegexValid || errorMessage]"
         variant="outlined"
         hide-details="auto"
     >
@@ -83,9 +85,7 @@
 </template>
 
 <script setup lang="ts">
-// - [ ] Better Comments
-
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { Vigad } from '@/proc/Vigad';
 import { Matching } from '@/proc/regex/Regex';
 import { Slicing } from '@/proc/regex/Regex';
@@ -108,60 +108,135 @@ const props = defineProps<{
  */
 const vigad = ref(Vigad.getInstance());
 
+/**
+ * @type {Ref<boolean>}
+ * @description Ref to the expand state of the more options section
+ */
 const expand = ref(false);
 
-// Value Regex input
-const valueRegex = ref(props.regex.getRegex().toString().slice(1, -1));
+/**
+ * @type {Ref<boolean>}
+ * @description Ref to the validity of the regex
+ */
+const isRegexValid = ref(true);
 
-watch(valueRegex, (newValue) => {
-    props.regex.setRegex(newValue.toString());
+/**
+ * @type {Ref<string>}
+ * @description Ref to the error message if the regex is not valid
+ */
+const errorMessage = computed(() => {
+    if (!isRegexValid.value) {
+        return "Your Regex is not valid and can't be processed!";
+    } else {
+        return '';
+    }
 });
 
-// Matching options
+/**
+ * @type {Ref<string>}
+ * @description Ref to the value of the regex input
+ */
+const valueRegex = ref(props.regex.getRegex().toString().slice(1, -1));
+
+/**
+ * @description watches the valueRegex and updates the regex if it is a valid regex
+ */
+watch(valueRegex, (newValue) => {
+    try {
+        const regex = new RegExp(newValue.toString());
+        console.log(regex);
+        props.regex.setRegex(newValue.toString());
+        isRegexValid.value = true;
+    } catch (e) {
+        console.log('not valid');
+        isRegexValid.value = false;
+    }
+});
+
+/**
+ * @type {Ref<Matching>}
+ * @description Ref to the current matching option
+ */
 const currentMatchingOption = ref(props.regex.getMatching());
 
+/**
+ * @type {Ref<Matching[]>}
+ * @description Ref to all of the matching options
+ */
 const matchingOptions = ref([Matching.APPROX, Matching.EXACT]);
 
+/**
+ * @description watches the current matching option and updates the regex
+ */
 watch(currentMatchingOption, (newValue) => {
     props.regex.setMatching(newValue);
 });
 
-// Slicing options
+/**
+ * @type {Ref<Slicing>}
+ * @description Ref to the current slicing option
+ */
 const currentSlicingOption = ref(props.regex.getSlicing());
 
+/**
+ * @type {Ref<Slicing[]>}
+ * @description Ref to all of the slicing options
+ */
 const slicingOptions = ref([
     Slicing.SUBSTR,
     Slicing.SPACES,
     Slicing.ENTIRE_STR,
 ]);
 
+/**
+ * @description watches the current slicing option and updates the regex
+ */
 watch(currentSlicingOption, (newValue) => {
     props.regex.setSlicing(newValue);
 });
 
-// Similarity options
+/**
+ * @type {Ref<Similarity>}
+ * @description Ref to the current similarity option
+ */
 const currentSimilarityOption = ref(props.regex.getSimilarity());
 
+/**
+ * @type {Ref<Similarity[]>}
+ * @description Ref to all of the similarity options
+ */
 const similarityOptions = ref([
     Similarity.NONE,
     Similarity.NUM_LET,
     Similarity.LET_NUM,
 ]);
 
+/**
+ * @description watches the current similarity option and updates the regex
+ */
 watch(currentSimilarityOption, (newValue) => {
     props.regex.setSimilarity(newValue);
 });
 
-// Number of matches
+/**
+ * @type {Ref<number>}
+ * @description Ref to the current number of matches
+ */
 const currentNumberOfMatches = ref(props.regex.getMatchesNum());
 
+/**
+ * @description watches the current number of matches and updates the regex
+ */
 watch(currentNumberOfMatches, (newValue) => {
     if (!Number(newValue)) return;
 
     props.regex.setMatchesNum(newValue);
 });
 
-// Reset all options to default
+/**
+ * @description Reset all options to default
+ * @returns {void}
+ */
 function reset() {
     currentMatchingOption.value = props.resetOptions.matchingOption;
     currentSlicingOption.value = props.resetOptions.slicingOption;

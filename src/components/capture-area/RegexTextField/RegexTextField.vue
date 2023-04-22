@@ -1,13 +1,13 @@
 <template>
     <v-text-field
-        v-model="beforeValueConstraint"
-        label="Before Constraint"
-        placeholder="Enter a constraint value"
+        v-model="valueRegex"
+        :label="label"
+        :placeholder="placeholder"
         variant="outlined"
         hide-details="auto"
     >
         <template v-slot:prepend-inner>
-            <v-icon icon="mdi-table-column-plus-before"></v-icon>
+            <v-icon :icon="prependIcon"></v-icon>
         </template>
         <template v-slot:append-inner>
             <v-fade-transition leave-absolute>
@@ -83,14 +83,24 @@
 </template>
 
 <script setup lang="ts">
+// - [ ] Better Comments
+
 import { ref, watch } from 'vue';
 import { Vigad } from '@/proc/Vigad';
 import { Matching } from '@/proc/regex/Regex';
 import { Slicing } from '@/proc/regex/Regex';
 import { Similarity } from '@/proc/regex/Regex';
+import { ConstraintRegex } from '@/proc/regex/ConstraintRegex';
+import { ValueRegex } from '@/proc/regex/ValueRegex';
+import { ResetSettings } from '../CaptureAreaSearchValue/ResetSettings';
 
 const props = defineProps<{
+    label: string;
+    placeholder: string;
     captureAreaId: number;
+    prependIcon: string;
+    regex: ConstraintRegex | ValueRegex;
+    resetOptions: ResetSettings;
 }>();
 
 /**
@@ -101,51 +111,23 @@ const vigad = ref(Vigad.getInstance());
 const expand = ref(false);
 
 // Value Regex input
-const beforeValueConstraint = ref(
-    vigad.value
-        .getCaptureArea(props.captureAreaId)
-        .getRegexGroups()[0]
-        .getConstraintRegex()[0]
-        .getRegex()
-        .toString()
-        .slice(1, -1)
-);
+const valueRegex = ref(props.regex.getRegex().toString().slice(1, -1));
 
-watch(beforeValueConstraint, (newValue) => {
-    vigad.value
-        .getCaptureArea(props.captureAreaId)
-        .getRegexGroups()[0]
-        .getConstraintRegex()[0]
-        .setRegex(newValue.toString());
+watch(valueRegex, (newValue) => {
+    props.regex.setRegex(newValue.toString());
 });
 
 // Matching options
-const currentMatchingOption = ref(
-    vigad.value
-        .getCaptureArea(props.captureAreaId)
-        .getRegexGroups()[0]
-        .getConstraintRegex()[0]
-        .getMatching()
-);
+const currentMatchingOption = ref(props.regex.getMatching());
 
 const matchingOptions = ref([Matching.APPROX, Matching.EXACT]);
 
 watch(currentMatchingOption, (newValue) => {
-    vigad.value
-        .getCaptureArea(props.captureAreaId)
-        .getRegexGroups()[0]
-        .getConstraintRegex()[0]
-        .setMatching(newValue);
+    props.regex.setMatching(newValue);
 });
 
 // Slicing options
-const currentSlicingOption = ref(
-    vigad.value
-        .getCaptureArea(props.captureAreaId)
-        .getRegexGroups()[0]
-        .getConstraintRegex()[0]
-        .getSlicing()
-);
+const currentSlicingOption = ref(props.regex.getSlicing());
 
 const slicingOptions = ref([
     Slicing.SUBSTR,
@@ -154,21 +136,11 @@ const slicingOptions = ref([
 ]);
 
 watch(currentSlicingOption, (newValue) => {
-    vigad.value
-        .getCaptureArea(props.captureAreaId)
-        .getRegexGroups()[0]
-        .getConstraintRegex()[0]
-        .setSlicing(newValue);
+    props.regex.setSlicing(newValue);
 });
 
 // Similarity options
-const currentSimilarityOption = ref(
-    vigad.value
-        .getCaptureArea(props.captureAreaId)
-        .getRegexGroups()[0]
-        .getConstraintRegex()[0]
-        .getSimilarity()
-);
+const currentSimilarityOption = ref(props.regex.getSimilarity());
 
 const similarityOptions = ref([
     Similarity.NONE,
@@ -177,38 +149,24 @@ const similarityOptions = ref([
 ]);
 
 watch(currentSimilarityOption, (newValue) => {
-    vigad.value
-        .getCaptureArea(props.captureAreaId)
-        .getRegexGroups()[0]
-        .getConstraintRegex()[0]
-        .setSimilarity(newValue);
+    props.regex.setSimilarity(newValue);
 });
 
 // Number of matches
-const currentNumberOfMatches = ref(
-    vigad.value
-        .getCaptureArea(props.captureAreaId)
-        .getRegexGroups()[0]
-        .getConstraintRegex()[0]
-        .getMatchesNum()
-);
+const currentNumberOfMatches = ref(props.regex.getMatchesNum());
 
 watch(currentNumberOfMatches, (newValue) => {
     if (!Number(newValue)) return;
 
-    vigad.value
-        .getCaptureArea(props.captureAreaId)
-        .getRegexGroups()[0]
-        .getConstraintRegex()[0]
-        .setMatchesNum(newValue);
+    props.regex.setMatchesNum(newValue);
 });
 
 // Reset all options to default
 function reset() {
-    currentMatchingOption.value = Matching.APPROX;
-    currentSlicingOption.value = Slicing.SUBSTR;
-    currentSimilarityOption.value = Similarity.NONE;
-    currentNumberOfMatches.value = 10000;
+    currentMatchingOption.value = props.resetOptions.matchingOption;
+    currentSlicingOption.value = props.resetOptions.slicingOption;
+    currentSimilarityOption.value = props.resetOptions.similarityOption;
+    currentNumberOfMatches.value = props.resetOptions.numberOfMatches;
 }
 </script>
 

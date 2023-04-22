@@ -147,15 +147,5 @@ async function getScreen(event, title) {
         types: ['window', 'screen'],
     });
 
-    // const videoOptionsMenu = Menu.buildFromTemplate([
-    //   allSources.map((source) => {
-    //     return {
-    //       label: source.name,
-    //       click: () => selectSource(source),
-    //     }
-    //   }),
-    // ])
-
-    // videoOptionsMenu.popup()
     return allSources;
 }

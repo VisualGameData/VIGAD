@@ -10,7 +10,10 @@
         "test": "vitest --environment happy-dom",
         "test-ui": "vitest --ui --environment happy-dom",
         "test-coverage": "vitest run --coverage --environment happy-dom",
-        "build": "vue-tsc --noEmit && vite build && electron-builder",
+        "build:win": "vue-tsc --noEmit && vite build && electron-builder --win",
+        "build:mac": "vue-tsc --noEmit && vite build && electron-builder --mac",
+        "build:linux": "vue-tsc --noEmit && vite build && electron-builder --linux",
+        "build:all": "vue-tsc --noEmit && vite build && electron-builder --mac --win --linux",
         "gen-uml": "tplant --input src/proc/**/*.ts --output docs/proc-uml.svg -A"
     },
     "engines": {

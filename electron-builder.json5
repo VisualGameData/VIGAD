@@ -11,10 +11,20 @@
     files: ['dist-electron', 'dist'],
     linux: {
         icon: 'public/icon.png',
+        target: ['AppImage'],
+        category: 'Utility',
+        executableName: 'vigad',
+        desktop: {
+            Name: 'Vigad',
+            Icon: 'public/icon.png',
+            Terminal: 'false',
+            Type: 'Application',
+            Categories: 'Utility;',
+        },
     },
     mac: {
-        artifactName: '${productName}_${version}.${ext}',
         icon: 'public/icon.icns',
+        artifactName: '${productName}_${version}.${ext}',
         target: ['dmg'],
     },
     win: {

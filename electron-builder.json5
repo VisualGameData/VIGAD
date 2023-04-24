@@ -2,17 +2,33 @@
  * @see https://www.electron.build/configuration/configuration
  */
 {
-    appId: 'Vigad4256',
+    $schema: 'https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json',
+    appId: 'Vigad',
     asar: true,
     directories: {
         output: 'release/${version}',
     },
     files: ['dist-electron', 'dist'],
+    linux: {
+        icon: 'public/icon.png',
+        target: ['AppImage'],
+        category: 'Utility',
+        executableName: 'vigad',
+        desktop: {
+            Name: 'Vigad',
+            Icon: 'public/icon.png',
+            Terminal: 'false',
+            Type: 'Application',
+            Categories: 'Utility;',
+        },
+    },
     mac: {
+        icon: 'public/icon.icns',
         artifactName: '${productName}_${version}.${ext}',
         target: ['dmg'],
     },
     win: {
+        icon: 'public/icon.ico',
         target: [
             {
                 target: 'nsis',

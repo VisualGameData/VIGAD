@@ -1,3 +1,7 @@
+import { app, BrowserWindow, shell, ipcMain } from 'electron';
+import { release } from 'node:os';
+import { join } from 'node:path';
+
 // The built directory structure
 //
 // ├─┬ dist-electron
@@ -10,13 +14,9 @@
 //
 process.env.DIST_ELECTRON = join(__dirname, '..');
 process.env.DIST = join(process.env.DIST_ELECTRON, '../dist');
-process.env.PUBLIC = app.isPackaged
-    ? process.env.DIST
-    : join(process.env.DIST_ELECTRON, '../public');
-
-import { app, BrowserWindow, shell, ipcMain } from 'electron';
-import { release } from 'os';
-import { join } from 'path';
+process.env.PUBLIC = process.env.VITE_DEV_SERVER_URL
+    ? join(process.env.DIST_ELECTRON, '../public')
+    : process.env.DIST;
 
 // Disable GPU Acceleration for Windows 7
 if (release().startsWith('6.1')) app.disableHardwareAcceleration();
@@ -41,13 +41,28 @@ const url = process.env.VITE_DEV_SERVER_URL;
 const indexHtml = join(process.env.DIST, 'index.html');
 
 async function createWindow() {
+    // Determine the icon file based on the current platform
+    let iconFile;
+    switch (process.platform) {
+        case 'win32':
+            iconFile = 'icon.ico';
+            break;
+        case 'darwin':
+            iconFile = 'icon.icns';
+            break;
+        case 'linux':
+            iconFile = 'icon.png';
+            break;
+        default:
+            iconFile = 'icon.png';
+    }
     win = new BrowserWindow({
-        title: 'Main window',
+        title: 'Vigad',
+        icon: join(process.env.PUBLIC, iconFile),
         minWidth: 950,
         minHeight: 750,
         frame: true, // still buggy cant select items from the custom titlebar
         autoHideMenuBar: true,
-        icon: join(process.env.PUBLIC, '../src/assets/images/logo.png'),
         webPreferences: {
             preload,
             // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
@@ -61,12 +76,13 @@ async function createWindow() {
     const remoteMain = require('@electron/remote/main');
     remoteMain.initialize();
 
-    if (app.isPackaged) {
-        win.loadFile(indexHtml);
-    } else {
+    if (process.env.VITE_DEV_SERVER_URL) {
+        // electron-vite-vue#298
         win.loadURL(url);
         // Open devTool if the app is not packaged
         win.webContents.openDevTools();
+    } else {
+        win.loadFile(indexHtml);
     }
 
     // Test actively push message to the Electron-Renderer
@@ -75,7 +91,6 @@ async function createWindow() {
             'main-process-message',
             new Date().toLocaleString()
         );
-        win.setTitle(`Vigad`);
     });
 
     // Make all links open with the browser, not with the application
@@ -99,8 +114,14 @@ async function createWindow() {
     });
 }
 
+// This method will be called when Electron has finished
+// initialization and is ready to create browser windows.
+// Some APIs can only be used after this event occurs.
 app.whenReady().then(createWindow);
 
+// Quit when all windows are closed, except on macOS.
+// There, it's common for applications and their menu bar
+// to stay active until the user quits explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
     win = null;
     if (process.platform !== 'darwin') app.quit();
@@ -124,18 +145,19 @@ app.on('activate', () => {
 });
 
 // new window example arg: new windows url
-ipcMain.handle('open-win', (event, arg) => {
+ipcMain.handle('open-win', (_, arg) => {
     const childWindow = new BrowserWindow({
         webPreferences: {
             preload,
+            nodeIntegration: true,
+            contextIsolation: true,
         },
     });
 
-    if (app.isPackaged) {
-        childWindow.loadFile(indexHtml, { hash: arg });
+    if (process.env.VITE_DEV_SERVER_URL) {
+        childWindow.loadURL(`${url}#${arg}`);
     } else {
-        childWindow.loadURL(`${url}/#${arg}`);
-        // childWindow.webContents.openDevTools({ mode: "undocked", activate: true })
+        childWindow.loadFile(indexHtml, { hash: arg });
     }
 });
 
@@ -147,15 +169,5 @@ async function getScreen(event, title) {
         types: ['window', 'screen'],
     });
 
-    // const videoOptionsMenu = Menu.buildFromTemplate([
-    //   allSources.map((source) => {
-    //     return {
-    //       label: source.name,
-    //       click: () => selectSource(source),
-    //     }
-    //   }),
-    // ])
-
-    // videoOptionsMenu.popup()
     return allSources;
 }

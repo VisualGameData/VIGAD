@@ -1,31 +1,31 @@
 function domReady(
-  condition: DocumentReadyState[] = ['complete', 'interactive']
+    condition: DocumentReadyState[] = ['complete', 'interactive']
 ) {
-  return new Promise((resolve) => {
-    if (condition.includes(document.readyState)) {
-      resolve(true)
-    } else {
-      document.addEventListener('readystatechange', () => {
+    return new Promise((resolve) => {
         if (condition.includes(document.readyState)) {
-          resolve(true)
+            resolve(true);
+        } else {
+            document.addEventListener('readystatechange', () => {
+                if (condition.includes(document.readyState)) {
+                    resolve(true);
+                }
+            });
         }
-      })
-    }
-  })
+    });
 }
 
 const safeDOM = {
-  append(parent: HTMLElement, child: HTMLElement) {
-    if (!Array.from(parent.children).find((e) => e === child)) {
-      return parent.appendChild(child)
-    }
-  },
-  remove(parent: HTMLElement, child: HTMLElement) {
-    if (Array.from(parent.children).find((e) => e === child)) {
-      return parent.removeChild(child)
-    }
-  },
-}
+    append(parent: HTMLElement, child: HTMLElement) {
+        if (!Array.from(parent.children).find((e) => e === child)) {
+            return parent.appendChild(child);
+        }
+    },
+    remove(parent: HTMLElement, child: HTMLElement) {
+        if (Array.from(parent.children).find((e) => e === child)) {
+            return parent.removeChild(child);
+        }
+    },
+};
 
 /**
  * https://tobiasahlin.com/spinkit
@@ -34,8 +34,8 @@ const safeDOM = {
  * https://matejkustec.github.io/SpinThatShit
  */
 function useLoading() {
-  const className = `loaders-css__square-spin`
-  const styleContent = `
+    const className = `loaders-css__square-spin`;
+    const styleContent = `
 @keyframes square-spin {
   25% { transform: perspective(100px) rotateX(180deg) rotateY(0); }
   50% { transform: perspective(100px) rotateX(180deg) rotateY(180deg); }
@@ -61,75 +61,75 @@ function useLoading() {
   background: #282c34;
   z-index: 9;
 }
-    `
-  const oStyle = document.createElement('style')
-  const oDiv = document.createElement('div')
+    `;
+    const oStyle = document.createElement('style');
+    const oDiv = document.createElement('div');
 
-  oStyle.id = 'app-loading-style'
-  oStyle.innerHTML = styleContent
-  oDiv.className = 'app-loading-wrap'
-  oDiv.innerHTML = `<div class="${className}"><div></div></div>`
+    oStyle.id = 'app-loading-style';
+    oStyle.innerHTML = styleContent;
+    oDiv.className = 'app-loading-wrap';
+    oDiv.innerHTML = `<div class="${className}"><div></div></div>`;
 
-  return {
-    appendLoading() {
-      safeDOM.append(document.head, oStyle)
-      safeDOM.append(document.body, oDiv)
-    },
-    removeLoading() {
-      safeDOM.remove(document.head, oStyle)
-      safeDOM.remove(document.body, oDiv)
-    },
-  }
+    return {
+        appendLoading() {
+            safeDOM.append(document.head, oStyle);
+            safeDOM.append(document.body, oDiv);
+        },
+        removeLoading() {
+            safeDOM.remove(document.head, oStyle);
+            safeDOM.remove(document.body, oDiv);
+        },
+    };
 }
 
 // ----------------------------------------------------------------------
 
-const { appendLoading, removeLoading } = useLoading()
-domReady().then(appendLoading)
+const { appendLoading, removeLoading } = useLoading();
+domReady().then(appendLoading);
 
 window.onmessage = (ev) => {
-  ev.data.payload === 'removeLoading' && removeLoading()
-}
+    ev.data.payload === 'removeLoading' && removeLoading();
+};
 
-setTimeout(removeLoading, 4999)
+setTimeout(removeLoading, 4999);
 
 // ! Working with informations from the main process and the renderer process
-const { contextBridge, ipcRenderer } = require('electron')
+const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electronAPI', {
-  getMedia: () => ipcRenderer.invoke('get-screens'),
-  minimizeScreen: () => ipcRenderer.invoke('minimize-screen'),
-  fullScreen: () => ipcRenderer.invoke('full-screen'),
-  closeApplication: () => ipcRenderer.invoke('close-application'),
-})
+    getMedia: () => ipcRenderer.invoke('get-screens'),
+    minimizeScreen: () => ipcRenderer.invoke('minimize-screen'),
+    fullScreen: () => ipcRenderer.invoke('full-screen'),
+    closeApplication: () => ipcRenderer.invoke('close-application'),
+});
 
 ipcRenderer.on('SET_SOURCE', async (event, sourceId) => {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      audio: false,
-      video: {
-        mandatory: {
-          chromeMediaSource: 'desktop',
-          chromeMediaSourceId: sourceId,
-          minWidth: 1280,
-          maxWidth: 3840,
-          minHeight: 720,
-          maxHeight: 2160,
-        },
-      },
-    })
-    handleStream(stream)
-  } catch (e) {
-    handleError(e)
-  }
-})
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+            audio: false,
+            video: {
+                mandatory: {
+                    chromeMediaSource: 'desktop',
+                    chromeMediaSourceId: sourceId,
+                    minWidth: 1280,
+                    maxWidth: 3840,
+                    minHeight: 720,
+                    maxHeight: 2160,
+                },
+            },
+        });
+        handleStream(stream);
+    } catch (e) {
+        handleError(e);
+    }
+});
 
 function handleStream(stream) {
-  const video = document.querySelector('video')
-  video.srcObject = stream
-  video.onloadedmetadata = (e) => video.play()
+    const video = document.querySelector('video');
+    video.srcObject = stream;
+    video.onloadedmetadata = (e) => video.play();
 }
 
 function handleError(e) {
-  console.log(e)
+    console.log(e);
 }

@@ -24,11 +24,11 @@ export const routes = [
         },
     },
     {
-        name: 'run',
-        path: '/run',
-        component: () => import('../views/RunPage.vue'),
+        name: 'capture',
+        path: '/capture',
+        component: () => import('../views/CapturePage.vue'),
         meta: {
-            title: 'Vigad - Run',
+            title: 'Vigad - Capturing',
         },
     },
     {

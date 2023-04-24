@@ -1,15 +1,36 @@
 <template>
     <div>
         <div class="pt-2 regex-definition">
-            <ValueRegex :captureAreaId="captureAreaId" />
+            <RegexTextField
+                label="Search value"
+                placeholder="Enter search value"
+                prepend-icon="mdi-table-column"
+                :captureAreaId="captureAreaId"
+                :regex="valueRegex"
+                :resetOptions="defaultValueRegexSettings"
+            />
         </div>
 
         <div class="mt-4 regex-constraint-before-definition">
-            <BeforeConstraint :captureAreaId="captureAreaId" />
+            <RegexTextField
+                label="Before Constraint"
+                placeholder="Enter a constraint value"
+                prepend-icon="mdi-table-column-plus-before"
+                :captureAreaId="captureAreaId"
+                :regex="beforeConstraint"
+                :resetOptions="defaultBeforeConstraintsSettings"
+            />
         </div>
 
         <div class="mt-4 regex-constraint-after-definition">
-            <AfterConstraint :captureAreaId="captureAreaId" />
+            <RegexTextField
+                label="After Constraint"
+                placeholder="Enter a constraint value"
+                prepend-icon="mdi-table-column-plus-after"
+                :captureAreaId="captureAreaId"
+                :regex="afterConstraint"
+                :resetOptions="defaultAfterConstraintsSettings"
+            />
         </div>
 
         <div class="mt-4 actions">
@@ -28,10 +49,15 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { Vigad } from '@/proc/Vigad';
-import ValueRegex from '@/components/capture-area/ValueRegex/ValueRegex.vue';
-import BeforeConstraint from '@/components/capture-area/BeforeConstraint/BeforeConstraint.vue';
-import AfterConstraint from '@/components/capture-area/AfterConstraint/AfterConstraint.vue';
+import RegexTextField from '@/components/capture-area/RegexTextField/RegexTextField.vue';
+import { Matching } from '@/proc/regex/Regex';
+import { Slicing } from '@/proc/regex/Regex';
+import { Similarity } from '@/proc/regex/Regex';
+import { ResetSettings } from './ResetSettings';
 
+/**
+ * Definied Props
+ */
 const props = defineProps<{
     captureAreaId: number;
 }>();
@@ -40,6 +66,60 @@ const props = defineProps<{
  * Get singelton instance reference to vigad
  */
 const vigad = ref(Vigad.getInstance());
+
+/**
+ * Value regex
+ */
+const valueRegex = vigad.value
+    .getCaptureArea(props.captureAreaId)
+    .getRegexGroups()[0]
+    .getValueRegex();
+
+/**
+ * Before constraint
+ */
+const beforeConstraint = vigad.value
+    .getCaptureArea(props.captureAreaId)
+    .getRegexGroups()[0]
+    .getConstraintRegex()[0];
+
+/**
+ * After constraint
+ */
+const afterConstraint = vigad.value
+    .getCaptureArea(props.captureAreaId)
+    .getRegexGroups()[0]
+    .getConstraintRegex()[1];
+
+/**
+ * Default settings for value regex
+ */
+const defaultValueRegexSettings: ResetSettings = {
+    matchingOption: Matching.EXACT,
+    slicingOption: Slicing.SUBSTR,
+    similarityOption: Similarity.NONE,
+    numberOfMatches: 10000,
+};
+
+/**
+ * Default settings for before constraints
+ */
+const defaultBeforeConstraintsSettings: ResetSettings = {
+    matchingOption: Matching.APPROX,
+    slicingOption: Slicing.SUBSTR,
+    similarityOption: Similarity.NONE,
+    numberOfMatches: 10000,
+};
+
+/**
+ * Default settings for after constraints
+ */
+const defaultAfterConstraintsSettings: ResetSettings = {
+    matchingOption: Matching.APPROX,
+    slicingOption: Slicing.SUBSTR,
+    similarityOption: Similarity.NONE,
+    numberOfMatches: 10000,
+};
 </script>
 
 <style lang="scss" scoped>

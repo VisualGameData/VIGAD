@@ -30,7 +30,7 @@
         <v-bottom-navigation :elevation="24" bg-color="surface" grow>
             <v-btn
                 :disabled="isRunning"
-                to="/run"
+                to="/capture"
                 prepend-icon="mdi-play"
                 value="run"
             >

@@ -1,13 +1,15 @@
 <template>
     <v-text-field
         v-model="valueRegex"
-        label="Search value"
-        placeholder="Enter search value"
+        :label="label"
+        :placeholder="placeholder"
+        :error="!isRegexValid"
+        :rules="[(v:string) => isRegexValid || errorMessage]"
         variant="outlined"
         hide-details="auto"
     >
         <template v-slot:prepend-inner>
-            <v-icon icon="mdi-table-column"></v-icon>
+            <v-icon :icon="prependIcon"></v-icon>
         </template>
         <template v-slot:append-inner>
             <v-fade-transition leave-absolute>
@@ -83,14 +85,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { Vigad } from '@/proc/Vigad';
 import { Matching } from '@/proc/regex/Regex';
 import { Slicing } from '@/proc/regex/Regex';
 import { Similarity } from '@/proc/regex/Regex';
+import { ConstraintRegex } from '@/proc/regex/ConstraintRegex';
+import { ValueRegex } from '@/proc/regex/ValueRegex';
+import { ResetSettings } from '../CaptureAreaSearchValue/ResetSettings';
 
 const props = defineProps<{
+    label: string;
+    placeholder: string;
     captureAreaId: number;
+    prependIcon: string;
+    regex: ConstraintRegex | ValueRegex;
+    resetOptions: ResetSettings;
 }>();
 
 /**
@@ -98,117 +108,140 @@ const props = defineProps<{
  */
 const vigad = ref(Vigad.getInstance());
 
+/**
+ * @type {Ref<boolean>}
+ * @description Ref to the expand state of the more options section
+ */
 const expand = ref(false);
 
-// Value Regex input
-const valueRegex = ref(
-    vigad.value
-        .getCaptureArea(props.captureAreaId)
-        .getRegexGroups()[0]
-        .getValueRegex()
-        .getRegex()
-        .toString()
-        .slice(1, -1)
-);
+/**
+ * @type {Ref<boolean>}
+ * @description Ref to the validity of the regex
+ */
+const isRegexValid = ref(true);
 
-watch(valueRegex, (newValue) => {
-    vigad.value
-        .getCaptureArea(props.captureAreaId)
-        .getRegexGroups()[0]
-        .getValueRegex()
-        .setRegex(newValue.toString());
+/**
+ * @type {Ref<string>}
+ * @description Ref to the error message if the regex is not valid
+ */
+const errorMessage = computed(() => {
+    if (!isRegexValid.value) {
+        return "Your Regex is not valid and can't be processed!";
+    } else {
+        return '';
+    }
 });
 
-// Matching options
-const currentMatchingOption = ref(
-    vigad.value
-        .getCaptureArea(props.captureAreaId)
-        .getRegexGroups()[0]
-        .getValueRegex()
-        .getMatching()
-);
+/**
+ * @type {Ref<string>}
+ * @description Ref to the value of the regex input
+ */
+const valueRegex = ref(props.regex.getRegex().toString().slice(1, -1));
 
+/**
+ * @description watches the valueRegex and updates the regex if it is a valid regex
+ */
+watch(valueRegex, (newValue) => {
+    try {
+        // try to create a new regex with the new value to check if it is valid
+        const regex = new RegExp(newValue.toString());
+        props.regex.setRegex(newValue.toString());
+        isRegexValid.value = true;
+    } catch (e) {
+        // if the regex is not valid notify the user
+        isRegexValid.value = false;
+    }
+});
+
+/**
+ * @type {Ref<Matching>}
+ * @description Ref to the current matching option
+ */
+const currentMatchingOption = ref(props.regex.getMatching());
+
+/**
+ * @type {Ref<Matching[]>}
+ * @description Ref to all of the matching options
+ */
 const matchingOptions = ref([Matching.APPROX, Matching.EXACT]);
 
+/**
+ * @description watches the current matching option and updates the regex
+ */
 watch(currentMatchingOption, (newValue) => {
-    vigad.value
-        .getCaptureArea(props.captureAreaId)
-        .getRegexGroups()[0]
-        .getValueRegex()
-        .setMatching(newValue);
+    props.regex.setMatching(newValue);
 });
 
-// Slicing options
-const currentSlicingOption = ref(
-    vigad.value
-        .getCaptureArea(props.captureAreaId)
-        .getRegexGroups()[0]
-        .getValueRegex()
-        .getSlicing()
-);
+/**
+ * @type {Ref<Slicing>}
+ * @description Ref to the current slicing option
+ */
+const currentSlicingOption = ref(props.regex.getSlicing());
 
+/**
+ * @type {Ref<Slicing[]>}
+ * @description Ref to all of the slicing options
+ */
 const slicingOptions = ref([
     Slicing.SUBSTR,
     Slicing.SPACES,
     Slicing.ENTIRE_STR,
 ]);
 
+/**
+ * @description watches the current slicing option and updates the regex
+ */
 watch(currentSlicingOption, (newValue) => {
-    vigad.value
-        .getCaptureArea(props.captureAreaId)
-        .getRegexGroups()[0]
-        .getValueRegex()
-        .setSlicing(newValue);
+    props.regex.setSlicing(newValue);
 });
 
-// Similarity options
-const currentSimilarityOption = ref(
-    vigad.value
-        .getCaptureArea(props.captureAreaId)
-        .getRegexGroups()[0]
-        .getValueRegex()
-        .getSimilarity()
-);
+/**
+ * @type {Ref<Similarity>}
+ * @description Ref to the current similarity option
+ */
+const currentSimilarityOption = ref(props.regex.getSimilarity());
 
+/**
+ * @type {Ref<Similarity[]>}
+ * @description Ref to all of the similarity options
+ */
 const similarityOptions = ref([
     Similarity.NONE,
     Similarity.NUM_LET,
     Similarity.LET_NUM,
 ]);
 
+/**
+ * @description watches the current similarity option and updates the regex
+ */
 watch(currentSimilarityOption, (newValue) => {
-    vigad.value
-        .getCaptureArea(props.captureAreaId)
-        .getRegexGroups()[0]
-        .getValueRegex()
-        .setSimilarity(newValue);
+    props.regex.setSimilarity(newValue);
 });
 
-// Number of matches
-const currentNumberOfMatches = ref(
-    vigad.value
-        .getCaptureArea(props.captureAreaId)
-        .getRegexGroups()[0]
-        .getValueRegex()
-        .getMatchesNum()
-);
+/**
+ * @type {Ref<number>}
+ * @description Ref to the current number of matches
+ */
+const currentNumberOfMatches = ref(props.regex.getMatchesNum());
 
+/**
+ * @description watches the current number of matches and updates the regex
+ */
 watch(currentNumberOfMatches, (newValue) => {
     if (!Number(newValue)) return;
 
-    vigad.value
-        .getCaptureArea(props.captureAreaId)
-        .getRegexGroups()[0]
-        .getValueRegex()
-        .setMatchesNum(newValue);
+    props.regex.setMatchesNum(newValue);
 });
 
-// Reset all options to default
+/**
+ * @description Reset all options to default
+ * @returns {void}
+ */
 function reset() {
-    currentMatchingOption.value = Matching.EXACT;
-    currentSlicingOption.value = Slicing.SUBSTR;
-    currentSimilarityOption.value = Similarity.NONE;
-    currentNumberOfMatches.value = 10000;
+    currentMatchingOption.value = props.resetOptions.matchingOption;
+    currentSlicingOption.value = props.resetOptions.slicingOption;
+    currentSimilarityOption.value = props.resetOptions.similarityOption;
+    currentNumberOfMatches.value = props.resetOptions.numberOfMatches;
 }
 </script>
 

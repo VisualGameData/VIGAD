@@ -55,6 +55,14 @@
                 Regex
             </v-btn>
 
+            <v-btn
+                prepend-icon="mdi-regex"
+                value="regex"
+                @click="addSnackbar()"
+            >
+                Snackbar
+            </v-btn>
+
             <v-dialog
                 v-model="dialog"
                 transition="dialog-bottom-transition"
@@ -196,13 +204,60 @@
                 </v-card>
             </v-dialog>
         </v-bottom-navigation>
+
+        <!-- Global Warnings -->
+        <!-- One after another when time is gone or clicked away -->
+        <v-snackbar
+            v-if="warnings.length > 0"
+            v-model="warnings[0].isActive"
+            :timeout="warnings[0].timeout || 2000"
+            @update:model-value="dismissWarning(warnings[0])"
+            :multi-line="warnings[0].isMultiLine"
+            :color="warnings[0].color"
+            location="top right"
+            max-width="300px"
+        >
+            {{ warnings[0].message }}
+
+            <template v-slot:actions>
+                <v-btn variant="text" @click="dismissWarning(warnings[0])"
+                    >Close</v-btn
+                >
+            </template>
+        </v-snackbar>
+        <!-- Loop over all - doesnt look like a toast are stacked behind -->
+        <!-- <v-snackbar
+            v-for="(warning, index) in warnings"
+            v-model="warning.isActive"
+            :key="index"
+            :timeout="warning.timeout || 2000"
+            @update:model-value="dismissWarning(warning)"
+            :multi-line="warning.isMultiLine"
+            :color="warning.color"
+            location="top right"
+            max-width="300px"
+        >
+            {{ warning.message }}
+
+            <template v-slot:actions>
+                <v-btn variant="text" @click="dismissWarning(warning)"
+                    >Close</v-btn
+                >
+            </template>
+        </v-snackbar> -->
     </v-app>
 </template>
 
 <script setup lang="ts">
+import VSnackbars from '@/components/VSnackbars/VSnackbars.vue';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { isRunning } from '@/composables/useRunning';
+import {
+    useWarningSystem,
+    Warning,
+    warningsQueue,
+} from '@/composables/useWarningSystem';
 
 import MainVideoStream from '@/components/MainVideoStream/MainVideoStream.vue';
 
@@ -277,6 +332,47 @@ async function copyToClipboard() {
  */
 async function regenerateAccessToken() {
     // TODO: Regenerate access token functionality
+}
+
+// Warning System functionallity
+const warnings = ref(useWarningSystem().warningsQueue);
+
+let t = 0;
+function addSnackbar() {
+    t += 1;
+    let mes = `Item ${t}`;
+    useWarningSystem().addWarning({
+        message: mes,
+        color: 'error',
+        timeout: 1000,
+        isMultiLine: false,
+        isActive: true,
+    });
+
+    useWarningSystem().addWarning({
+        message: mes,
+        color: 'info',
+        timeout: 2000,
+        isMultiLine: false,
+        isActive: true,
+    });
+
+    useWarningSystem().addWarning({
+        message: mes,
+        color: 'warning',
+        timeout: 10000,
+        isMultiLine: false,
+        isActive: true,
+    });
+}
+
+/**
+ * Function which will dismiss the warning
+ * @param item The warning to dismiss
+ */
+function dismissWarning(item: Warning) {
+    item.isActive = false;
+    useWarningSystem().removeWarning(item);
 }
 </script>
 

@@ -55,14 +55,6 @@
                 Regex
             </v-btn>
 
-            <v-btn
-                prepend-icon="mdi-regex"
-                value="regex"
-                @click="addSnackbar()"
-            >
-                Snackbar
-            </v-btn>
-
             <v-dialog
                 v-model="dialog"
                 transition="dialog-bottom-transition"
@@ -206,7 +198,6 @@
         </v-bottom-navigation>
 
         <!-- Global Warnings -->
-        <!-- One after another when time is gone or clicked away -->
         <v-snackbar
             v-if="warnings.length > 0"
             v-model="warnings[0].isActive"
@@ -228,31 +219,10 @@
                 >
             </template>
         </v-snackbar>
-        <!-- Loop over all - doesnt look like a toast are stacked behind -->
-        <!-- <v-snackbar
-            v-for="(warning, index) in warnings"
-            v-model="warning.isActive"
-            :key="index"
-            :timeout="warning.timeout || 2000"
-            @update:model-value="dismissWarning(warning)"
-            :multi-line="warning.isMultiLine"
-            :color="warning.color"
-            location="top right"
-            max-width="300px"
-        >
-            {{ warning.message }}
-
-            <template v-slot:actions>
-                <v-btn variant="text" @click="dismissWarning(warning)"
-                    >Close</v-btn
-                >
-            </template>
-        </v-snackbar> -->
     </v-app>
 </template>
 
 <script setup lang="ts">
-import VSnackbars from '@/components/VSnackbars/VSnackbars.vue';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { isRunning } from '@/composables/useRunning';
@@ -338,36 +308,11 @@ async function regenerateAccessToken() {
 }
 
 // Warning System functionallity
+
+/**
+ * Ref which will hold the warnings queue
+ */
 const warnings = ref(useWarningSystem().warningsQueue);
-
-let t = 0;
-function addSnackbar() {
-    t += 1;
-    let mes = `Item ${t}`;
-    useWarningSystem().addWarning({
-        message: mes,
-        color: 'error',
-        timeout: 10000,
-        isMultiLine: false,
-        isActive: true,
-    });
-
-    useWarningSystem().addWarning({
-        message: mes,
-        color: 'info',
-        timeout: 20000,
-        isMultiLine: false,
-        isActive: true,
-    });
-
-    useWarningSystem().addWarning({
-        message: mes,
-        color: 'warning',
-        timeout: 10000,
-        isMultiLine: false,
-        isActive: true,
-    });
-}
 
 /**
  * Function which will dismiss the warning

@@ -30,5 +30,10 @@ const props = defineProps<{
 .scrollable {
     max-height: calc(100vh - 56px - 16px - 16px - 68px - 16px);
     overflow: auto;
+    width: 100%;
+}
+
+.scrollable > * {
+    width: 100%;
 }
 </style>

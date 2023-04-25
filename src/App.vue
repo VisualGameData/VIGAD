@@ -200,7 +200,7 @@
         <!-- Global Warnings -->
         <v-snackbar
             v-if="warnings.length > 0"
-            v-model="warnings[0].isActive"
+            v-model="showWarning"
             :timeout="warnings[0].timeout || 2000"
             @update:model-value="dismissWarning(warnings[0])"
             :multi-line="warnings[0].isMultiLine"
@@ -223,7 +223,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { isRunning } from '@/composables/useRunning';
 import {
@@ -315,11 +315,15 @@ async function regenerateAccessToken() {
 const warnings = ref(useWarningSystem().warningsQueue);
 
 /**
+ * Computed which will return if there is a warning to show
+ */
+const showWarning = computed(() => !!warnings.value[0].message);
+
+/**
  * Function which will dismiss the warning
  * @param item The warning to dismiss
  */
 function dismissWarning(item: Warning) {
-    item.isActive = false;
     useWarningSystem().removeWarning(item);
 }
 </script>

@@ -11,7 +11,7 @@ export const useWarningSystem = () => {
      * @param warning The warning to add to the queue.
      */
     const addWarning = (warning: Warning) => {
-        if (warning.isActive) warningsQueue.value.push(warning);
+        warningsQueue.value.push(warning);
     };
 
     /**
@@ -41,5 +41,4 @@ export interface Warning {
     timeout?: number; // in milliseconds
     color?: string; // can be hex, rgb, rgba, hsl, hsla, or something like warning, error, info, success more info: https://vuetifyjs.com/en/api/v-snackbar/#props-color
     isMultiLine?: boolean;
-    isActive: boolean; // if the warning is active, this has to be TRUE to show the warning in the queue at all, otherwise it will be removed from the queue
 }

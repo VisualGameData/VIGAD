@@ -40,5 +40,4 @@ export interface Warning {
     message: string; // the message to display
     timeout?: number; // in milliseconds
     color?: string; // can be hex, rgb, rgba, hsl, hsla, or something like warning, error, info, success more info: https://vuetifyjs.com/en/api/v-snackbar/#props-color
-    isMultiLine?: boolean;
 }

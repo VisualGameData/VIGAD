@@ -203,7 +203,7 @@
             v-model="showWarning"
             :timeout="warnings[0].timeout || 2000"
             @update:model-value="dismissWarning(warnings[0])"
-            :multi-line="warnings[0].isMultiLine"
+            :multi-line="true"
             :color="warnings[0].color"
             location="top right"
             max-width="300px"

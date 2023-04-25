@@ -221,7 +221,10 @@
 
             <template v-slot:actions>
                 <v-btn variant="text" @click="dismissWarning(warnings[0])"
-                    >Close</v-btn
+                    >Close
+                    <span v-if="warnings.length > 1"
+                        >({{ warnings.length - 1 }} more)</span
+                    ></v-btn
                 >
             </template>
         </v-snackbar>
@@ -344,7 +347,7 @@ function addSnackbar() {
     useWarningSystem().addWarning({
         message: mes,
         color: 'error',
-        timeout: 1000,
+        timeout: 10000,
         isMultiLine: false,
         isActive: true,
     });
@@ -352,7 +355,7 @@ function addSnackbar() {
     useWarningSystem().addWarning({
         message: mes,
         color: 'info',
-        timeout: 2000,
+        timeout: 20000,
         isMultiLine: false,
         isActive: true,
     });

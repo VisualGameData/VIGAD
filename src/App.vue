@@ -374,58 +374,37 @@ function addSnackbar() {
     let mes = `Item ${t}`;
 
     useNotificationSystem().addNotification({
-        title: 'Titel x ',
-        message: mes,
+        message: 'Success Notification ',
+        color: 'success',
+        timeout: 10000,
+        isActive: true,
+    });
+
+    useNotificationSystem().addNotification({
+        message: 'Error Notification ',
         color: 'error',
         timeout: 10000,
         isActive: true,
     });
 
     useNotificationSystem().addNotification({
-        title: 'Titely ',
-        message: mes,
+        message: 'Info Notification',
         color: 'info',
         timeout: -1,
         isActive: true,
     });
 
     useNotificationSystem().addNotification({
-        title: 'Titel z',
-        message: mes,
-        color: 'info',
-        timeout: -1,
-        isActive: true,
-    });
-
-    useNotificationSystem().addNotification({
-        title: 'awdawd',
-        message: mes,
-        color: 'info',
-        timeout: -1,
-        isActive: true,
-    });
-
-    useNotificationSystem().addNotification({
-        title: 'awdawd',
-        message: mes,
-        color: 'info',
-        timeout: -1,
-        isActive: true,
-    });
-
-    useNotificationSystem().addNotification({
-        title: 'Tihgzhgzhtel',
-        message:
-            'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
+        message: 'Warning Notification',
         color: 'warning',
         timeout: -1,
         isActive: true,
     });
 
     useNotificationSystem().addNotification({
-        title: 'awdawd',
-        message: mes,
-        color: 'info',
+        message:
+            'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
+        color: 'warning',
         timeout: -1,
         isActive: true,
     });

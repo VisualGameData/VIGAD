@@ -36,7 +36,6 @@ export const useNotificationSystem = () => {
  * Interface that can be used to define a warning.
  */
 export interface Notification {
-    title: string; // the title of the Notification
     message: string; // the message to display
     timeout?: number; // in milliseconds
     color?: string; // can be hex, rgb, rgba, hsl, hsla, or something like warning, error, info, success more info: https://vuetifyjs.com/en/api/v-snackbar/#props-color

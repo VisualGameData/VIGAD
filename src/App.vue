@@ -38,6 +38,14 @@
             </v-btn>
 
             <v-btn
+                prepend-icon="mdi-regex"
+                value="regex"
+                @click="addSnackbar()"
+            >
+                Snackbar
+            </v-btn>
+
+            <v-btn
                 :disabled="isRunning"
                 to="/"
                 prepend-icon="mdi-monitor"
@@ -197,26 +205,31 @@
             </v-dialog>
         </v-bottom-navigation>
 
-        <!-- Global Warnings -->
+        <!-- Notification System -->
         <v-snackbar
-            v-if="warnings.length > 0"
-            v-model="showWarning"
-            :timeout="warnings[0].timeout || 2000"
-            @update:model-value="dismissWarning(warnings[0])"
-            :multi-line="true"
-            :color="warnings[0].color"
+            v-for="(notification, index) in displayedNotifications"
+            v-model="notification.isActive"
+            :key="index"
+            :timeout="notification.timeout || 3000"
+            @update:model-value="dismissNotification(notification, index)"
+            :color="notification.color"
             location="top right"
             max-width="300px"
+            height="60px"
+            :style="{ 'margin-top': calcMargin(index) }"
+            :multi-line="false"
+            ref="notificationItem"
         >
-            {{ warnings[0].message }}
+            <div>
+                {{ truncatedText(index) }}
+            </div>
 
             <template v-slot:actions>
-                <v-btn variant="text" @click="dismissWarning(warnings[0])"
-                    >Close
-                    <span v-if="warnings.length > 1"
-                        >({{ warnings.length - 1 }} more)</span
-                    ></v-btn
-                >
+                <v-btn
+                    icon="mdi-close"
+                    variant="plain"
+                    @click="dismissNotification(notification, index)"
+                ></v-btn>
             </template>
         </v-snackbar>
     </v-app>
@@ -227,10 +240,10 @@ import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { isRunning } from '@/composables/useRunning';
 import {
-    useWarningSystem,
-    Warning,
-    warningsQueue,
-} from '@/composables/useWarningSystem';
+    useNotificationSystem,
+    Notification,
+    notificationQueue,
+} from '@/composables/useNotificationSystem';
 
 import MainVideoStream from '@/components/MainVideoStream/MainVideoStream.vue';
 
@@ -295,7 +308,7 @@ async function copyToClipboard() {
     try {
         await navigator.clipboard.writeText(accessToken.value);
     } catch (err) {
-        // TODO: Handle error with warning system
+        // TODO: Handle error with notification system
         console.error('Failed to copy access token: ', err);
     }
 }
@@ -307,24 +320,115 @@ async function regenerateAccessToken() {
     // TODO: Regenerate access token functionality
 }
 
-// Warning System functionallity
+// Notification System functionallity
 
 /**
- * Ref which will hold the warnings queue
+ * Ref which will hold the notification queue
  */
-const warnings = ref(useWarningSystem().warningsQueue);
+const notifications = ref(useNotificationSystem().notificationQueue);
 
 /**
- * Computed which will return if there is a warning to show
+ * Computed which will return only a small amount of notifications
  */
-const showWarning = computed(() => !!warnings.value[0].message);
+const displayedNotifications = computed((): Notification[] => {
+    const notificationLimit = 4;
+    return notifications.value.slice(0, notificationLimit);
+});
 
 /**
- * Function which will dismiss the warning
- * @param item The warning to dismiss
+ * Function which will dismiss the notification
+ * @param item The notification to dismiss
  */
-function dismissWarning(item: Warning) {
-    useWarningSystem().removeWarning(item);
+function dismissNotification(item: Notification, index: number) {
+    useNotificationSystem().removeNotification(item);
+    calcMargin(index);
+}
+
+/**
+ * Function which will truncate the text of the notification if it is too long to display
+ * @param index The index of the notification
+ */
+function truncatedText(index: number): string {
+    const limit = 75;
+    if (notifications.value[index].message.length > limit) {
+        return notifications.value[index].message.substring(0, limit) + '...';
+    } else {
+        return notifications.value[index].message;
+    }
+}
+
+const previousSnackbarHeight = ref(0);
+const notificationItem = ref(null);
+
+/**
+ * Function which will calculate the margin for the notification
+ * @param i The index of the notification
+ */
+function calcMargin(index: number): string {
+    return index * 70 + 'px';
+}
+
+let t = 0;
+function addSnackbar() {
+    t += 1;
+    let mes = `Item ${t}`;
+
+    useNotificationSystem().addNotification({
+        title: 'Titel x ',
+        message: mes,
+        color: 'error',
+        timeout: 10000,
+        isActive: true,
+    });
+
+    useNotificationSystem().addNotification({
+        title: 'Titely ',
+        message: mes,
+        color: 'info',
+        timeout: -1,
+        isActive: true,
+    });
+
+    useNotificationSystem().addNotification({
+        title: 'Titel z',
+        message: mes,
+        color: 'info',
+        timeout: -1,
+        isActive: true,
+    });
+
+    useNotificationSystem().addNotification({
+        title: 'awdawd',
+        message: mes,
+        color: 'info',
+        timeout: -1,
+        isActive: true,
+    });
+
+    useNotificationSystem().addNotification({
+        title: 'awdawd',
+        message: mes,
+        color: 'info',
+        timeout: -1,
+        isActive: true,
+    });
+
+    useNotificationSystem().addNotification({
+        title: 'Tihgzhgzhtel',
+        message:
+            'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
+        color: 'warning',
+        timeout: -1,
+        isActive: true,
+    });
+
+    useNotificationSystem().addNotification({
+        title: 'awdawd',
+        message: mes,
+        color: 'info',
+        timeout: -1,
+        isActive: true,
+    });
 }
 </script>
 
@@ -389,5 +493,12 @@ body {
 .dialog-bottom-transition-enter-active,
 .dialog-bottom-transition-leave-active {
     transition: transform 0.2s ease-in-out;
+}
+
+.overflow-wrap {
+    overflow-wrap: break-word;
+    overflow: auto;
+    word-wrap: break-word;
+    max-height: 250px;
 }
 </style>

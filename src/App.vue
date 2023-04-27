@@ -122,8 +122,10 @@
                                         tokenVisibility ? 'text' : 'password'
                                     "
                                     :rules="[rules.required, rules.min]"
-                                    @click:append-inner="toggleTokenVisibility"
-                                    @update:model-value="isAccessTokenValid"
+                                    @click:append-inner="
+                                        toggleTokenVisibility()
+                                    "
+                                    @update:model-value="validateAccessToken()"
                                     persistent-placeholder
                                     hide-details
                                 >
@@ -362,22 +364,22 @@ function generateRandomToken(): string {
 async function regenerateAccessToken() {
     // TODO: Regenerate access token functionality
     accessToken.value = await generateRandomToken();
-    if (!isAccessTokenValid()) {
+    if (!validateAccessToken()) {
         regenerateAccessToken();
     }
 }
-const previousValid = ref(false);
+const isAccessTokenValid = ref(false);
 
-const isAccessTokenValid = () => {
+function validateAccessToken() {
     const isValid = Object.values(rules).every(
         (rule) => rule(accessToken.value) === true
     );
 
-    if (previousValid.value === isValid) {
+    if (isAccessTokenValid.value === isValid) {
         return isValid;
     }
 
-    previousValid.value = isValid;
+    isAccessTokenValid.value = isValid;
 
     if (!isValid) {
         stopSession();
@@ -397,7 +399,7 @@ const isAccessTokenValid = () => {
     }
 
     return isValid;
-};
+}
 
 // Notification System functionallity
 

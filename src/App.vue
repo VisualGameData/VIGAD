@@ -196,6 +196,36 @@
                 </v-card>
             </v-dialog>
         </v-bottom-navigation>
+
+        <!-- Notification System -->
+        <v-snackbar
+            v-for="(notification, index) in notifications"
+            v-model="notification.isActive"
+            :key="index"
+            :timeout="notification.timeout || 3000"
+            @update:model-value="dismissNotification(notification, index)"
+            :color="notification.color"
+            location="top right"
+            max-width="300px"
+            height="60px"
+            :style="{
+                ...{ 'margin-top': calcMargin(index) },
+                ...{ 'z-index': 900 },
+            }"
+            :multi-line="false"
+        >
+            <div class="scrollable-content">
+                {{ notification.message }}
+            </div>
+
+            <template v-slot:actions>
+                <v-btn
+                    icon="mdi-close"
+                    variant="plain"
+                    @click="dismissNotification(notification, index)"
+                ></v-btn>
+            </template>
+        </v-snackbar>
     </v-app>
 </template>
 
@@ -203,6 +233,11 @@
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { isRunning } from '@/composables/useRunning';
+import {
+    useNotificationSystem,
+    Notification,
+    notificationQueue,
+} from '@/composables/useNotificationSystem';
 
 import MainVideoStream from '@/components/MainVideoStream/MainVideoStream.vue';
 
@@ -267,7 +302,7 @@ async function copyToClipboard() {
     try {
         await navigator.clipboard.writeText(accessToken.value);
     } catch (err) {
-        // TODO: Handle error with warning system
+        // TODO: Handle error with notification system
         console.error('Failed to copy access token: ', err);
     }
 }
@@ -277,6 +312,30 @@ async function copyToClipboard() {
  */
 async function regenerateAccessToken() {
     // TODO: Regenerate access token functionality
+}
+
+// Notification System functionallity
+
+/**
+ * Ref which will hold the notification queue
+ */
+const notifications = ref(useNotificationSystem().notificationQueue);
+
+/**
+ * Function which will dismiss the notification
+ * @param item The notification to dismiss
+ */
+function dismissNotification(item: Notification, index: number) {
+    useNotificationSystem().removeNotification(item);
+    calcMargin(index);
+}
+
+/**
+ * Function which will calculate the margin for the notification
+ * @param i The index of the notification
+ */
+function calcMargin(index: number): string {
+    return index * 70 + 16 + 'px';
 }
 </script>
 
@@ -341,5 +400,32 @@ body {
 .dialog-bottom-transition-enter-active,
 .dialog-bottom-transition-leave-active {
     transition: transform 0.2s ease-in-out;
+}
+
+// Notification settings
+.scrollable-content {
+    overflow-wrap: break-word;
+    overflow: auto;
+    word-wrap: break-word;
+    max-height: 48px;
+    scrollbar-width: thin;
+    scrollbar-color: #ccc transparent;
+}
+
+.scrollable-content:hover {
+    scrollbar-color: #ffffff transparent;
+}
+
+.scrollable-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.scrollable-content::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.scrollable-content::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 10px;
 }
 </style>

@@ -38,14 +38,6 @@
             </v-btn>
 
             <v-btn
-                prepend-icon="mdi-regex"
-                value="regex"
-                @click="addSnackbar()"
-            >
-                Snackbar
-            </v-btn>
-
-            <v-btn
                 :disabled="isRunning"
                 to="/"
                 prepend-icon="mdi-monitor"
@@ -221,10 +213,9 @@
                 ...{ 'z-index': 900 },
             }"
             :multi-line="false"
-            ref="notificationItem"
         >
-            <div>
-                {{ truncatedText(index) }}
+            <div class="scrollable-content">
+                {{ notification.message }}
             </div>
 
             <template v-slot:actions>
@@ -239,7 +230,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { isRunning } from '@/composables/useRunning';
 import {
@@ -340,69 +331,11 @@ function dismissNotification(item: Notification, index: number) {
 }
 
 /**
- * Function which will truncate the text of the notification if it is too long to display
- * @param index The index of the notification
- */
-function truncatedText(index: number): string {
-    const limit = 75;
-    if (notifications.value[index].message.length > limit) {
-        return notifications.value[index].message.substring(0, limit) + '...';
-    } else {
-        return notifications.value[index].message;
-    }
-}
-
-const previousSnackbarHeight = ref(0);
-const notificationItem = ref(null);
-
-/**
  * Function which will calculate the margin for the notification
  * @param i The index of the notification
  */
 function calcMargin(index: number): string {
-    return index * 70 + 'px';
-}
-
-let t = 0;
-function addSnackbar() {
-    t += 1;
-    let mes = `Item ${t}`;
-
-    useNotificationSystem().addNotification({
-        message: 'Success Notification ',
-        color: 'success',
-        timeout: 10000,
-        isActive: true,
-    });
-
-    useNotificationSystem().addNotification({
-        message: 'Error Notification ',
-        color: 'error',
-        timeout: 10000,
-        isActive: true,
-    });
-
-    useNotificationSystem().addNotification({
-        message: 'Info Notification',
-        color: 'info',
-        timeout: -1,
-        isActive: true,
-    });
-
-    useNotificationSystem().addNotification({
-        message: 'Warning Notification',
-        color: 'warning',
-        timeout: -1,
-        isActive: true,
-    });
-
-    useNotificationSystem().addNotification({
-        message:
-            'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
-        color: 'warning',
-        timeout: -1,
-        isActive: true,
-    });
+    return index * 70 + 16 + 'px';
 }
 </script>
 
@@ -469,10 +402,30 @@ body {
     transition: transform 0.2s ease-in-out;
 }
 
-.overflow-wrap {
+// Notification settings
+.scrollable-content {
     overflow-wrap: break-word;
     overflow: auto;
     word-wrap: break-word;
-    max-height: 250px;
+    max-height: 48px;
+    scrollbar-width: thin;
+    scrollbar-color: #ccc transparent;
+}
+
+.scrollable-content:hover {
+    scrollbar-color: #ffffff transparent;
+}
+
+.scrollable-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.scrollable-content::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.scrollable-content::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 10px;
 }
 </style>

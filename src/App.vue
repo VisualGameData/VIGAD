@@ -259,15 +259,19 @@ const router = useRouter();
 onMounted(() => {
     // navigate to the default route
     router.push('/');
+
+    // generate a new access token on application start
+    regenerateAccessToken();
 });
 
 // Dialog for settings
 const dialog = ref(false);
 
 // Sample UUID for access token testing
-const accessToken = ref('17fe8fa2-1dc1-49ca-b7b2-b6ecf9068252');
-const isSessionActive = ref(false);
+
+const accessToken = ref('');
 const tokenVisibility = ref(false);
+const isSessionActive = ref(false);
 const streamData = ref(false);
 const streamRegexAndCaptureAreaSettings = ref(false);
 
@@ -298,7 +302,6 @@ function toggleTokenVisibility() {
  * Function which will copy the access token to the clipboard
  */
 async function copyToClipboard() {
-    // TODO: Copy to clipboard functionality
     try {
         await navigator.clipboard.writeText(accessToken.value);
     } catch (err) {
@@ -308,10 +311,25 @@ async function copyToClipboard() {
 }
 
 /**
+ * Function which will generate a random token
+ */
+function generateRandomToken(): string {
+    // 48 = to 96 Characters
+    // 32 = to 64 Characters
+    // 16 = to 32 Characters
+    const buffer = new Uint8Array(32);
+    crypto.getRandomValues(buffer);
+    return Array.prototype.map
+        .call(buffer, (x: number) => ('00' + x.toString(16)).slice(-2))
+        .join('');
+}
+
+/**
  * Function which will regenerate a new access token
  */
 async function regenerateAccessToken() {
     // TODO: Regenerate access token functionality
+    accessToken.value = await generateRandomToken();
 }
 
 // Notification System functionallity

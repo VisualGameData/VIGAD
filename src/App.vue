@@ -207,7 +207,7 @@
 
         <!-- Notification System -->
         <v-snackbar
-            v-for="(notification, index) in displayedNotifications"
+            v-for="(notification, index) in notifications"
             v-model="notification.isActive"
             :key="index"
             :timeout="notification.timeout || 3000"
@@ -216,7 +216,10 @@
             location="top right"
             max-width="300px"
             height="60px"
-            :style="{ 'margin-top': calcMargin(index) }"
+            :style="{
+                ...{ 'margin-top': calcMargin(index) },
+                ...{ 'z-index': 900 },
+            }"
             :multi-line="false"
             ref="notificationItem"
         >
@@ -326,14 +329,6 @@ async function regenerateAccessToken() {
  * Ref which will hold the notification queue
  */
 const notifications = ref(useNotificationSystem().notificationQueue);
-
-/**
- * Computed which will return only a small amount of notifications
- */
-const displayedNotifications = computed((): Notification[] => {
-    const notificationLimit = 4;
-    return notifications.value.slice(0, notificationLimit);
-});
 
 /**
  * Function which will dismiss the notification

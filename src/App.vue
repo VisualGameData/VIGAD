@@ -58,6 +58,9 @@
             <v-dialog
                 v-model="dialog"
                 transition="dialog-bottom-transition"
+                :style="{
+                    ...{ 'z-index': 800 },
+                }"
                 persistent
                 fullscreen
                 scrim
@@ -79,6 +82,7 @@
 
                         <v-btn
                             v-if="!isSessionActive"
+                            :disabled="!isAccessTokenValid"
                             class="rounded-pill"
                             prepend-icon="mdi-play"
                             variant="tonal"
@@ -88,6 +92,7 @@
 
                         <v-btn
                             v-else
+                            :disabled="!isAccessTokenValid"
                             class="rounded-pill"
                             prepend-icon="mdi-stop"
                             variant="tonal"
@@ -116,10 +121,11 @@
                                     :type="
                                         tokenVisibility ? 'text' : 'password'
                                     "
+                                    :rules="[rules.required, rules.min]"
                                     @click:append-inner="toggleTokenVisibility"
+                                    @update:model-value="isAccessTokenValid"
                                     persistent-placeholder
                                     hide-details
-                                    readonly
                                 >
                                     <template v-slot:append>
                                         <v-tooltip location="bottom">
@@ -260,7 +266,7 @@ onMounted(() => {
     // navigate to the default route
     router.push('/');
 
-    // generate a new access token on application start
+    // generate a new access token on application start and validate it
     regenerateAccessToken();
 });
 
@@ -270,6 +276,10 @@ const dialog = ref(false);
 // Sample UUID for access token testing
 
 const accessToken = ref('');
+const rules = {
+    required: (value: string) => !!value || 'Required.',
+    min: (v: string) => v.length >= 8 || 'Min 8 characters',
+};
 const tokenVisibility = ref(false);
 const isSessionActive = ref(false);
 const streamData = ref(false);
@@ -281,6 +291,12 @@ const streamRegexAndCaptureAreaSettings = ref(false);
 function startSession() {
     isSessionActive.value = true;
     // TODO: Start session functionality
+    useNotificationSystem().addNotification({
+        message: 'Session Started',
+        timeout: 2000,
+        color: 'info',
+        isActive: true,
+    });
 }
 
 /**
@@ -289,6 +305,12 @@ function startSession() {
 function stopSession() {
     isSessionActive.value = false;
     // TODO: Stop session functionality
+    useNotificationSystem().addNotification({
+        message: 'Session stopped',
+        timeout: 2000,
+        color: 'info',
+        isActive: true,
+    });
 }
 
 /**
@@ -304,9 +326,19 @@ function toggleTokenVisibility() {
 async function copyToClipboard() {
     try {
         await navigator.clipboard.writeText(accessToken.value);
+        useNotificationSystem().addNotification({
+            message: 'Copied access token to clipboard',
+            timeout: 2000,
+            color: 'info',
+            isActive: true,
+        });
     } catch (err) {
-        // TODO: Handle error with notification system
-        console.error('Failed to copy access token: ', err);
+        useNotificationSystem().addNotification({
+            message: 'Unable to copy access token to clipboard',
+            timeout: 3000,
+            color: 'error',
+            isActive: true,
+        });
     }
 }
 
@@ -330,7 +362,42 @@ function generateRandomToken(): string {
 async function regenerateAccessToken() {
     // TODO: Regenerate access token functionality
     accessToken.value = await generateRandomToken();
+    if (!isAccessTokenValid()) {
+        regenerateAccessToken();
+    }
 }
+const previousValid = ref(false);
+
+const isAccessTokenValid = () => {
+    const isValid = Object.values(rules).every(
+        (rule) => rule(accessToken.value) === true
+    );
+
+    if (previousValid.value === isValid) {
+        return isValid;
+    }
+
+    previousValid.value = isValid;
+
+    if (!isValid) {
+        stopSession();
+        useNotificationSystem().addNotification({
+            message: 'The access token is invalid',
+            timeout: 2000,
+            color: 'error',
+            isActive: true,
+        });
+    } else {
+        useNotificationSystem().addNotification({
+            message: 'The access token is valid',
+            timeout: 1000,
+            color: 'success',
+            isActive: true,
+        });
+    }
+
+    return isValid;
+};
 
 // Notification System functionallity
 
@@ -345,7 +412,6 @@ const notifications = ref(useNotificationSystem().notificationQueue);
  */
 function dismissNotification(item: Notification, index: number) {
     useNotificationSystem().removeNotification(item);
-    calcMargin(index);
 }
 
 /**

@@ -1,7 +1,7 @@
 import { ConstraintRegex } from "./ConstraintRegex";
 import { Slicing } from "./Regex";
 import { ValueRegex } from "./ValueRegex";
-import { StringSimilarity } from "../stringSimilarity";
+import { StringSimilarity } from "../StringSimilarity";
 
 export class RegexHandler {
     private static instance: RegexHandler;

@@ -121,13 +121,19 @@
                                     :type="
                                         tokenVisibility ? 'text' : 'password'
                                     "
-                                    :rules="[rules.required, rules.min]"
+                                    :rules="[
+                                        rules.uppercase,
+                                        rules.lowercase,
+                                        rules.min,
+                                        rules.required,
+                                        rules.special,
+                                        rules.number,
+                                    ]"
                                     @click:append-inner="
                                         toggleTokenVisibility()
                                     "
                                     @update:model-value="validateAccessToken()"
                                     persistent-placeholder
-                                    hide-details
                                 >
                                     <template v-slot:append>
                                         <v-tooltip location="bottom">
@@ -275,13 +281,27 @@ onMounted(() => {
 // Dialog for settings
 const dialog = ref(false);
 
-// Sample UUID for access token testing
-
+/**
+ * Access token
+ */
 const accessToken = ref('');
+
+/**
+ * Rules for the access token
+ */
 const rules = {
-    required: (value: string) => !!value || 'Required.',
+    required: (value: string) =>
+        !!value || 'An access token is required to start a session',
     min: (v: string) => v.length >= 8 || 'Min 8 characters',
+    uppercase: (v: string) =>
+        /[A-Z]/.test(v) || 'Must include at least one uppercase letter',
+    lowercase: (v: string) =>
+        /[a-z]/.test(v) || 'Must include at least one lowercase letter',
+    special: (v: string) =>
+        /[\W_]/.test(v) || 'Must include at least one special character',
+    number: (v: string) => /\d/.test(v) || 'Must include at least one number',
 };
+
 const tokenVisibility = ref(false);
 const isSessionActive = ref(false);
 const streamData = ref(false);
@@ -348,14 +368,24 @@ async function copyToClipboard() {
  * Function which will generate a random token
  */
 function generateRandomToken(): string {
-    // 48 = to 96 Characters
-    // 32 = to 64 Characters
-    // 16 = to 32 Characters
     const buffer = new Uint8Array(32);
     crypto.getRandomValues(buffer);
-    return Array.prototype.map
-        .call(buffer, (x: number) => ('00' + x.toString(16)).slice(-2))
+    const characterSet =
+        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>/?';
+    const token = Array.from(buffer)
+        .map((x: number) => characterSet[x % characterSet.length])
         .join('');
+    if (
+        rules.lowercase(token) === true &&
+        rules.uppercase(token) === true &&
+        rules.special(token) === true &&
+        rules.number(token) === true &&
+        rules.min(token) === true
+    ) {
+        return token;
+    } else {
+        return generateRandomToken();
+    }
 }
 
 /**

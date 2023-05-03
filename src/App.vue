@@ -411,14 +411,18 @@ function validateAccessToken() {
 
     isAccessTokenValid.value = isValid;
 
-    if (!isValid) {
-        if (isSessionActive.value) stopSession();
-        useNotificationSystem().addNotification({
-            message: 'The access token is invalid',
-            timeout: 2000,
-            color: 'error',
-            isActive: true,
-        });
+    const invalidAccessTokenNotification: Notification = {
+        message: 'The access token is invalid',
+        timeout: 2000,
+        color: 'error',
+        isActive: true,
+    };
+
+    if (!isValid && isSessionActive.value) {
+        stopSession();
+        useNotificationSystem().addNotification(invalidAccessTokenNotification);
+    } else if (!isValid) {
+        useNotificationSystem().addNotification(invalidAccessTokenNotification);
     } else {
         useNotificationSystem().addNotification({
             message: 'The access token is valid',

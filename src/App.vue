@@ -371,7 +371,7 @@ function generateRandomToken(): string {
     const buffer = new Uint8Array(32);
     crypto.getRandomValues(buffer);
     const characterSet =
-        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>/?';
+        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*_+-=?';
     const token = Array.from(buffer)
         .map((x: number) => characterSet[x % characterSet.length])
         .join('');
@@ -412,7 +412,7 @@ function validateAccessToken() {
     isAccessTokenValid.value = isValid;
 
     if (!isValid) {
-        stopSession();
+        if (isSessionActive.value) stopSession();
         useNotificationSystem().addNotification({
             message: 'The access token is invalid',
             timeout: 2000,

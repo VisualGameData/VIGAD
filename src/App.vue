@@ -62,8 +62,8 @@
                     ...{ 'z-index': 800 },
                 }"
                 persistent
-                fullscreen
-                scrim
+                scrim="#00000"
+                width="700px"
             >
                 <template v-slot:activator="{ props }">
                     <v-btn v-bind="props" prepend-icon="mdi-cog">

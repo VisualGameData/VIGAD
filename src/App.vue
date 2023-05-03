@@ -59,8 +59,8 @@
                 v-model="dialog"
                 transition="dialog-bottom-transition"
                 persistent
-                fullscreen
-                scrim
+                scrim="#00000"
+                width="700px"
             >
                 <template v-slot:activator="{ props }">
                     <v-btn v-bind="props" prepend-icon="mdi-cog">

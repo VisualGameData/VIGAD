@@ -26,7 +26,7 @@
                         >
                             <v-card
                                 v-for="(source, index) in onlyScreenSources"
-                                :key="source.id"
+                                :key="(source as any).id"
                                 @click="
                                     streamHandler.setCurrentSelectedSource(
                                         streams[index]
@@ -34,7 +34,7 @@
                                 "
                                 class="mb-2"
                             >
-                                <v-card-title>{{ source.name }}</v-card-title>
+                                <v-card-title>{{ (source as any).name }}</v-card-title>
                                 <v-card-text>
                                     <video
                                         autoplay
@@ -55,7 +55,7 @@
                                 v-for="(
                                     source, index
                                 ) in onlyApplicationSources"
-                                :key="source.id"
+                                :key="(source as any).id"
                                 @click="
                                     streamHandler.setCurrentSelectedSource(
                                         streams[lastScreenIndex + index]
@@ -63,7 +63,7 @@
                                 "
                                 class="mb-2"
                             >
-                                <v-card-title>{{ source.name }}</v-card-title>
+                                <v-card-title>{{ (source as any).name }}</v-card-title>
                                 <v-card-text>
                                     <video
                                         autoplay

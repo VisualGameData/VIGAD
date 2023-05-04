@@ -62,7 +62,7 @@
                     ...{ 'z-index': 800 },
                 }"
                 persistent
-                scrim="#00000"
+                scrim="#000000"
                 width="700px"
             >
                 <template v-slot:activator="{ props }">

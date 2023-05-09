@@ -15,8 +15,8 @@ Overall Vigad offers a wide range of use cases, even outside of gaming.
 ## Compatibility
 Vigad has been testet on the following platforms:
 
-- Windows 10 or newer
-- Linux
+- Windows 10 and newer
+- Ubuntu 22.04 (likely to work on similar distributions as well)
 - MAC (coming soon)
 
 ## Contributors

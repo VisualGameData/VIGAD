@@ -16,11 +16,8 @@ Overall Vigad offers a wide range of use cases, even outside of gaming.
 Vigad has been testet on the following platforms:
 
 - Windows 10 or newer
-- Linux (coming soon)
-
-## Requirements
-
-- NodeJS
+- Linux
+- MAC (coming soon)
 
 ## Contributors
 A big thank you goes to all contributors of ideas, code, docs and overall support!

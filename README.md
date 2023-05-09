@@ -13,7 +13,7 @@ A common use case would be for example to extract the players health points from
 Overall Vigad offers a wide range of use cases, even outside of gaming.
 
 ## Compatibility
-Vigad has been testet on the following platforms:
+Vigad has been tested on the following platforms:
 
 - Windows 10 and newer
 - Ubuntu 22.04 (likely to work on similar distributions as well)

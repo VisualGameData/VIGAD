@@ -19,5 +19,12 @@ Vigad has been testet on the following platforms:
 - Ubuntu 22.04 (likely to work on similar distributions as well)
 - MAC (coming soon)
 
+## Installation
+Download the executable for the latest version [here](https://github.com/VisualGameData/VIGAD/releases/latest/) (Win: .exe, Linux: .AppImage)
+
+Note: In order to run the .AppImage executable, fuse is required.
+- Install fuse:
+> apt install fuse
+
 ## Contributors
 A big thank you goes to all contributors of ideas, code, docs and overall support!

@@ -1,43 +1,149 @@
 import { ref } from 'vue';
 
-export const notificationQueue = ref<Notification[]>([]);
-
 /**
- * Function that can be used store and handle notifications
+ * notifications list
  */
-export const useNotificationSystem = () => {
+const notifications = ref<Notification[]>([]);
+
+export default function useNotifications() {
     /**
-     * Function that can be used to add a notification to the queue
-     * @param notification The notification to add to the queue.
+     * Create a notification
+     * @param options
      */
-    const addNotification = (notification: Notification) => {
-        notificationQueue.value.push(notification);
+    const createNotification: CreateNotification = (options) => {
+        const _options = Object.assign(
+            { ...defaultNotificationOptions },
+            options
+        );
+
+        notifications.value.push(
+            ...[
+                {
+                    id: createUUID(),
+                    ..._options,
+                },
+            ]
+        );
     };
 
     /**
-     * Function that can be used to remove a Notification from the queue.
-     * @param notification The notification to remove from the queue.
+     * Create an error notification
+     * @param options
      */
-    const removeNotification = (notification: Notification) => {
-        const index = notificationQueue.value.indexOf(notification);
-        if (index > -1) {
-            notificationQueue.value.splice(index, 1);
-        }
+    const createErrorNotification: CreateNotification = (options) => {
+        createNotification({
+            type: 'error',
+            title: 'Yikes. Something went wrong.',
+            duration: 8,
+            ...options,
+        });
+    };
+
+    /**
+     * Create a success notification
+     * @param options
+     */
+    const createSuccessNotification: CreateNotification = (options) => {
+        createNotification({ type: 'success', title: 'Success!', ...options });
+    };
+
+    /**
+     * Create a warning notification
+     * @param options
+     */
+    const createWarningNotification: CreateNotification = (options) => {
+        createNotification({
+            type: 'warning',
+            title: 'Something to lookout for.',
+            duration: 8,
+            ...options,
+        });
+    };
+
+    /**
+     * Remove notification from the list
+     * @param id
+     */
+    const removeNotifications = (id: string) => {
+        const index = notifications.value.findIndex((item) => item.id === id);
+        if (index !== -1) notifications.value.splice(index, 1);
+    };
+
+    /**
+     * Stop body overflow when notification is shown
+     */
+    const stopBodyOverflow = () => {
+        document && document.body.classList.add(...['hide-overflow']);
+    };
+
+    /**
+     * Allow body overflow after notification is removed
+     */
+    const allowBodyOverflow = () => {
+        document && document.body.classList.remove(...['hide-overflow']);
     };
 
     return {
-        addNotification,
-        removeNotification,
-        notificationQueue,
+        notifications,
+        createNotification,
+        createSuccessNotification,
+        createErrorNotification,
+        createWarningNotification,
+        removeNotifications,
+        stopBodyOverflow,
+        allowBodyOverflow,
     };
+}
+
+/**
+ * Create a unique id
+ * @returns a unique id as a string
+ */
+function createUUID(): string {
+    let dt = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+        /[xy]/g,
+        function (c) {
+            var r = (dt + Math.random() * 16) % 16 | 0;
+            dt = Math.floor(dt / 16);
+            return (c == 'x' ? r : (r & 0x3) | 0x8).toString(16);
+        }
+    );
+    return uuid;
+}
+
+/**
+ * Notification interface
+ */
+export interface Notification {
+    id: string;
+    type: string;
+    title: string;
+    message: string;
+    autoClose: boolean;
+    duration: number;
+}
+
+/**
+ * Create notification function
+ */
+export type CreateNotification = {
+    (options: {
+        type?: string;
+        title?: string;
+        message?: string;
+        autoClose?: boolean;
+        duration?: number;
+    }): void;
 };
 
 /**
- * Interface that can be used to define a warning.
+ * Default notification options
  */
-export interface Notification {
-    message: string; // the message to display
-    timeout?: number; // in milliseconds
-    color?: string; // can be hex, rgb, rgba, hsl, hsla, or something like warning, error, info, success more info: https://vuetifyjs.com/en/api/v-snackbar/#props-color
-    isActive: true;
-}
+const defaultNotificationOptions = {
+    type: 'info',
+    title: 'Info Notification',
+    message: 'Ooops! A message was not provided',
+    autoClose: true,
+    duration: 5,
+};

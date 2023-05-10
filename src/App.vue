@@ -212,7 +212,7 @@
         </v-bottom-navigation>
 
         <!-- Notification System -->
-        <v-snackbar
+        <!-- <v-snackbar
             v-for="(notification, index) in notifications"
             v-model="notification.isActive"
             :key="index"
@@ -239,7 +239,34 @@
                     @click="dismissNotification(notification, index)"
                 ></v-btn>
             </template>
-        </v-snackbar>
+        </v-snackbar> -->
+        <Teleport to="body">
+            <transition-group
+                name="toast-notification"
+                tag="div"
+                class="toast-notifications"
+                @before-enter="stopBodyOverflow"
+                @after-enter="allowBodyOverflow"
+                @before-leave="stopBodyOverflow"
+                @after-leave="allowBodyOverflow"
+            >
+                <toast-notification
+                    v-for="(item, idx) in notifications"
+                    :key="item.id"
+                    :id="item.id"
+                    :type="item.type"
+                    :title="item.title"
+                    :message="item.message"
+                    :auto-close="item.autoClose"
+                    :duration="item.duration"
+                    @close="
+                        () => {
+                            removeNotifications(item.id);
+                        }
+                    "
+                ></toast-notification>
+            </transition-group>
+        </Teleport>
     </v-app>
 </template>
 
@@ -247,11 +274,29 @@
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { isRunning } from '@/composables/useRunning';
-import {
-    useNotificationSystem,
-    Notification,
-    notificationQueue,
-} from '@/composables/useNotificationSystem';
+// import {
+//     useNotificationSystem,
+//     Notification,
+//     notificationQueue,
+// } from '@/composables/useNotificationSystem';
+import { inject } from 'vue';
+import { CreateNotification } from '@/composables/useNotificationSystem';
+import useNotifications from '@/composables/useNotificationSystem';
+import ToastNotification from '@/components/ToastNotification/ToastNotification.vue';
+
+// const {
+//     notifications,
+//     removeNotifications,
+//     stopBodyOverflow,
+//     allowBodyOverflow,
+// } = useNotifications();
+
+const notifications = ref(useNotifications().notifications);
+const removeNotifications = useNotifications().removeNotifications;
+const stopBodyOverflow = useNotifications().stopBodyOverflow;
+const allowBodyOverflow = useNotifications().allowBodyOverflow;
+
+const createNotification = <CreateNotification>inject('create-notification');
 
 import MainVideoStream from '@/components/MainVideoStream/MainVideoStream.vue';
 
@@ -313,12 +358,16 @@ const streamRegexAndCaptureAreaSettings = ref(false);
 function startSession() {
     isSessionActive.value = true;
     // TODO: Start session functionality
-    useNotificationSystem().addNotification({
-        message: 'Session Started',
-        timeout: 2000,
-        color: 'info',
-        isActive: true,
+    useNotifications().createNotification({
+        title: 'Session started',
+        type: 'info',
     });
+    // useNotificationSystem().addNotification({
+    //     message: 'Session Started',
+    //     timeout: 2000,
+    //     color: 'info',
+    //     isActive: true,
+    // });
 }
 
 /**
@@ -327,12 +376,16 @@ function startSession() {
 function stopSession() {
     isSessionActive.value = false;
     // TODO: Stop session functionality
-    useNotificationSystem().addNotification({
-        message: 'Session stopped',
-        timeout: 2000,
-        color: 'info',
-        isActive: true,
+    useNotifications().createNotification({
+        title: 'Session stopped',
+        type: 'info',
     });
+    // useNotificationSystem().addNotification({
+    //     message: 'Session stopped',
+    //     timeout: 2000,
+    //     color: 'info',
+    //     isActive: true,
+    // });
 }
 
 /**
@@ -348,19 +401,25 @@ function toggleTokenVisibility() {
 async function copyToClipboard() {
     try {
         await navigator.clipboard.writeText(accessToken.value);
-        useNotificationSystem().addNotification({
-            message: 'Copied access token to clipboard',
-            timeout: 2000,
-            color: 'info',
-            isActive: true,
+        useNotifications().createSuccessNotification({
+            title: 'Copied access token to clipboard',
         });
+        // useNotificationSystem().addNotification({
+        //     message: 'Copied access token to clipboard',
+        //     timeout: 2000,
+        //     color: 'info',
+        //     isActive: true,
+        // });
     } catch (err) {
-        useNotificationSystem().addNotification({
-            message: 'Unable to copy access token to clipboard',
-            timeout: 3000,
-            color: 'error',
-            isActive: true,
+        useNotifications().createErrorNotification({
+            title: 'Unable to copy access token to clipboard',
         });
+        // useNotificationSystem().addNotification({
+        //     message: 'Unable to copy access token to clipboard',
+        //     timeout: 3000,
+        //     color: 'error',
+        //     isActive: true,
+        // });
     }
 }
 
@@ -411,25 +470,36 @@ function validateAccessToken() {
 
     isAccessTokenValid.value = isValid;
 
-    const invalidAccessTokenNotification: Notification = {
-        message: 'The access token is invalid',
-        timeout: 2000,
-        color: 'error',
-        isActive: true,
-    };
+    // const invalidAccessTokenNotification: Notification = {
+    //     message: 'The access token is invalid',
+    //     timeout: 2000,
+    //     color: 'error',
+    //     isActive: true,
+    // };
 
     if (!isValid && isSessionActive.value) {
         stopSession();
-        useNotificationSystem().addNotification(invalidAccessTokenNotification);
-    } else if (!isValid) {
-        useNotificationSystem().addNotification(invalidAccessTokenNotification);
-    } else {
-        useNotificationSystem().addNotification({
-            message: 'The access token is valid',
-            timeout: 1000,
-            color: 'success',
-            isActive: true,
+        useNotifications().createErrorNotification({
+            title: 'Session stopped',
+            message: 'The access token is invalid',
         });
+        // useNotificationSystem().addNotification(invalidAccessTokenNotification);
+    } else if (!isValid) {
+        useNotifications().createErrorNotification({
+            title: 'Session stopped',
+            message: 'The access token is invalid',
+        });
+        // useNotificationSystem().addNotification(invalidAccessTokenNotification);
+    } else {
+        useNotifications().createSuccessNotification({
+            title: 'The access token is valid',
+        });
+        // useNotificationSystem().addNotification({
+        //     message: 'The access token is valid',
+        //     timeout: 1000,
+        //     color: 'success',
+        //     isActive: true,
+        // });
     }
 
     return isValid;
@@ -440,14 +510,14 @@ function validateAccessToken() {
 /**
  * Ref which will hold the notification queue
  */
-const notifications = ref(useNotificationSystem().notificationQueue);
+// const notifications = ref(useNotificationSystem().notificationQueue);
 
 /**
  * Function which will dismiss the notification
  * @param item The notification to dismiss
  */
 function dismissNotification(item: Notification, index: number) {
-    useNotificationSystem().removeNotification(item);
+    // useNotificationSystem().removeNotification(item);
 }
 
 /**
@@ -547,5 +617,33 @@ body {
 .scrollable-content::-webkit-scrollbar-thumb {
     background-color: #ccc;
     border-radius: 10px;
+}
+
+.toast-notifications {
+    z-index: 9999;
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0.8rem;
+}
+
+.toast-notification-enter-active {
+    animation: toast-fade-in 0.5s ease-in-out;
+}
+.toast-notification-leave-active {
+    animation: toast-fade-in 0.5s ease-in-out reverse;
+}
+
+@keyframes toast-fade-in {
+    from {
+        opacity: 0;
+        transform: scale(0.4);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 </style>

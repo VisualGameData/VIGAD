@@ -122,7 +122,7 @@ const close = () => {
 <style lang="scss" scoped>
 .toast-notification {
     --toast-color: #3cff00;
-    // cursor: pointer;
+    cursor: pointer;
     max-width: 450px;
     position: relative;
     background: #121212;

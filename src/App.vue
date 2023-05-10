@@ -244,8 +244,6 @@
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { isRunning } from '@/composables/useRunning';
-import { inject } from 'vue';
-import { CreateNotification } from '@/composables/useNotificationSystem';
 import useNotifications from '@/composables/useNotificationSystem';
 import ToastNotification from '@/components/ToastNotification/ToastNotification.vue';
 
@@ -316,8 +314,6 @@ function startSession() {
     // TODO: Start session functionality
     useNotifications().createNotification({
         title: 'Session started',
-        type: 'warning',
-        message: ''
     });
 }
 
@@ -416,7 +412,6 @@ function validateAccessToken() {
     } else {
         useNotifications().createSuccessNotification({
             title: 'The access token is valid',
-            message: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.'
         });
     }
 

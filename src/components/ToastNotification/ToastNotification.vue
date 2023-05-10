@@ -5,17 +5,13 @@
         @click.prevent="close"
         :ref="id"
     >
-        <div @click="close" class="close-btn" title="Close">
-            <v-icon icon="mdi-close" />
-        </div>
-
         <div class="body">
-            <v-icon :color="toastIconColor" icon="mdi-alert"></v-icon>
+            <v-icon :color="toastIconColor" :icon="`mdi-${toastIcon}`"></v-icon>
             <v-divider vertical />
             <div class="content">
                 <div class="content__title">{{ toastTitle }}</div>
 
-                <p class="content__message">{{ message }}</p>
+                <p v-if="message" class="content__message">{{ message }}</p>
             </div>
         </div>
         <div v-if="autoClose" class="progress"></div>
@@ -71,13 +67,13 @@ onMounted(() => {
 const toastIcon = computed(() => {
     switch (props.type) {
         case 'error':
-            return 'error';
+            return 'alert';
         case 'warning':
             return 'alert-circle';
         case 'success':
-            return 'success';
+            return 'check';
         default:
-            return 'alert';
+            return 'information';
     }
 });
 
@@ -87,11 +83,11 @@ const toastIcon = computed(() => {
 const toastColor = computed(() => {
     switch (props.type) {
         case 'error':
-            return '#ff355b';
+            return '#c7677a';
         case 'warning':
-            return '#e8b910';
+            return '#f18c20';
         case 'success':
-            return '#00cc69';
+            return '#5cae53';
         default:
             return '#bb86fc';
     }
@@ -129,31 +125,14 @@ const close = () => {
     // cursor: pointer;
     max-width: 450px;
     position: relative;
-    background: black;
+    background: #121212;
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.08),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     min-height: 4rem;
     padding-inline: 1.5rem;
     padding-block: 1.2rem;
     transition: all 0.3s ease-in-out;
-
-    .close-btn {
-        position: absolute;
-        top: 0.4rem;
-        right: 0.4rem;
-        display: flex;
-        place-items: center;
-        justify-content: center;
-        height: 32px;
-        width: 32px;
-        transition: var(--all-transition);
-        cursor: pointer;
-
-        &:hover {
-            box-shadow: 0px 0px 10px rgb(228, 228, 228);
-            border-radius: 50%;
-        }
-    }
+    border-radius: 8px !important;
 
     .body {
         display: flex;
@@ -181,6 +160,24 @@ const close = () => {
             &__message {
                 max-height: 150px;
                 overflow-y: auto;
+
+                overflow-wrap: break-word;
+                word-wrap: break-word;
+                scrollbar-width: thin;
+                scrollbar-color: #ccc transparent;
+                &:hover{
+                    scrollbar-color: #ffffff transparent;
+                }
+                &::-webkit-scrollbar{
+                    width: 6px;
+                }
+                &::-webkit-scrollbar-track{
+                    background-color: transparent;
+                }
+                &::-webkit-scrollbar-thumb {
+                    background-color: #ccc;
+                    border-radius: 10px;
+                }
             }
         }
     }
@@ -193,6 +190,7 @@ const close = () => {
         width: 100%;
         background: var(--toast-color);
         animation: progress var(--toast-duration) ease-in-out forwards;
+        border-radius: 8px !important;
     }
 
     @keyframes progress {

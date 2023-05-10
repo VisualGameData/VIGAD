@@ -143,7 +143,7 @@ export type CreateNotification = {
 const defaultNotificationOptions = {
     type: 'info',
     title: 'Info Notification',
-    message: 'Ooops! A message was not provided',
+    message: '',
     autoClose: true,
     duration: 5,
 };

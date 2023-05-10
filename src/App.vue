@@ -210,36 +210,6 @@
                 </v-card>
             </v-dialog>
         </v-bottom-navigation>
-
-        <!-- Notification System -->
-        <!-- <v-snackbar
-            v-for="(notification, index) in notifications"
-            v-model="notification.isActive"
-            :key="index"
-            :timeout="notification.timeout || 3000"
-            @update:model-value="dismissNotification(notification, index)"
-            :color="notification.color"
-            location="top right"
-            max-width="300px"
-            height="60px"
-            :style="{
-                ...{ 'margin-top': calcMargin(index) },
-                ...{ 'z-index': 900 },
-            }"
-            :multi-line="false"
-        >
-            <div class="scrollable-content">
-                {{ notification.message }}
-            </div>
-
-            <template v-slot:actions>
-                <v-btn
-                    icon="mdi-close"
-                    variant="plain"
-                    @click="dismissNotification(notification, index)"
-                ></v-btn>
-            </template>
-        </v-snackbar> -->
         <Teleport to="body">
             <transition-group
                 name="toast-notification"
@@ -274,29 +244,15 @@
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { isRunning } from '@/composables/useRunning';
-// import {
-//     useNotificationSystem,
-//     Notification,
-//     notificationQueue,
-// } from '@/composables/useNotificationSystem';
 import { inject } from 'vue';
 import { CreateNotification } from '@/composables/useNotificationSystem';
 import useNotifications from '@/composables/useNotificationSystem';
 import ToastNotification from '@/components/ToastNotification/ToastNotification.vue';
 
-// const {
-//     notifications,
-//     removeNotifications,
-//     stopBodyOverflow,
-//     allowBodyOverflow,
-// } = useNotifications();
-
 const notifications = ref(useNotifications().notifications);
 const removeNotifications = useNotifications().removeNotifications;
 const stopBodyOverflow = useNotifications().stopBodyOverflow;
 const allowBodyOverflow = useNotifications().allowBodyOverflow;
-
-const createNotification = <CreateNotification>inject('create-notification');
 
 import MainVideoStream from '@/components/MainVideoStream/MainVideoStream.vue';
 
@@ -360,14 +316,9 @@ function startSession() {
     // TODO: Start session functionality
     useNotifications().createNotification({
         title: 'Session started',
-        type: 'info',
+        type: 'warning',
+        message: ''
     });
-    // useNotificationSystem().addNotification({
-    //     message: 'Session Started',
-    //     timeout: 2000,
-    //     color: 'info',
-    //     isActive: true,
-    // });
 }
 
 /**
@@ -380,12 +331,6 @@ function stopSession() {
         title: 'Session stopped',
         type: 'info',
     });
-    // useNotificationSystem().addNotification({
-    //     message: 'Session stopped',
-    //     timeout: 2000,
-    //     color: 'info',
-    //     isActive: true,
-    // });
 }
 
 /**
@@ -404,22 +349,10 @@ async function copyToClipboard() {
         useNotifications().createSuccessNotification({
             title: 'Copied access token to clipboard',
         });
-        // useNotificationSystem().addNotification({
-        //     message: 'Copied access token to clipboard',
-        //     timeout: 2000,
-        //     color: 'info',
-        //     isActive: true,
-        // });
     } catch (err) {
         useNotifications().createErrorNotification({
             title: 'Unable to copy access token to clipboard',
         });
-        // useNotificationSystem().addNotification({
-        //     message: 'Unable to copy access token to clipboard',
-        //     timeout: 3000,
-        //     color: 'error',
-        //     isActive: true,
-        // });
     }
 }
 
@@ -470,63 +403,26 @@ function validateAccessToken() {
 
     isAccessTokenValid.value = isValid;
 
-    // const invalidAccessTokenNotification: Notification = {
-    //     message: 'The access token is invalid',
-    //     timeout: 2000,
-    //     color: 'error',
-    //     isActive: true,
-    // };
-
     if (!isValid && isSessionActive.value) {
         stopSession();
         useNotifications().createErrorNotification({
             title: 'Session stopped',
             message: 'The access token is invalid',
         });
-        // useNotificationSystem().addNotification(invalidAccessTokenNotification);
     } else if (!isValid) {
         useNotifications().createErrorNotification({
-            title: 'Session stopped',
-            message: 'The access token is invalid',
+            title: 'The access token is invalid',
         });
-        // useNotificationSystem().addNotification(invalidAccessTokenNotification);
     } else {
         useNotifications().createSuccessNotification({
             title: 'The access token is valid',
+            message: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.'
         });
-        // useNotificationSystem().addNotification({
-        //     message: 'The access token is valid',
-        //     timeout: 1000,
-        //     color: 'success',
-        //     isActive: true,
-        // });
     }
 
     return isValid;
 }
 
-// Notification System functionallity
-
-/**
- * Ref which will hold the notification queue
- */
-// const notifications = ref(useNotificationSystem().notificationQueue);
-
-/**
- * Function which will dismiss the notification
- * @param item The notification to dismiss
- */
-function dismissNotification(item: Notification, index: number) {
-    // useNotificationSystem().removeNotification(item);
-}
-
-/**
- * Function which will calculate the margin for the notification
- * @param i The index of the notification
- */
-function calcMargin(index: number): string {
-    return index * 70 + 16 + 'px';
-}
 </script>
 
 <style lang="scss">
@@ -592,38 +488,11 @@ body {
     transition: transform 0.2s ease-in-out;
 }
 
-// Notification settings
-.scrollable-content {
-    overflow-wrap: break-word;
-    overflow: auto;
-    word-wrap: break-word;
-    max-height: 48px;
-    scrollbar-width: thin;
-    scrollbar-color: #ccc transparent;
-}
-
-.scrollable-content:hover {
-    scrollbar-color: #ffffff transparent;
-}
-
-.scrollable-content::-webkit-scrollbar {
-    width: 6px;
-}
-
-.scrollable-content::-webkit-scrollbar-track {
-    background-color: transparent;
-}
-
-.scrollable-content::-webkit-scrollbar-thumb {
-    background-color: #ccc;
-    border-radius: 10px;
-}
-
 .toast-notifications {
     z-index: 9999;
     position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
+    top: 24px;
+    right: 24px;
     display: flex;
     flex-direction: column-reverse;
     gap: 0.8rem;

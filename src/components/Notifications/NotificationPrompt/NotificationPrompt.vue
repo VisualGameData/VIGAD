@@ -1,28 +1,36 @@
 <template>
     <div
-        class="toast-notification"
-        :style="`--toast-duration: ${duration}s; --toast-color: ${toastColor}`"
+        class="notification-prompt"
+        :style="`--toast-duration: ${duration}s; --toast-color: ${notificationColor}`"
         @click.prevent="close"
         :ref="id"
     >
-        <div class="body">
-            <v-icon :color="toastIconColor" :icon="`mdi-${toastIcon}`"></v-icon>
+        <div class="notification-body">
+            <v-icon
+                :color="notificationIconColor"
+                :icon="`mdi-${notificationIcon}`"
+            ></v-icon>
             <v-divider vertical />
-            <div class="content">
-                <div class="content__title">{{ toastTitle }}</div>
+            <div class="notification-content">
+                <div class="notification-content__title">
+                    {{ notificationTitle }}
+                </div>
 
-                <p v-if="message" class="content__message">{{ message }}</p>
+                <p v-if="message" class="notification-content__message">
+                    {{ message }}
+                </p>
             </div>
         </div>
-        <div v-if="autoClose" class="progress"></div>
+        <div v-if="autoClose" class="notification-duration-progress-bar"></div>
     </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 
-// Props for our component,
-// these are the same as Notitfication interface.
+/**
+ * Props for our component, these are the same as Notitfication interface.
+ */
 const props = defineProps({
     id: { type: String, required: true },
     type: {
@@ -40,20 +48,23 @@ const props = defineProps({
     duration: { type: Number, default: 5, required: false }, // in seconds
 });
 
-// Defining emits
-// for closing a notification
+/**
+ * Defining emits for closing a notification
+ */
 const emit = defineEmits<{
     (e: 'close'): void;
 }>();
 
-// some reactive values to manage the notification
+/**
+ * A reactive value to store the timer
+ */
 const timer = ref<any>(-1);
 const startedAt = ref<number>(0);
 const delay = ref<number>(0);
 
-// setting up the automatic
-// dismissing of notificaton
-// after the specified duration
+/**
+ * A lifecycle hook to start the timer for auto closing the notification if autoClose is true
+ */
 onMounted(() => {
     if (props.autoClose) {
         startedAt.value = Date.now();
@@ -64,7 +75,7 @@ onMounted(() => {
 
 // a computed property to set
 // the icon for the notification
-const toastIcon = computed(() => {
+const notificationIcon = computed(() => {
     switch (props.type) {
         case 'error':
             return 'alert';
@@ -77,10 +88,10 @@ const toastIcon = computed(() => {
     }
 });
 
-// a computed property to set
-// the icon and progres bar color
-// for the notification
-const toastColor = computed(() => {
+/**
+ * A computed property to set the color for the notification based on the type of notification provided
+ */
+const notificationColor = computed(() => {
     switch (props.type) {
         case 'error':
             return '#c7677a';
@@ -93,7 +104,10 @@ const toastColor = computed(() => {
     }
 });
 
-const toastIconColor = computed(() => {
+/**
+ * A computed property to set the icon color for the notification based on the type of notification provided
+ */
+const notificationIconColor = computed(() => {
     switch (props.type) {
         case 'error':
             return 'error';
@@ -106,21 +120,23 @@ const toastIconColor = computed(() => {
     }
 });
 
-// a computed property to set
-// the title of the notification
-const toastTitle = computed(() => {
+/**
+ * A computed property to set the title for the notification
+ */
+const notificationTitle = computed(() => {
     return props.title && props.title !== null ? props.title : 'Notification';
 });
 
-// a method to close the
-// notification and emit the action
+/**
+ * A method to close the notification and emit the action
+ */
 const close = () => {
     emit('close');
 };
 </script>
 
 <style lang="scss" scoped>
-.toast-notification {
+.notification-prompt {
     --toast-color: #3cff00;
     cursor: pointer;
     max-width: 450px;
@@ -134,22 +150,11 @@ const close = () => {
     transition: all 0.3s ease-in-out;
     border-radius: 8px !important;
 
-    .body {
+    .notification-body {
         display: flex;
         gap: 1.4rem;
         place-items: center;
-
-        i {
-            color: var(--toast-color);
-        }
-
-        .vl {
-            background: #e4e4e4;
-            width: 0.12rem;
-            height: 3rem;
-        }
-
-        .content {
+        .notification-content {
             display: flex;
             flex-direction: column;
             gap: 1.1rem;
@@ -165,13 +170,13 @@ const close = () => {
                 word-wrap: break-word;
                 scrollbar-width: thin;
                 scrollbar-color: #ccc transparent;
-                &:hover{
+                &:hover {
                     scrollbar-color: #ffffff transparent;
                 }
-                &::-webkit-scrollbar{
+                &::-webkit-scrollbar {
                     width: 6px;
                 }
-                &::-webkit-scrollbar-track{
+                &::-webkit-scrollbar-track {
                     background-color: transparent;
                 }
                 &::-webkit-scrollbar-thumb {
@@ -182,7 +187,7 @@ const close = () => {
         }
     }
 
-    .progress {
+    .notification-duration-progress-bar {
         position: absolute;
         bottom: 0px;
         left: 0;

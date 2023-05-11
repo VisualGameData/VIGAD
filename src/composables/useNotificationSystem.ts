@@ -99,6 +99,7 @@ export default function useNotifications() {
  * Create a unique id
  * @returns a unique id as a string
  */
+//TODO this is redundant (we already have a function creating a random string. Reuse that after refactoring.
 function createUUID(): string {
     let dt = new Date().getTime();
     var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(

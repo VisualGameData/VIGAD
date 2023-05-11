@@ -74,4 +74,20 @@ describe('useNotifications Composable', () => {
 
         expect(notifications.notifications.value.length).toBe(0);
     });
+
+    it('stopBodyOverflow adds hide-overflow class to document body', () => {
+        const { stopBodyOverflow } = useNotifications();
+
+        stopBodyOverflow();
+
+        expect(document.body.classList.contains('hide-overflow')).toBe(true);
+    });
+
+    it('allowBodyOverflow removes hide-overflow class from document body', () => {
+        const { allowBodyOverflow } = useNotifications();
+
+        allowBodyOverflow();
+
+        expect(document.body.classList.contains('hide-overflow')).toBe(false);
+    });
 });

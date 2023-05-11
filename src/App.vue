@@ -28,7 +28,8 @@
 
         <Navigation />
 
-        <Teleport to="body">
+        <NotificantionPrompt />
+        <!-- <Teleport to="body">
             <transition-group
                 name="toast-notification"
                 tag="div"
@@ -54,21 +55,22 @@
                     "
                 ></toast-notification>
             </transition-group>
-        </Teleport>
+        </Teleport> -->
     </v-app>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import useNotifications from '@/composables/useNotificationSystem';
-import ToastNotification from '@/components/ToastNotification/ToastNotification.vue';
 import Navigation from '@/components/Navigation/Navigation.vue';
+import NotificantionPrompt from '@/components/NotificantionPrompt/NotificantionPrompt.vue';
+// import useNotifications from '@/composables/useNotificationSystem';
+// import ToastNotification from '@/components/ToastNotification/ToastNotification.vue';
 
-const notifications = ref(useNotifications().notifications);
-const removeNotifications = useNotifications().removeNotifications;
-const stopBodyOverflow = useNotifications().stopBodyOverflow;
-const allowBodyOverflow = useNotifications().allowBodyOverflow;
+// const notifications = ref(useNotifications().notifications);
+// const removeNotifications = useNotifications().removeNotifications;
+// const stopBodyOverflow = useNotifications().stopBodyOverflow;
+// const allowBodyOverflow = useNotifications().allowBodyOverflow;
 
 import MainVideoStream from '@/components/MainVideoStream/MainVideoStream.vue';
 
@@ -87,6 +89,7 @@ async function closeApplication() {
 
 // Force the application to navigate to the default route
 const router = useRouter();
+
 onMounted(() => {
     // navigate to the default route
     router.push('/');
@@ -150,31 +153,31 @@ body {
     justify-content: center;
 }
 
-.toast-notifications {
-    z-index: 9999;
-    position: absolute;
-    top: 24px;
-    right: 24px;
-    display: flex;
-    flex-direction: column-reverse;
-    gap: 0.8rem;
-}
+// .toast-notifications {
+//     z-index: 9999;
+//     position: absolute;
+//     top: 24px;
+//     right: 24px;
+//     display: flex;
+//     flex-direction: column-reverse;
+//     gap: 0.8rem;
+// }
 
-.toast-notification-enter-active {
-    animation: toast-fade-in 0.5s ease-in-out;
-}
-.toast-notification-leave-active {
-    animation: toast-fade-in 0.5s ease-in-out reverse;
-}
+// .toast-notification-enter-active {
+//     animation: toast-fade-in 0.5s ease-in-out;
+// }
+// .toast-notification-leave-active {
+//     animation: toast-fade-in 0.5s ease-in-out reverse;
+// }
 
-@keyframes toast-fade-in {
-    from {
-        opacity: 0;
-        transform: scale(0.4);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
+// @keyframes toast-fade-in {
+//     from {
+//         opacity: 0;
+//         transform: scale(0.4);
+//     }
+//     to {
+//         opacity: 1;
+//         transform: scale(1);
+//     }
+// }
 </style>

@@ -81,7 +81,9 @@
                                         <v-icon
                                             v-bind="props"
                                             icon="mdi-content-copy"
-                                            @click="copyToClipboard"
+                                            @click="
+                                                writeClipboardText(accessToken)
+                                            "
                                         ></v-icon>
                                     </template>
 
@@ -147,6 +149,8 @@
 
 <script setup lang="ts">
 import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
+import useClipboard from '@/composables/useClipboard/useClipboard';
+import useTokenGenerator from '@/composables/useTokenGenerator/useTokenGenerator';
 import { onMounted, ref } from 'vue';
 
 onMounted(() => {
@@ -154,35 +158,30 @@ onMounted(() => {
     regenerateAccessToken();
 });
 
+/**
+ * Composables
+ */
+const { writeClipboardText } = useClipboard();
+const { rules, generateToken } = useTokenGenerator();
+
+/**
+ * Data
+ */
 const isAccessTokenValid = ref(false);
 const tokenVisibility = ref(false);
 const isSessionActive = ref(false);
 const streamData = ref(false);
 const streamRegexAndCaptureAreaSettings = ref(false);
 
-// Dialog for settings
+/**
+ * Dialog visibility
+ */
 const dialog = ref(false);
 
 /**
  * Access token
  */
 const accessToken = ref('');
-
-/**
- * Rules for the access token
- */
-const rules = {
-    required: (value: string) =>
-        !!value || 'An access token is required to start a session',
-    min: (v: string) => v.length >= 8 || 'Min 8 characters',
-    uppercase: (v: string) =>
-        /[A-Z]/.test(v) || 'Must include at least one uppercase letter',
-    lowercase: (v: string) =>
-        /[a-z]/.test(v) || 'Must include at least one lowercase letter',
-    special: (v: string) =>
-        /[\W_]/.test(v) || 'Must include at least one special character',
-    number: (v: string) => /\d/.test(v) || 'Must include at least one number',
-};
 
 /**
  * Start the session
@@ -215,57 +214,11 @@ function toggleTokenVisibility() {
 }
 
 /**
- * Function which will copy the access token to the clipboard
- */
-async function copyToClipboard() {
-    if (accessToken.value === '') {
-        useNotificationSystem().createErrorNotification({
-            title: 'No access token to copy',
-        });
-        return;
-    }
-    try {
-        await navigator.clipboard.writeText(accessToken.value);
-        useNotificationSystem().createSuccessNotification({
-            title: 'Copied access token to clipboard',
-        });
-    } catch (err) {
-        useNotificationSystem().createErrorNotification({
-            title: 'Unable to copy access token to clipboard',
-        });
-    }
-}
-
-/**
- * Function which will generate a random token
- */
-function generateRandomToken(): string {
-    const buffer = new Uint8Array(32);
-    crypto.getRandomValues(buffer);
-    const characterSet =
-        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*_+-=?';
-    const token = Array.from(buffer)
-        .map((x: number) => characterSet[x % characterSet.length])
-        .join('');
-    if (
-        rules.lowercase(token) === true &&
-        rules.uppercase(token) === true &&
-        rules.special(token) === true &&
-        rules.number(token) === true &&
-        rules.min(token) === true
-    ) {
-        return token;
-    } else {
-        return generateRandomToken();
-    }
-}
-
-/**
  * Function which will regenerate a new access token
  */
 async function regenerateAccessToken() {
-    // TODO: Regenerate access token functionality
-    accessToken.value = await generateRandomToken();
+    accessToken.value = generateToken();
+
     if (!validateAccessToken()) {
         regenerateAccessToken();
     }

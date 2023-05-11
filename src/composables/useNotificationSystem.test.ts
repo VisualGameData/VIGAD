@@ -1,6 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import useNotifications from '@/composables/useNotificationSystem';
 
+// When the Notification is outsourced from  the App.vue properly in a proper own component, this test should be updated to reflect that and also check the component if the Notification is actually rendered.
+
 describe('useNotifications Composable', () => {
     let notifications: any;
     beforeEach(() => {

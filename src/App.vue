@@ -26,8 +26,10 @@
             </v-container>
         </v-main>
 
+        <!-- Bottom Navigation -->
         <Navigation />
 
+        <!-- Notification Prompts -->
         <NotificantionPrompt />
     </v-app>
 </template>
@@ -117,32 +119,4 @@ body {
     align-items: center;
     justify-content: center;
 }
-
-// .toast-notifications {
-//     z-index: 9999;
-//     position: absolute;
-//     top: 24px;
-//     right: 24px;
-//     display: flex;
-//     flex-direction: column-reverse;
-//     gap: 0.8rem;
-// }
-
-// .toast-notification-enter-active {
-//     animation: toast-fade-in 0.5s ease-in-out;
-// }
-// .toast-notification-leave-active {
-//     animation: toast-fade-in 0.5s ease-in-out reverse;
-// }
-
-// @keyframes toast-fade-in {
-//     from {
-//         opacity: 0;
-//         transform: scale(0.4);
-//     }
-//     to {
-//         opacity: 1;
-//         transform: scale(1);
-//     }
-// }
 </style>

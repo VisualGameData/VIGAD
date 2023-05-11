@@ -67,6 +67,12 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
+// Variables
+$bottom-nav-height: 56px;
+$container-padding: 16px;
+$viewport-height: 100vh;
+
+// Global styles
 *,
 :after,
 :before {
@@ -75,6 +81,7 @@ onMounted(() => {
     box-sizing: border-box;
 }
 
+// Body styles
 body,
 html {
     width: 100%;
@@ -92,6 +99,7 @@ body {
     user-select: none;
 }
 
+// Classes
 .drag {
     -webkit-app-region: drag;
 }
@@ -101,22 +109,27 @@ body {
 }
 
 .proper-height {
-    // 56px is the height of the bottom navigation
-    // 16px is the padding of the v-container which is at the bottom and top
-    min-height: calc(100vh - 56px - 16px - 16px);
-    max-height: calc(100vh - 56px - 16px - 16px);
+    min-height: calc(
+        #{$viewport-height} - #{$bottom-nav-height} - #{$container-padding} - #{$container-padding}
+    );
+    max-height: calc(
+        #{$viewport-height} - #{$bottom-nav-height} - #{$container-padding} - #{$container-padding}
+    );
     overflow: hidden;
 }
 
+// Sections
 #side-panel-container {
     overflow-y: auto;
     min-width: 375px;
     max-width: 375px;
-    margin-right: 16px;
+    margin-right: $container-padding;
 }
 
 #video-stream-container {
-    min-height: calc(100vh - 56px - 16px - 16px);
+    min-height: calc(
+        #{$viewport-height} - #{$bottom-nav-height} - #{$container-padding} - #{$container-padding}
+    );
     width: 100%;
     display: flex;
     align-items: center;

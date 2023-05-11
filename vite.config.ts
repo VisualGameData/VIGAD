@@ -21,6 +21,7 @@ export default defineConfig(({ command }) => {
         test: {
             // Unit-Test coverage report settings and output directory
             coverage: {
+                all: true,
                 provider: 'c8',
                 reporter: ['text', 'html'],
                 reportsDirectory: './tests/unit/coverage',

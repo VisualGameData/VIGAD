@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router/index';
-import vuetify from './plugins/vuetify';
+import vuetify from './plugins/vuetify/vuetify';
 // https://github.com/nikitasnv/vue-resizable
 
 createApp(App)

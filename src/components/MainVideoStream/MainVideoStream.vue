@@ -43,7 +43,7 @@ import { Vigad } from '@/proc/Vigad';
 // @ts-ignore
 import VueDragResize from 'vue3-drag-resize';
 import { isRerendering } from '@/composables/useForceRerender';
-import { Rectangle } from '../Rectangle';
+import { Rectangle } from './Rectangle';
 
 /**
  * Get singelton instance reference to vigad

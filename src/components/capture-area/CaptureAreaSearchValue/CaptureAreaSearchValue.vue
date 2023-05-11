@@ -50,10 +50,11 @@
 import { ref } from 'vue';
 import { Vigad } from '@/proc/Vigad';
 import RegexTextField from '@/components/capture-area/RegexTextField/RegexTextField.vue';
-import { Matching } from '@/proc/regex/Regex';
-import { Slicing } from '@/proc/regex/Regex';
-import { Similarity } from '@/proc/regex/Regex';
-import { ResetSettings } from './ResetSettings';
+import {
+    defaultValueRegexSettings,
+    defaultAfterConstraintsSettings,
+    defaultBeforeConstraintsSettings,
+} from './ResetSettings';
 
 /**
  * Definied Props
@@ -90,36 +91,6 @@ const afterConstraint = vigad.value
     .getCaptureArea(props.captureAreaId)
     .getRegexGroups()[0]
     .getConstraintRegex()[1];
-
-/**
- * Default settings for value regex
- */
-const defaultValueRegexSettings: ResetSettings = {
-    matchingOption: Matching.EXACT,
-    slicingOption: Slicing.SUBSTR,
-    similarityOption: Similarity.NONE,
-    numberOfMatches: 10000,
-};
-
-/**
- * Default settings for before constraints
- */
-const defaultBeforeConstraintsSettings: ResetSettings = {
-    matchingOption: Matching.APPROX,
-    slicingOption: Slicing.SUBSTR,
-    similarityOption: Similarity.NONE,
-    numberOfMatches: 10000,
-};
-
-/**
- * Default settings for after constraints
- */
-const defaultAfterConstraintsSettings: ResetSettings = {
-    matchingOption: Matching.APPROX,
-    slicingOption: Slicing.SUBSTR,
-    similarityOption: Similarity.NONE,
-    numberOfMatches: 10000,
-};
 </script>
 
 <style lang="scss" scoped>

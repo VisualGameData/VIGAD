@@ -1,8 +1,8 @@
 <template>
     <Teleport to="body">
         <transition-group
-            name="notifications-container"
             tag="div"
+            name="notifications-container"
             class="notifications-containers"
             :class="notificationContainerLocation"
             @before-enter="stopBodyOverflow"

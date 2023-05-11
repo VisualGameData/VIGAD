@@ -30,7 +30,7 @@
         <Navigation />
 
         <!-- Notification Prompts -->
-        <NotificantionPromptContainer
+        <NotificantionProvider
             :location="NotificationAnchorPosition.TOP_RIGHT"
         />
     </v-app>
@@ -41,8 +41,8 @@ import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import MainVideoStream from '@/components/MainVideoStream/MainVideoStream.vue';
 import Navigation from '@/components/Navigation/Navigation.vue';
-import NotificantionPromptContainer from './components/Notifications/NotificantionPromptContainer/NotificantionPromptContainer.vue';
-import { NotificationAnchorPosition } from './components/Notifications/NotificationAnchorPosition';
+import NotificantionProvider from '@/components/Notifications/NotificationProvider/NotificationProvider.vue';
+import { NotificationAnchorPosition } from '@/components/Notifications/NotificationAnchorPosition';
 
 // Handle System Bar Functions for later
 async function minimizeScreen() {

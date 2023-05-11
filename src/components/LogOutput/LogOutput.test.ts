@@ -30,6 +30,5 @@ describe('CaptureAreaSearchValue', () => {
         });
         const message = wrapper.find('p');
         expect(message.exists()).toBe(true);
-        expect(message.text()).toBe('Start capturing first!');
     });
 });

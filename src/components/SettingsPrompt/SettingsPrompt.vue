@@ -146,7 +146,7 @@
 </template>
 
 <script setup lang="ts">
-import useNotifications from '@/composables/useNotificationSystem';
+import useNotifications from '@/composables/useNotificationSystem/useNotificationSystem';
 import { onMounted, ref } from 'vue';
 
 onMounted(() => {

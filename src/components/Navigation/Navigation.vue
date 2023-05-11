@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { isRunning } from '@/composables/useRunning';
+import { isRunning } from '@/composables/useRunning/useRunning';
 import SettingsPrompt from '@/components/SettingsPrompt/SettingsPrompt.vue';
 </script>
 

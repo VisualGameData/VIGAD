@@ -31,7 +31,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import ToastNotification from '@/components/ToastNotification/ToastNotification.vue';
-import useNotifications from '@/composables/useNotificationSystem';
+import useNotifications from '@/composables/useNotificationSystem/useNotificationSystem';
 
 const notifications = ref(useNotifications().notifications);
 const removeNotifications = useNotifications().removeNotifications;

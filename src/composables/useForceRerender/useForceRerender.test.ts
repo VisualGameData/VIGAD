@@ -3,7 +3,7 @@ import { mount } from '@vue/test-utils';
 import {
     useForceRerender,
     isRerendering,
-} from '@/composables/useForceRerender';
+} from '@/composables/useForceRerender/useForceRerender';
 
 describe('useForceRerender Composable', () => {
     it('should trigger a rerender when called', async () => {

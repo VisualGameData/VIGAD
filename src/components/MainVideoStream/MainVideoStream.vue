@@ -42,7 +42,7 @@ import { useElementSize } from '@vueuse/core';
 import { Vigad } from '@/proc/Vigad';
 // @ts-ignore
 import VueDragResize from 'vue3-drag-resize';
-import { isRerendering } from '@/composables/useForceRerender';
+import { isRerendering } from '@/composables/useForceRerender/useForceRerender';
 import { Rectangle } from './Rectangle';
 
 /**

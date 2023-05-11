@@ -29,50 +29,15 @@
         <Navigation />
 
         <NotificantionPrompt />
-        <!-- <Teleport to="body">
-            <transition-group
-                name="toast-notification"
-                tag="div"
-                class="toast-notifications"
-                @before-enter="stopBodyOverflow"
-                @after-enter="allowBodyOverflow"
-                @before-leave="stopBodyOverflow"
-                @after-leave="allowBodyOverflow"
-            >
-                <toast-notification
-                    v-for="(item, idx) in notifications"
-                    :key="item.id"
-                    :id="item.id"
-                    :type="item.type"
-                    :title="item.title"
-                    :message="item.message"
-                    :auto-close="item.autoClose"
-                    :duration="item.duration"
-                    @close="
-                        () => {
-                            removeNotifications(item.id);
-                        }
-                    "
-                ></toast-notification>
-            </transition-group>
-        </Teleport> -->
     </v-app>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import MainVideoStream from '@/components/MainVideoStream/MainVideoStream.vue';
 import Navigation from '@/components/Navigation/Navigation.vue';
 import NotificantionPrompt from '@/components/NotificantionPrompt/NotificantionPrompt.vue';
-// import useNotifications from '@/composables/useNotificationSystem';
-// import ToastNotification from '@/components/ToastNotification/ToastNotification.vue';
-
-// const notifications = ref(useNotifications().notifications);
-// const removeNotifications = useNotifications().removeNotifications;
-// const stopBodyOverflow = useNotifications().stopBodyOverflow;
-// const allowBodyOverflow = useNotifications().allowBodyOverflow;
-
-import MainVideoStream from '@/components/MainVideoStream/MainVideoStream.vue';
 
 // Handle System Bar Functions for later
 async function minimizeScreen() {

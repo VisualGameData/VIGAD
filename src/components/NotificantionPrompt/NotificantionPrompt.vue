@@ -1,33 +1,31 @@
 <template>
-    <div>
-        <Teleport to="body">
-            <transition-group
-                name="toast-notification"
-                tag="div"
-                class="toast-notifications"
-                @before-enter="stopBodyOverflow"
-                @after-enter="allowBodyOverflow"
-                @before-leave="stopBodyOverflow"
-                @after-leave="allowBodyOverflow"
-            >
-                <toast-notification
-                    v-for="(item, idx) in notifications"
-                    :key="item.id"
-                    :id="item.id"
-                    :type="item.type"
-                    :title="item.title"
-                    :message="item.message"
-                    :auto-close="item.autoClose"
-                    :duration="item.duration"
-                    @close="
-                        () => {
-                            removeNotifications(item.id);
-                        }
-                    "
-                ></toast-notification>
-            </transition-group>
-        </Teleport>
-    </div>
+    <Teleport to="body">
+        <transition-group
+            name="toast-notification"
+            tag="div"
+            class="toast-notifications"
+            @before-enter="stopBodyOverflow"
+            @after-enter="allowBodyOverflow"
+            @before-leave="stopBodyOverflow"
+            @after-leave="allowBodyOverflow"
+        >
+            <toast-notification
+                v-for="(item, idx) in notifications"
+                :key="item.id"
+                :id="item.id"
+                :type="item.type"
+                :title="item.title"
+                :message="item.message"
+                :auto-close="item.autoClose"
+                :duration="item.duration"
+                @close="
+                    () => {
+                        removeNotifications(item.id);
+                    }
+                "
+            ></toast-notification>
+        </transition-group>
+    </Teleport>
 </template>
 
 <script setup lang="ts">

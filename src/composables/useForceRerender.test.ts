@@ -7,10 +7,12 @@ import {
 
 describe('useForceRerender Composable', () => {
     it('should trigger a rerender when called', async () => {
+        const text = 'Component to rerender';
+
         const wrapper = mount({
             template: `
                 <div v-if="isRerendering">
-                    <p>Component to rerender</p>
+                    <p>${text}</p>
                 </div>
             `,
             setup() {
@@ -24,6 +26,6 @@ describe('useForceRerender Composable', () => {
         await useForceRerender();
 
         // Check that the component has rerendered
-        expect(wrapper.text()).toBe('Component to rerender');
+        expect(wrapper.text()).toBe(text);
     });
 });

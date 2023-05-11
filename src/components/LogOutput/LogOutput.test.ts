@@ -4,8 +4,6 @@ import { mount } from '@vue/test-utils';
 import LogOutput from '@/components/LogOutput/LogOutput.vue';
 import { Vigad } from '@/proc/Vigad';
 
-// ! Vuetify Components causing warnings in the console when testing fix this
-
 describe('CaptureAreaSearchValue', () => {
     /**
      * Vigad instance

@@ -9,8 +9,6 @@ import {
     defaultBeforeConstraintsSettings,
 } from '@/components/capture-area/CaptureAreaSearchValue/ResetSettings';
 
-// ! Vuetify Components causing warnings in the console when testing fix this
-
 describe('RegexTextField', () => {
     /**
      * Vigad instance

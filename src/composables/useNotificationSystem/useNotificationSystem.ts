@@ -5,7 +5,7 @@ import { ref } from 'vue';
  */
 const notifications = ref<Notification[]>([]);
 
-export default function useNotifications() {
+export default function useNotificationSystem() {
     /**
      * Create a notification
      * @param options

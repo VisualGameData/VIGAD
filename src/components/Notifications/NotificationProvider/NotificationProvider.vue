@@ -30,15 +30,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import NotificationPrompt from '@/components/Notifications/NotificationPrompt/NotificationPrompt.vue';
-import useNotifications from '@/composables/useNotificationSystem/useNotificationSystem';
+import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
 import { NotificationAnchorPosition } from '@/components/Notifications/NotificationAnchorPosition';
 
-const notifications = ref(useNotifications().notifications);
-const removeNotifications = useNotifications().removeNotifications;
-const stopBodyOverflow = useNotifications().stopBodyOverflow;
-const allowBodyOverflow = useNotifications().allowBodyOverflow;
+const {
+    notifications,
+    removeNotifications,
+    stopBodyOverflow,
+    allowBodyOverflow,
+} = useNotificationSystem();
 
 /**
  * Props to define the location of the notification container

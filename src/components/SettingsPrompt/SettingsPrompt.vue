@@ -146,7 +146,7 @@
 </template>
 
 <script setup lang="ts">
-import useNotifications from '@/composables/useNotificationSystem/useNotificationSystem';
+import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
 import { onMounted, ref } from 'vue';
 
 onMounted(() => {
@@ -190,7 +190,7 @@ const rules = {
 function startSession() {
     isSessionActive.value = true;
     // TODO: Start session functionality
-    useNotifications().createNotification({
+    useNotificationSystem().createNotification({
         title: 'Session started',
     });
 }
@@ -201,7 +201,7 @@ function startSession() {
 function stopSession() {
     isSessionActive.value = false;
     // TODO: Stop session functionality
-    useNotifications().createNotification({
+    useNotificationSystem().createNotification({
         title: 'Session stopped',
         type: 'info',
     });
@@ -219,18 +219,18 @@ function toggleTokenVisibility() {
  */
 async function copyToClipboard() {
     if (accessToken.value === '') {
-        useNotifications().createErrorNotification({
+        useNotificationSystem().createErrorNotification({
             title: 'No access token to copy',
         });
         return;
     }
     try {
         await navigator.clipboard.writeText(accessToken.value);
-        useNotifications().createSuccessNotification({
+        useNotificationSystem().createSuccessNotification({
             title: 'Copied access token to clipboard',
         });
     } catch (err) {
-        useNotifications().createErrorNotification({
+        useNotificationSystem().createErrorNotification({
             title: 'Unable to copy access token to clipboard',
         });
     }
@@ -270,6 +270,10 @@ async function regenerateAccessToken() {
         regenerateAccessToken();
     }
 }
+
+/**
+ * Function which will validate the access token and notifies the user
+ */
 function validateAccessToken() {
     const isValid = Object.values(rules).every(
         (rule) => rule(accessToken.value) === true
@@ -283,16 +287,16 @@ function validateAccessToken() {
 
     if (!isValid && isSessionActive.value) {
         stopSession();
-        useNotifications().createErrorNotification({
+        useNotificationSystem().createErrorNotification({
             title: 'Session stopped',
             message: 'The access token is invalid',
         });
     } else if (!isValid) {
-        useNotifications().createErrorNotification({
+        useNotificationSystem().createErrorNotification({
             title: 'The access token is invalid',
         });
     } else {
-        useNotifications().createSuccessNotification({
+        useNotificationSystem().createSuccessNotification({
             title: 'The access token is valid',
         });
     }

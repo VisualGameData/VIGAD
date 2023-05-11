@@ -60,6 +60,7 @@ describe('CaptureAreaSearchValue', () => {
         });
 
         expect(wrapper.findAllComponents(RegexTextField)).toHaveLength(3);
+
         expect(
             wrapper.findComponent({
                 name: 'RegexTextField',
@@ -73,6 +74,7 @@ describe('CaptureAreaSearchValue', () => {
                 },
             })
         ).toBeTruthy();
+
         expect(
             wrapper.findComponent({
                 name: 'RegexTextField',
@@ -86,6 +88,7 @@ describe('CaptureAreaSearchValue', () => {
                 },
             })
         ).toBeTruthy();
+
         expect(
             wrapper.findComponent({
                 name: 'RegexTextField',

@@ -9,6 +9,8 @@ import {
     defaultBeforeConstraintsSettings,
 } from '@/components/capture-area/CaptureAreaSearchValue/ResetSettings';
 
+// ! Vuetify Components causing warnings in the console when testing fix this
+
 describe('RegexTextField', () => {
     /**
      * Vigad instance
@@ -49,7 +51,7 @@ describe('RegexTextField', () => {
         .getRegexGroups()[0]
         .getConstraintRegex()[1];
 
-    it('renders with value regex', async () => {
+    it('render with value regex', async () => {
         const props = {
             label: 'Search value',
             placeholder: 'Enter search value',
@@ -64,13 +66,14 @@ describe('RegexTextField', () => {
         });
 
         expect(wrapper.html());
+        expect(wrapper.exists()).toBe(true);
     });
 
-    it('renders with before regex constraint', async () => {
+    it('render with before regex constraint', async () => {
         const props = {
-            label: 'Search value',
-            placeholder: 'Enter search value',
-            prependIcon: 'mdi-table-column',
+            label: 'Before Constraint',
+            placeholder: 'Enter a constraint value',
+            prependIcon: 'mdi-table-column-plus-before',
             captureAreaId: captureAreas.value[0].getId(),
             regex: beforeConstraint,
             resetOptions: defaultBeforeConstraintsSettings,
@@ -81,9 +84,10 @@ describe('RegexTextField', () => {
         });
 
         expect(wrapper.html());
+        expect(wrapper.exists()).toBe(true);
     });
 
-    it('renders with after regex constraint', async () => {
+    it('render with after regex constraint', async () => {
         const props = {
             label: 'After Constraint',
             placeholder: 'Enter a constraint value',
@@ -98,5 +102,6 @@ describe('RegexTextField', () => {
         });
 
         expect(wrapper.html());
+        expect(wrapper.exists()).toBe(true);
     });
 });

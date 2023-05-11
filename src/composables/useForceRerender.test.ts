@@ -5,7 +5,7 @@ import {
     isRerendering,
 } from '@/composables/useForceRerender';
 
-describe('useForceRerender', () => {
+describe('useForceRerender Composable', () => {
     it('should trigger a rerender when called', async () => {
         const wrapper = mount({
             template: `

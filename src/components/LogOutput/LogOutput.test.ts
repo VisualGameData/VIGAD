@@ -34,31 +34,4 @@ describe('CaptureAreaSearchValue', () => {
         expect(message.exists()).toBe(true);
         expect(message.text()).toBe('Start capturing first!');
     });
-
-    //! have to work on that
-    // it('displays matchedElements when it is not empty', async () => {
-    //     const wrapper = mount(LogOutput);
-    //     wrapper.vm.matchedElements = [
-    //         {
-    //             match: {
-    //                 index: 1,
-    //                 element: 'example',
-    //             },
-    //             rating: 5,
-    //             timestamp: '12:34:56',
-    //         },
-    //     ];
-
-    //     const listItemTitle = wrapper.find('v-list-item-title');
-    //     expect(listItemTitle.exists()).toBe(true);
-    //     expect(listItemTitle.text()).toBe('12:34:56');
-
-    //     const elementInfo = wrapper.find('div:contains("Element:")');
-    //     expect(elementInfo.exists()).toBe(true);
-    //     expect(elementInfo.text()).toBe('Element: example');
-
-    //     const ratingInfo = wrapper.find('div:contains("Rating:")');
-    //     expect(ratingInfo.exists()).toBe(true);
-    //     expect(ratingInfo.text()).toBe('Rating: 5');
-    // });
 });

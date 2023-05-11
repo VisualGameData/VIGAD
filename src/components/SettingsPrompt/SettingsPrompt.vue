@@ -218,6 +218,12 @@ function toggleTokenVisibility() {
  * Function which will copy the access token to the clipboard
  */
 async function copyToClipboard() {
+    if (accessToken.value === '') {
+        useNotifications().createErrorNotification({
+            title: 'No access token to copy',
+        });
+        return;
+    }
     try {
         await navigator.clipboard.writeText(accessToken.value);
         useNotifications().createSuccessNotification({

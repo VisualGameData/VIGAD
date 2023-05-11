@@ -13,7 +13,8 @@
         "allowSyntheticDefaultImports": true,
         "skipLibCheck": true,
         "paths": {
-            "@/*": ["./src/*"]
+            "@/*": ["./src/*"],
+            "crypto": ["node_modules/crypto-js"]
         }
     },
     "include": ["src"],

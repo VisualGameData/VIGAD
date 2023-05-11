@@ -1,0 +1,64 @@
+import { describe, it, expect } from 'vitest';
+import { ref } from 'vue';
+import { mount } from '@vue/test-utils';
+import LogOutput from '@/components/LogOutput/LogOutput.vue';
+import { Vigad } from '@/proc/Vigad';
+
+// ! Vuetify Components causing warnings in the console when testing fix this
+
+describe('CaptureAreaSearchValue', () => {
+    /**
+     * Vigad instance
+     */
+    const vigad = ref(Vigad.getInstance());
+
+    /**
+     * Add capture area
+     */
+    vigad.value.addCaptureArea(100, 100, 0, 0);
+
+    /**
+     * Capture areas
+     */
+    const captureAreas = ref(vigad.value.getAllCaptureAreas());
+
+    const props = {
+        captureAreaId: captureAreas.value[0].getId(),
+    };
+
+    it('displays "Start capturing first!" when matchedElements is empty', async () => {
+        const wrapper = mount(LogOutput, {
+            props: props,
+        });
+        const message = wrapper.find('p');
+        expect(message.exists()).toBe(true);
+        expect(message.text()).toBe('Start capturing first!');
+    });
+
+    //! have to work on that
+    // it('displays matchedElements when it is not empty', async () => {
+    //     const wrapper = mount(LogOutput);
+    //     wrapper.vm.matchedElements = [
+    //         {
+    //             match: {
+    //                 index: 1,
+    //                 element: 'example',
+    //             },
+    //             rating: 5,
+    //             timestamp: '12:34:56',
+    //         },
+    //     ];
+
+    //     const listItemTitle = wrapper.find('v-list-item-title');
+    //     expect(listItemTitle.exists()).toBe(true);
+    //     expect(listItemTitle.text()).toBe('12:34:56');
+
+    //     const elementInfo = wrapper.find('div:contains("Element:")');
+    //     expect(elementInfo.exists()).toBe(true);
+    //     expect(elementInfo.text()).toBe('Element: example');
+
+    //     const ratingInfo = wrapper.find('div:contains("Rating:")');
+    //     expect(ratingInfo.exists()).toBe(true);
+    //     expect(ratingInfo.text()).toBe('Rating: 5');
+    // });
+});

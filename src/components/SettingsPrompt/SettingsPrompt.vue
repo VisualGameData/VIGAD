@@ -8,6 +8,7 @@
         persistent
         scrim="#000000"
         width="700px"
+        no-click-animation
     >
         <template v-slot:activator="{ props }">
             <v-btn v-bind="props" prepend-icon="mdi-cog">
@@ -71,6 +72,8 @@
                                 rules.special,
                                 rules.number,
                             ]"
+                            :error="!validateAccessToken()"
+                            :error-messages="errorMessage"
                             @click:append-inner="toggleTokenVisibility()"
                             @update:model-value="validateAccessToken()"
                             persistent-placeholder
@@ -151,12 +154,9 @@
 import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
 import useClipboard from '@/composables/useClipboard/useClipboard';
 import useTokenGenerator from '@/composables/useTokenGenerator/useTokenGenerator';
-import { onMounted, ref } from 'vue';
+import { Ref, onMounted, ref, watch } from 'vue';
 
-onMounted(() => {
-    // generate a new access token on application start and validate it
-    regenerateAccessToken();
-});
+onMounted(() => {});
 
 /**
  * Composables
@@ -168,6 +168,7 @@ const { rules, generateToken } = useTokenGenerator();
  * Data
  */
 const isAccessTokenValid = ref(false);
+const errorMessage: Ref<string[]> = ref([]);
 const tokenVisibility = ref(false);
 const isSessionActive = ref(false);
 const streamData = ref(false);
@@ -177,6 +178,26 @@ const streamRegexAndCaptureAreaSettings = ref(false);
  * Dialog visibility
  */
 const dialog = ref(false);
+watch(
+    () => dialog.value,
+    (value) => {
+        if (value) {
+            // generate token if empty
+            if (accessToken.value === '') regenerateAccessToken();
+        } else {
+            // reset validation state
+            const isValid = Object.values(rules).every(
+                (rule) => rule(accessToken.value) === true
+            );
+
+            if (isAccessTokenValid.value === isValid) {
+                errorMessage.value = Object.values(rules)
+                    .map((rule) => rule(accessToken.value))
+                    .filter((value) => typeof value === 'string') as string[];
+            }
+        }
+    }
+);
 
 /**
  * Access token

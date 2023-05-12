@@ -38,13 +38,25 @@ export default function useTokenGenerator() {
      * Generate a random token
      */
     const generateToken = (
-        len: number = 12,
+        lenght: number = 32,
         alphabet: string = characterSet
     ): string => {
+        // https://github.com/josephg/gentoken/tree/master
         const genToken = require('@josephg/gentoken');
-        const t = genToken(32, alphabet);
-        console.log(t);
-        return t;
+
+        const generatedToken = genToken(lenght, alphabet);
+
+        if (
+            rules.lowercase(generatedToken) &&
+            rules.uppercase(generatedToken) &&
+            rules.special(generatedToken) &&
+            rules.number(generatedToken) &&
+            rules.min(generatedToken)
+        ) {
+            return generatedToken;
+        } else {
+            return generateToken();
+        }
         // const sourceBytes = randomBytes(len);
         // const generatedToken = Array.from(sourceBytes)
         //     .map((xs: number) => alphabet[xs % alphabet.length])

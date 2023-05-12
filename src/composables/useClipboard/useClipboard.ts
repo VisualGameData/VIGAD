@@ -20,35 +20,17 @@ export default function useClipboard() {
      * @param text
      * @returns
      */
-    const writeClipboardText = async (text: string) => {
-        if (!supported) {
-            useNotificationSystem().createErrorNotification({
-                title: 'Clipboard not supported',
-                message: 'Your browser does not support the clipboard API.',
-            });
-            return;
-        }
-
-        if (!text) {
-            useNotificationSystem().createErrorNotification({
-                title: 'Empty clipboard',
-                message: 'Cannot copy empty text to clipboard.',
-            });
-            return;
+    const writeClipboardText = async (text: string): Promise<boolean> => {
+        if (!supported || !text) {
+            return false;
         }
 
         try {
             await navigator.clipboard.writeText(text);
             clipboardText.value = text;
-            useNotificationSystem().createSuccessNotification({
-                title: 'Copied to clipboard',
-                message: 'The text has been copied to your clipboard.',
-            });
+            return true;
         } catch (error) {
-            useNotificationSystem().createErrorNotification({
-                title: 'Failed to copy to clipboard',
-                message: 'Failed to copy the text to your clipboard.',
-            });
+            return false;
         }
     };
 

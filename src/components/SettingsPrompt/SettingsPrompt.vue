@@ -82,7 +82,7 @@
                                             v-bind="props"
                                             icon="mdi-content-copy"
                                             @click="
-                                                writeClipboardText(accessToken)
+                                                copyToClipboard(accessToken)
                                             "
                                         ></v-icon>
                                     </template>
@@ -255,6 +255,23 @@ function validateAccessToken() {
     }
 
     return isValid;
+}
+
+/**
+ * Function which will copy the access token to the clipboard
+ */
+async function copyToClipboard(text: string) {
+    const isSuccessful = await writeClipboardText(text);
+    if (isSuccessful) {
+        useNotificationSystem().createSuccessNotification({
+            title: 'Copied to clipboard',
+            message: 'The text has been copied to your clipboard.',
+        });
+    } else {
+        useNotificationSystem().createErrorNotification({
+            title: 'Failed to copy access token to clipboard',
+        });
+    }
 }
 </script>
 

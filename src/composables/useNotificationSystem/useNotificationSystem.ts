@@ -26,7 +26,6 @@ export default function useNotificationSystem() {
         notifications.value.push(
             ...[
                 {
-                    // TODO: this is redundant (we already have a function creating a random string. Reuse that after refactoring.
                     id: generateToken(),
                     ..._options,
                 },
@@ -102,24 +101,6 @@ export default function useNotificationSystem() {
         allowBodyOverflow,
     };
 }
-
-// TODO: this is redundant (we already have a function creating a random string. Reuse that after refactoring.
-/**
- * Create a unique id
- * @returns a unique id as a string
- */
-// function createUUID(): string {
-//     let dt = new Date().getTime();
-//     var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-//         /[xy]/g,
-//         function (c) {
-//             var r = (dt + Math.random() * 16) % 16 | 0;
-//             dt = Math.floor(dt / 16);
-//             return (c == 'x' ? r : (r & 0x3) | 0x8).toString(16);
-//         }
-//     );
-//     return uuid;
-// }
 
 /**
  * Notification interface

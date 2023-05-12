@@ -55,7 +55,7 @@
         "vuetify-loader": "^2.0.0-alpha.9"
     },
     "browser": {
-        "crypto": true
+        "crypto": false
     },
     "dependencies": {
         "@electron/remote": "^2.0.9",

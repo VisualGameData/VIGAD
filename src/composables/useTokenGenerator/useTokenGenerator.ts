@@ -42,9 +42,43 @@ export default function useTokenGenerator() {
         alphabet: string = characterSet
     ): string => {
         // https://github.com/josephg/gentoken/tree/master
-        const genToken = require('@josephg/gentoken');
+        // const genToken = require('@josephg/gentoken');
 
-        const generatedToken = genToken(lenght, alphabet);
+        // const generatedToken = genToken(lenght);
+        // const generatedToken = randomBytes(length)
+        //     .toString('base64')
+        //     .replace(/\+/g, '-')
+        //     .replace(/\//g, '_')
+        //     .replace(/=/g, '');
+        // // remove base64 padding, replace unsafe chars
+        let generatedToken = '';
+
+        // Check if running in Node.js
+        if (typeof process !== 'undefined' && process?.versions?.node) {
+            console.log('Running in Node.js');
+            // Check for Node.js crypto support
+            try {
+                const { randomBytes } = require('crypto');
+                const sourceBytes = randomBytes(lenght);
+                generatedToken = Array.from(sourceBytes)
+                    .map((x: any) => alphabet[x % alphabet.length])
+                    .join('');
+            } catch (err) {
+                console.log('No Node', err);
+            }
+        } else {
+            console.log('Running in browser');
+            // Test for browser crypto support
+            try {
+                const sourceBytes = new Uint8Array(lenght);
+                window.crypto.getRandomValues(sourceBytes);
+                generatedToken = Array.from(sourceBytes)
+                    .map((x) => alphabet[x % alphabet.length])
+                    .join('');
+            } catch (err) {
+                console.log('No Browser', err);
+            }
+        }
 
         if (
             rules.lowercase(generatedToken) &&
@@ -57,27 +91,6 @@ export default function useTokenGenerator() {
         } else {
             return generateToken();
         }
-        // const sourceBytes = randomBytes(len);
-        // const generatedToken = Array.from(sourceBytes)
-        //     .map((xs: number) => alphabet[xs % alphabet.length])
-        //     .join('');
-
-        // const buffer = new Uint8Array(32);
-        // crypto.getRandomValues(buffer);
-        // const generatedToken = Array.from(buffer)
-        //     .map((x) => characterSet[x % characterSet.length])
-        //     .join('');
-        // if (
-        //     rules.lowercase(generatedToken) &&
-        //     rules.uppercase(generatedToken) &&
-        //     rules.special(generatedToken) &&
-        //     rules.number(generatedToken) &&
-        //     rules.min(generatedToken)
-        // ) {
-        //     return generatedToken;
-        // } else {
-        //     return generateToken();
-        // }
     };
 
     return {

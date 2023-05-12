@@ -59,6 +59,7 @@
     },
     "dependencies": {
         "@electron/remote": "^2.0.9",
+        "@josephg/gentoken": "^1.0.0",
         "@mdi/font": "^7.2.96",
         "@types/webfontloader": "^1.6.35",
         "@vue/test-utils": "^2.3.2",

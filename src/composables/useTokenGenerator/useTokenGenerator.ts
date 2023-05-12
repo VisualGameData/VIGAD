@@ -37,23 +37,35 @@ export default function useTokenGenerator() {
     /**
      * Generate a random token
      */
-    const generateToken = (): string => {
-        const buffer = new Uint8Array(32);
-        crypto.getRandomValues(buffer);
-        const generatedToken = Array.from(buffer)
-            .map((x) => characterSet[x % characterSet.length])
-            .join('');
-        if (
-            rules.lowercase(generatedToken) &&
-            rules.uppercase(generatedToken) &&
-            rules.special(generatedToken) &&
-            rules.number(generatedToken) &&
-            rules.min(generatedToken)
-        ) {
-            return generatedToken;
-        } else {
-            return generateToken();
-        }
+    const generateToken = (
+        len: number = 12,
+        alphabet: string = characterSet
+    ): string => {
+        const genToken = require('@josephg/gentoken');
+        const t = genToken(32, alphabet);
+        console.log(t);
+        return t;
+        // const sourceBytes = randomBytes(len);
+        // const generatedToken = Array.from(sourceBytes)
+        //     .map((xs: number) => alphabet[xs % alphabet.length])
+        //     .join('');
+
+        // const buffer = new Uint8Array(32);
+        // crypto.getRandomValues(buffer);
+        // const generatedToken = Array.from(buffer)
+        //     .map((x) => characterSet[x % characterSet.length])
+        //     .join('');
+        // if (
+        //     rules.lowercase(generatedToken) &&
+        //     rules.uppercase(generatedToken) &&
+        //     rules.special(generatedToken) &&
+        //     rules.number(generatedToken) &&
+        //     rules.min(generatedToken)
+        // ) {
+        //     return generatedToken;
+        // } else {
+        //     return generateToken();
+        // }
     };
 
     return {

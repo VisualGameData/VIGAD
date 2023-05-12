@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
+import clipboardy from 'clipboardy';
 
 /**
  * Clipboard composable
@@ -13,7 +13,7 @@ export default function useClipboard() {
     /**
      * Check if the clipboard is supported by the browser
      */
-    const supported = 'clipboard' in navigator;
+    const supported = navigator && navigator.clipboard;
 
     /**
      * Save the given text to the clipboard
@@ -21,15 +21,30 @@ export default function useClipboard() {
      * @returns
      */
     const writeClipboardText = async (text: string): Promise<boolean> => {
-        if (!supported || !text) {
+        if (!text) {
             return false;
         }
 
-        try {
-            await navigator.clipboard.writeText(text);
-            clipboardText.value = text;
-            return true;
-        } catch (error) {
+        if (typeof navigator !== 'undefined' && navigator.clipboard) {
+            try {
+                await navigator.clipboard.writeText(text);
+                clipboardText.value = text;
+                return true;
+            } catch (error) {
+                console.error(error);
+                return false;
+            }
+        } else if (typeof clipboardy !== 'undefined') {
+            try {
+                clipboardy.writeSync(text);
+                clipboardText.value = text;
+                return true;
+            } catch (error) {
+                console.error(error);
+                return false;
+            }
+        } else {
+            console.error('Clipboard not supported');
             return false;
         }
     };
@@ -37,12 +52,28 @@ export default function useClipboard() {
     /**
      * Read the text from the clipboard
      */
-    const readClipboardText = async () => {
-        try {
-            const text = await navigator.clipboard.readText();
-            clipboardText.value = text;
-        } catch (error) {
-            console.error('Failed to read from clipboard: ', error);
+    const readClipboardText = async (): Promise<string> => {
+        if (typeof navigator !== 'undefined' && navigator.clipboard) {
+            try {
+                const text = await navigator.clipboard.readText();
+                clipboardText.value = text;
+                return text;
+            } catch (error) {
+                console.error(error);
+                return '';
+            }
+        } else if (typeof clipboardy !== 'undefined') {
+            try {
+                const text = clipboardy.readSync();
+                clipboardText.value = text;
+                return text;
+            } catch (error) {
+                console.error(error);
+                return '';
+            }
+        } else {
+            console.error('Clipboard not supported');
+            return '';
         }
     };
 

@@ -1,5 +1,6 @@
 import { ref } from 'vue';
 import useTokenGenerator from '@/composables/useTokenGenerator/useTokenGenerator';
+const { rules } = useTokenGenerator();
 
 /**
  * notifications list
@@ -25,7 +26,7 @@ export default function useNotificationSystem() {
         notifications.value.push(
             ...[
                 {
-                    id: generateToken(),
+                    id: generateRandomToken(),
                     ..._options,
                 },
             ]
@@ -99,6 +100,30 @@ export default function useNotificationSystem() {
         stopBodyOverflow,
         allowBodyOverflow,
     };
+}
+
+/**
+ * Function which will generate a random token
+ */
+function generateRandomToken(): string {
+    const buffer = new Uint8Array(32);
+    crypto.getRandomValues(buffer);
+    const characterSet =
+        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*_+-=?';
+    const token = Array.from(buffer)
+        .map((x: number) => characterSet[x % characterSet.length])
+        .join('');
+    if (
+        rules.lowercase(token) === true &&
+        rules.uppercase(token) === true &&
+        rules.special(token) === true &&
+        rules.number(token) === true &&
+        rules.min(token) === true
+    ) {
+        return token;
+    } else {
+        return generateRandomToken();
+    }
 }
 
 /**

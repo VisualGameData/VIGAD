@@ -214,10 +214,36 @@ function toggleTokenVisibility() {
 }
 
 /**
+ * Function which will generate a random token
+ */
+function generateRandomToken(): string {
+    const buffer = new Uint8Array(32);
+    crypto.getRandomValues(buffer);
+    const characterSet =
+        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*_+-=?';
+    const token = Array.from(buffer)
+        .map((x: number) => characterSet[x % characterSet.length])
+        .join('');
+    if (
+        rules.lowercase(token) === true &&
+        rules.uppercase(token) === true &&
+        rules.special(token) === true &&
+        rules.number(token) === true &&
+        rules.min(token) === true
+    ) {
+        return token;
+    } else {
+        return generateRandomToken();
+    }
+}
+
+/**
  * Function which will regenerate a new access token
  */
 async function regenerateAccessToken() {
-    accessToken.value = generateToken();
+    // accessToken.value = generateToken();
+    // TODO: Regenerate access token functionality
+    accessToken.value = await generateRandomToken();
 
     if (!validateAccessToken()) {
         regenerateAccessToken();

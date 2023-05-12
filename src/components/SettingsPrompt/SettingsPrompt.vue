@@ -150,7 +150,7 @@
 <script setup lang="ts">
 import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
 import useClipboard from '@/composables/useClipboard/useClipboard';
-import useTokenGenerator from '@/composables/useTokenGenerator/useTokenGenerator';
+// import useTokenGenerator from '@/composables/useTokenGenerator/useTokenGenerator';
 import { onMounted, ref } from 'vue';
 
 onMounted(() => {
@@ -162,7 +162,7 @@ onMounted(() => {
  * Composables
  */
 const { writeClipboardText } = useClipboard();
-const { rules, generateToken } = useTokenGenerator();
+// const { generateToken } = useTokenGenerator();
 
 /**
  * Data
@@ -182,6 +182,22 @@ const dialog = ref(false);
  * Access token
  */
 const accessToken = ref('');
+
+/**
+ * Rules for the access token
+ */
+const rules = {
+    required: (value: string) =>
+        !!value || 'An access token is required to start a session',
+    min: (v: string) => v.length >= 8 || 'Min 8 characters',
+    uppercase: (v: string) =>
+        /[A-Z]/.test(v) || 'Must include at least one uppercase letter',
+    lowercase: (v: string) =>
+        /[a-z]/.test(v) || 'Must include at least one lowercase letter',
+    special: (v: string) =>
+        /[\W_]/.test(v) || 'Must include at least one special character',
+    number: (v: string) => /\d/.test(v) || 'Must include at least one number',
+};
 
 /**
  * Start the session

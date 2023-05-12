@@ -1,6 +1,6 @@
 import { ref } from 'vue';
-import useTokenGenerator from '@/composables/useTokenGenerator/useTokenGenerator';
-const { rules } = useTokenGenerator();
+// import useTokenGenerator from '@/composables/useTokenGenerator/useTokenGenerator';
+// const { rules } = useTokenGenerator();
 
 /**
  * notifications list
@@ -11,7 +11,7 @@ const notifications = ref<Notification[]>([]);
  * Notification System Composable
  */
 export default function useNotificationSystem() {
-    const { generateToken } = useTokenGenerator();
+    // const { generateToken } = useTokenGenerator();
 
     /**
      * Create a notification
@@ -26,7 +26,7 @@ export default function useNotificationSystem() {
         notifications.value.push(
             ...[
                 {
-                    id: generateRandomToken(),
+                    id: createUUID(),
                     ..._options,
                 },
             ]
@@ -103,27 +103,21 @@ export default function useNotificationSystem() {
 }
 
 /**
- * Function which will generate a random token
+ * Create a unique id
+ * @returns a unique id as a string
  */
-function generateRandomToken(): string {
-    const buffer = new Uint8Array(32);
-    crypto.getRandomValues(buffer);
-    const characterSet =
-        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*_+-=?';
-    const token = Array.from(buffer)
-        .map((x: number) => characterSet[x % characterSet.length])
-        .join('');
-    if (
-        rules.lowercase(token) === true &&
-        rules.uppercase(token) === true &&
-        rules.special(token) === true &&
-        rules.number(token) === true &&
-        rules.min(token) === true
-    ) {
-        return token;
-    } else {
-        return generateRandomToken();
-    }
+//TODO this is redundant (we already have a function creating a random string. Reuse that after refactoring.
+function createUUID(): string {
+    let dt = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+        /[xy]/g,
+        function (c) {
+            var r = (dt + Math.random() * 16) % 16 | 0;
+            dt = Math.floor(dt / 16);
+            return (c == 'x' ? r : (r & 0x3) | 0x8).toString(16);
+        }
+    );
+    return uuid;
 }
 
 /**

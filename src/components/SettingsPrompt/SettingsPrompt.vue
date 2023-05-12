@@ -154,15 +154,13 @@
 import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
 import useClipboard from '@/composables/useClipboard/useClipboard';
 import useTokenGenerator from '@/composables/useTokenGenerator/useTokenGenerator';
-import { Ref, onMounted, ref, watch } from 'vue';
-
-onMounted(() => {});
+import { Ref, ref, watch } from 'vue';
 
 /**
  * Composables
  */
 const { writeClipboardText } = useClipboard();
-const { rules, generateToken } = useTokenGenerator();
+const { rules, generateValidToken } = useTokenGenerator();
 
 /**
  * Data
@@ -238,11 +236,7 @@ function toggleTokenVisibility() {
  * Function which will regenerate a new access token
  */
 async function regenerateAccessToken() {
-    accessToken.value = generateToken();
-
-    if (!validateAccessToken()) {
-        regenerateAccessToken();
-    }
+    accessToken.value = generateValidToken();
 }
 
 /**
@@ -265,11 +259,7 @@ function validateAccessToken() {
             title: 'Session stopped',
             message: 'The access token is invalid',
         });
-    } else if (!isValid) {
-        useNotificationSystem().createErrorNotification({
-            title: 'The access token is invalid',
-        });
-    } else {
+    } else if (isValid) {
         useNotificationSystem().createSuccessNotification({
             title: 'The access token is valid',
         });

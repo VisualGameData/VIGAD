@@ -59,18 +59,41 @@ export default function useTokenGenerator() {
                 .map((x) => alphabet[x % alphabet.length])
                 .join('');
         }
+        return generatedToken;
+    };
 
-        if (
-            rules.lowercase(generatedToken) &&
-            rules.uppercase(generatedToken) &&
-            rules.special(generatedToken) &&
-            rules.number(generatedToken) &&
-            rules.min(generatedToken)
-        ) {
-            return generatedToken;
-        } else {
-            return generateToken();
+    /**
+     * Generate multiple tokens using the generateToken function, but they are not guaranteed to be valid tokens (they may not meet the rules)
+     * @param count
+     * @returns
+     */
+    const generateMultipleTokens = (count: number = 16): string[] => {
+        const tokens: string[] = [];
+        for (let i = 0; i < count; i++) {
+            const token = generateToken();
+            tokens.push(token);
         }
+        return tokens;
+    };
+
+    /**
+     * Generate a valid token using the rules defined in the rules object
+     * @returns a valid token
+     */
+    const generateValidToken = (): string => {
+        const tokens = generateMultipleTokens();
+        for (const token of tokens) {
+            if (
+                rules.lowercase(token) &&
+                rules.uppercase(token) &&
+                rules.special(token) &&
+                rules.number(token) &&
+                rules.min(token)
+            ) {
+                return token;
+            }
+        }
+        return generateValidToken();
     };
 
     return {
@@ -78,5 +101,7 @@ export default function useTokenGenerator() {
         minTokenLenght,
         rules,
         generateToken,
+        generateMultipleTokens,
+        generateValidToken,
     };
 }

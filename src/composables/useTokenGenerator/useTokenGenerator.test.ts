@@ -2,20 +2,20 @@ import { describe, it, expect } from 'vitest';
 import useTokenGenerator from '@/composables/useTokenGenerator/useTokenGenerator';
 
 describe('useTokenGenerator Composable', () => {
-    const { generateToken, rules, minTokenLenght } = useTokenGenerator();
+    const { generateValidToken, rules, minTokenLenght } = useTokenGenerator();
 
     it('generateToken returns a string', () => {
-        const token = generateToken();
+        const token = generateValidToken();
         expect(typeof token).toBe('string');
     });
 
     it('generateToken generates a token of minimum length', () => {
-        const token = generateToken();
+        const token = generateValidToken();
         expect(token.length).toBeGreaterThanOrEqual(minTokenLenght.value);
     });
 
     it('generateToken generates a token that meets all rules', () => {
-        const token = generateToken();
+        const token = generateValidToken();
         expect(rules.required(token)).toBe(true);
         expect(rules.min(token)).toBe(true);
         expect(rules.uppercase(token)).toBe(true);

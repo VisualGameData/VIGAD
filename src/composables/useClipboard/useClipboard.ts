@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import clipboardy from 'clipboardy';
+import clipboard from 'clipboardy';
 
 /**
  * Clipboard composable
@@ -34,9 +34,9 @@ export default function useClipboard() {
                 console.error(error);
                 return false;
             }
-        } else if (typeof clipboardy !== 'undefined') {
+        } else if (typeof clipboard !== 'undefined') {
             try {
-                clipboardy.writeSync(text);
+                clipboard.writeSync(text);
                 clipboardText.value = text;
                 return true;
             } catch (error) {
@@ -62,9 +62,9 @@ export default function useClipboard() {
                 console.error(error);
                 return '';
             }
-        } else if (typeof clipboardy !== 'undefined') {
+        } else if (typeof clipboard !== 'undefined') {
             try {
-                const text = clipboardy.readSync();
+                const text = clipboard.readSync();
                 clipboardText.value = text;
                 return text;
             } catch (error) {

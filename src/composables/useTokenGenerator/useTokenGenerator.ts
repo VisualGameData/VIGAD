@@ -35,49 +35,29 @@ export default function useTokenGenerator() {
     };
 
     /**
-     * Generate a random token
+     * Generate a random token using crypto module in Node.js or browser depending on the environment (Node.js or browser) - browser for application and Node.js for tests and GitHub Actions
      */
     const generateToken = (
         lenght: number = 32,
         alphabet: string = characterSet
     ): string => {
-        // https://github.com/josephg/gentoken/tree/master
-        // const genToken = require('@josephg/gentoken');
-
-        // const generatedToken = genToken(lenght);
-        // const generatedToken = randomBytes(length)
-        //     .toString('base64')
-        //     .replace(/\+/g, '-')
-        //     .replace(/\//g, '_')
-        //     .replace(/=/g, '');
-        // // remove base64 padding, replace unsafe chars
         let generatedToken = '';
 
-        // Check if running in Node.js
+        // Checks if the environment is Node.js
         if (typeof process !== 'undefined' && process?.versions?.node) {
-            console.log('Running in Node.js');
-            // Check for Node.js crypto support
-            try {
-                const { randomBytes } = require('crypto');
-                const sourceBytes = randomBytes(lenght);
-                generatedToken = Array.from(sourceBytes)
-                    .map((x: any) => alphabet[x % alphabet.length])
-                    .join('');
-            } catch (err) {
-                console.log('No Node', err);
-            }
+            // generate random bytes using crypto module in Node.js
+            const { randomBytes } = require('crypto');
+            const sourceBytes = randomBytes(lenght);
+            generatedToken = Array.from(sourceBytes)
+                .map((x: any) => alphabet[x % alphabet.length])
+                .join('');
         } else {
-            console.log('Running in browser');
-            // Test for browser crypto support
-            try {
-                const sourceBytes = new Uint8Array(lenght);
-                window.crypto.getRandomValues(sourceBytes);
-                generatedToken = Array.from(sourceBytes)
-                    .map((x) => alphabet[x % alphabet.length])
-                    .join('');
-            } catch (err) {
-                console.log('No Browser', err);
-            }
+            // generate random bytes using crypto module in browser
+            const sourceBytes = new Uint8Array(lenght);
+            window.crypto.getRandomValues(sourceBytes);
+            generatedToken = Array.from(sourceBytes)
+                .map((x) => alphabet[x % alphabet.length])
+                .join('');
         }
 
         if (
@@ -94,6 +74,7 @@ export default function useTokenGenerator() {
     };
 
     return {
+        characterSet,
         minTokenLenght,
         rules,
         generateToken,

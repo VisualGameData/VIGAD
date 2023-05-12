@@ -275,4 +275,10 @@ async function copyToClipboard(text: string) {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+// Dialog Animation for Settings
+.dialog-bottom-transition-enter-active,
+.dialog-bottom-transition-leave-active {
+    transition: transform 0.2s ease-in-out;
+}
+</style>

@@ -1,6 +1,5 @@
 import { ref } from 'vue';
 import useTokenGenerator from '@/composables/useTokenGenerator/useTokenGenerator';
-const { generateToken } = useTokenGenerator();
 
 /**
  * notifications list
@@ -11,7 +10,7 @@ const notifications = ref<Notification[]>([]);
  * Notification System Composable
  */
 export default function useNotificationSystem() {
-    // const { generateToken } = useTokenGenerator();
+    const { generateToken } = useTokenGenerator();
 
     /**
      * Create a notification

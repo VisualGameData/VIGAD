@@ -36,10 +36,4 @@ import { isRunning } from '@/composables/useRunning/useRunning';
 import SettingsPrompt from '@/components/SettingsPrompt/SettingsPrompt.vue';
 </script>
 
-<style lang="scss" scoped>
-// Dialog Animation for Settings
-.dialog-bottom-transition-enter-active,
-.dialog-bottom-transition-leave-active {
-    transition: transform 0.2s ease-in-out;
-}
-</style>
+<style lang="scss" scoped></style>

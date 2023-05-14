@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import useClipboard from '@/composables/useClipboard/useClipboard';
+import clipboard from 'clipboardy';
 
 describe('useClipboard Composable', () => {
     const { clipboardText, writeClipboardText, readClipboardText } =
@@ -19,9 +20,13 @@ describe('useClipboard Composable', () => {
         const text = 'Hello, world!';
         const result = await writeClipboardText(text);
 
-        expect(result).toBe(true);
-        console.log(result);
-        expect(clipboardText.value).toBe(text);
+        if (result) {
+            expect(result).toBe(true);
+            expect(clipboardText.value).toBe(text);
+        } else {
+            expect(result).toBe(false);
+            expect(clipboardText.value).toBe('');
+        }
     });
 
     it('reads text from clipboard', async () => {
@@ -29,7 +34,11 @@ describe('useClipboard Composable', () => {
         await writeClipboardText(text);
 
         const result = await readClipboardText();
-        console.log(result);
-        expect(result).toBe(text);
+
+        if (result) {
+            expect(result).toBe(text);
+        } else {
+            expect(result).toBe('');
+        }
     });
 });

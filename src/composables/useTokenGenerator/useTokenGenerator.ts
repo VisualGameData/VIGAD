@@ -16,9 +16,9 @@ export default function useTokenGenerator() {
     const minTokenLenght = ref(8);
 
     /**
-     * Rules for the access token
+     * Default Rules for the access token
      */
-    const rules = {
+    const defaultRules = {
         required: (value: string) =>
             !!value || 'An access token is required to start a session',
         min: (v: string) =>
@@ -31,7 +31,7 @@ export default function useTokenGenerator() {
         special: (v: string) =>
             /[\W_]/.test(v) || 'Must include at least one special character',
         number: (v: string) =>
-            /[0-9]*/.test(v) || 'Must include at least one number',
+            /[0-9]+/.test(v) || 'Must include at least one number',
     };
 
     /**
@@ -63,35 +63,19 @@ export default function useTokenGenerator() {
     };
 
     /**
-     * Generate multiple tokens using the generateToken function, but they are not guaranteed to be valid tokens (they may not meet the rules)
-     * @param count
-     * @returns
-     */
-    const generateMultipleTokens = (count: number = 16): string[] => {
-        const tokens: string[] = [];
-        for (let i = 0; i < count; i++) {
-            const token = generateToken();
-            tokens.push(token);
-        }
-        return tokens;
-    };
-
-    /**
      * Generate a valid token using the rules defined in the rules object
      * @returns a valid token
      */
     const generateValidToken = (): string => {
-        const tokens = generateMultipleTokens();
-        for (const token of tokens) {
-            if (
-                rules.lowercase(token) === true &&
-                rules.uppercase(token) === true &&
-                rules.special(token) === true &&
-                rules.number(token) === true &&
-                rules.min(token) === true
-            ) {
-                return token;
-            }
+        const token = generateToken();
+        if (
+            defaultRules.lowercase(token) === true &&
+            defaultRules.uppercase(token) === true &&
+            defaultRules.special(token) === true &&
+            defaultRules.number(token) === true &&
+            defaultRules.min(token) === true
+        ) {
+            return token;
         }
         return generateValidToken();
     };
@@ -99,9 +83,8 @@ export default function useTokenGenerator() {
     return {
         characterSet,
         minTokenLenght,
-        rules,
+        defaultRules,
         generateToken,
-        generateMultipleTokens,
         generateValidToken,
     };
 }

@@ -2,7 +2,8 @@ import { describe, it, expect } from 'vitest';
 import useTokenGenerator from '@/composables/useTokenGenerator/useTokenGenerator';
 
 describe('useTokenGenerator Composable', () => {
-    const { generateValidToken, rules, minTokenLenght } = useTokenGenerator();
+    const { generateValidToken, defaultRules, minTokenLenght } =
+        useTokenGenerator();
 
     it('generateToken returns a string', () => {
         const token = generateValidToken();
@@ -18,12 +19,12 @@ describe('useTokenGenerator Composable', () => {
         const runs = 100;
         for (let index = 0; index < runs; index++) {
             const token = generateValidToken();
-            expect(rules.required(token)).toBe(true);
-            expect(rules.min(token)).toBe(true);
-            expect(rules.uppercase(token)).toBe(true);
-            expect(rules.lowercase(token)).toBe(true);
-            expect(rules.special(token)).toBe(true);
-            expect(rules.number(token)).toBe(true);
+            expect(defaultRules.required(token)).toBe(true);
+            expect(defaultRules.min(token)).toBe(true);
+            expect(defaultRules.uppercase(token)).toBe(true);
+            expect(defaultRules.lowercase(token)).toBe(true);
+            expect(defaultRules.special(token)).toBe(true);
+            expect(defaultRules.number(token)).toBe(true);
         }
     });
 });

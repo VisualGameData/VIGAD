@@ -20,6 +20,9 @@ describe('useClipboard Composable', () => {
         const text = 'Hello, world!';
         const result = await writeClipboardText(text);
 
+        /**
+         * It is currently not possible to write into the clipboard when run in a GitHub Action therefore always true
+         */
         if (result) {
             expect(result).toBe(true);
             expect(clipboardText.value).toBe(text);
@@ -35,6 +38,9 @@ describe('useClipboard Composable', () => {
 
         const result = await readClipboardText();
 
+        /**
+         * It is currently not possible to read the clipboard when run in a GitHub Action therefore always true
+         */
         if (result) {
             expect(result).toBe(text);
         } else {

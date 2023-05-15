@@ -1,12 +1,12 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import useNotifications from '@/composables/useNotificationSystem';
+import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
 
 // When the Notification is outsourced from  the App.vue properly in a proper own component, this test should be updated to reflect that and also check the component if the Notification is actually rendered.
 
-describe('useNotifications Composable', () => {
+describe('useNotificationSystem Composable', () => {
     let notifications: any;
     beforeEach(() => {
-        notifications = useNotifications();
+        notifications = useNotificationSystem();
     });
 
     it('should add a general notification and delete it afterwards', () => {
@@ -78,7 +78,7 @@ describe('useNotifications Composable', () => {
     });
 
     it('stopBodyOverflow adds hide-overflow class to document body', () => {
-        const { stopBodyOverflow } = useNotifications();
+        const { stopBodyOverflow } = useNotificationSystem();
 
         stopBodyOverflow();
 
@@ -86,7 +86,7 @@ describe('useNotifications Composable', () => {
     });
 
     it('allowBodyOverflow removes hide-overflow class from document body', () => {
-        const { allowBodyOverflow } = useNotifications();
+        const { allowBodyOverflow } = useNotificationSystem();
 
         allowBodyOverflow();
 

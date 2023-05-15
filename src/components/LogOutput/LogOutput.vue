@@ -29,7 +29,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { Vigad } from '@/proc/Vigad';
-import { isRunning } from '@/composables/useRunning';
+import { isRunning } from '@/composables/useRunning/useRunning';
 
 const props = defineProps<{
     captureAreaId: number;

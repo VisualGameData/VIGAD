@@ -41,7 +41,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useRunning, isRunning } from '@/composables/useRunning';
+import { useRunning, isRunning } from '@/composables/useRunning/useRunning';
 import { Vigad } from '@/proc/Vigad';
 
 import ViewComponent from '@/components/ViewComponent/ViewComponent.vue';

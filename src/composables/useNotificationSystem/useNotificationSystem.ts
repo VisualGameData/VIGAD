@@ -1,11 +1,17 @@
 import { ref } from 'vue';
+import useTokenGenerator from '@/composables/useTokenGenerator/useTokenGenerator';
 
 /**
  * notifications list
  */
 const notifications = ref<Notification[]>([]);
 
-export default function useNotifications() {
+/**
+ * Notification System Composable
+ */
+export default function useNotificationSystem() {
+    const { generateValidToken } = useTokenGenerator();
+
     /**
      * Create a notification
      * @param options
@@ -19,7 +25,7 @@ export default function useNotifications() {
         notifications.value.push(
             ...[
                 {
-                    id: createUUID(),
+                    id: generateValidToken(),
                     ..._options,
                 },
             ]
@@ -93,24 +99,6 @@ export default function useNotifications() {
         stopBodyOverflow,
         allowBodyOverflow,
     };
-}
-
-/**
- * Create a unique id
- * @returns a unique id as a string
- */
-//TODO this is redundant (we already have a function creating a random string. Reuse that after refactoring.
-function createUUID(): string {
-    let dt = new Date().getTime();
-    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-        /[xy]/g,
-        function (c) {
-            var r = (dt + Math.random() * 16) % 16 | 0;
-            dt = Math.floor(dt / 16);
-            return (c == 'x' ? r : (r & 0x3) | 0x8).toString(16);
-        }
-    );
-    return uuid;
 }
 
 /**

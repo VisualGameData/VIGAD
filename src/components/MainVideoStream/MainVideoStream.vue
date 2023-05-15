@@ -37,12 +37,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive, watch } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useElementSize } from '@vueuse/core';
 import { Vigad } from '@/proc/Vigad';
 // @ts-ignore
 import VueDragResize from 'vue3-drag-resize';
-import { isRerendering } from '@/composables/useForceRerender';
+import { isRerendering } from '@/composables/useForceRerender/useForceRerender';
 import { Rectangle } from './Rectangle';
 
 /**

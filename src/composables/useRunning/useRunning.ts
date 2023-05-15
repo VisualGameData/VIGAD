@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import { Vigad } from '../proc/Vigad';
+import { Vigad } from '../../proc/Vigad';
 
 /**
  * Reactive boolean that can be used to check the capture status.

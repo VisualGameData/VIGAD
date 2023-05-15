@@ -32,6 +32,7 @@
         "vue"
     ],
     "devDependencies": {
+        "@types/clipboardy": "^2.0.1",
         "@typescript-eslint/eslint-plugin": "^5.59.0",
         "@typescript-eslint/parser": "^5.59.0",
         "@vitejs/plugin-vue": "^4.1.0",
@@ -61,6 +62,7 @@
         "@vue/test-utils": "^2.3.2",
         "@vueuse/components": "^10.1.0",
         "@vueuse/core": "^10.1.0",
+        "clipboardy": "^3.0.0",
         "randexp": "^0.5.3",
         "roboto-fontface": "^0.10.0",
         "tesseract.js": "^3.0.3",

@@ -49,7 +49,7 @@ import { Vigad } from '@/proc/Vigad';
 import {
     isRerendering,
     useForceRerender,
-} from '@/composables/useForceRerender';
+} from '@/composables/useForceRerender/useForceRerender';
 
 /**
  * Get singelton instance reference to vigad

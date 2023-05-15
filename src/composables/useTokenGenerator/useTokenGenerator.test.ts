@@ -15,12 +15,15 @@ describe('useTokenGenerator Composable', () => {
     });
 
     it('generateToken generates a token that meets all rules', () => {
-        const token = generateValidToken();
-        expect(rules.required(token)).toBe(true);
-        expect(rules.min(token)).toBe(true);
-        expect(rules.uppercase(token)).toBe(true);
-        expect(rules.lowercase(token)).toBe(true);
-        expect(rules.special(token)).toBe(true);
-        expect(rules.number(token)).toBe(true);
+        const runs = 100;
+        for (let index = 0; index < runs; index++) {
+            const token = generateValidToken();
+            expect(rules.required(token)).toBe(true);
+            expect(rules.min(token)).toBe(true);
+            expect(rules.uppercase(token)).toBe(true);
+            expect(rules.lowercase(token)).toBe(true);
+            expect(rules.special(token)).toBe(true);
+            expect(rules.number(token)).toBe(true);
+        }
     });
 });

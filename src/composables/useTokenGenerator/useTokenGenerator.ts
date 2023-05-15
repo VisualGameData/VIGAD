@@ -31,7 +31,7 @@ export default function useTokenGenerator() {
         special: (v: string) =>
             /[\W_]/.test(v) || 'Must include at least one special character',
         number: (v: string) =>
-            /\d/.test(v) || 'Must include at least one number',
+            /[0-9]*/.test(v) || 'Must include at least one number',
     };
 
     /**
@@ -84,11 +84,11 @@ export default function useTokenGenerator() {
         const tokens = generateMultipleTokens();
         for (const token of tokens) {
             if (
-                rules.lowercase(token) &&
-                rules.uppercase(token) &&
-                rules.special(token) &&
-                rules.number(token) &&
-                rules.min(token)
+                rules.lowercase(token) === true &&
+                rules.uppercase(token) === true &&
+                rules.special(token) === true &&
+                rules.number(token) === true &&
+                rules.min(token) === true
             ) {
                 return token;
             }

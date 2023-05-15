@@ -10,7 +10,7 @@ const notifications = ref<Notification[]>([]);
  * Notification System Composable
  */
 export default function useNotificationSystem() {
-    const { generateToken } = useTokenGenerator();
+    const { generateValidToken } = useTokenGenerator();
 
     /**
      * Create a notification
@@ -25,7 +25,7 @@ export default function useNotificationSystem() {
         notifications.value.push(
             ...[
                 {
-                    id: generateToken(),
+                    id: generateValidToken(),
                     ..._options,
                 },
             ]

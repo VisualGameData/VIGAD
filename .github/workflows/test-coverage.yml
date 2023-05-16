@@ -26,11 +26,19 @@ jobs:
       - run: npm install
       - run: npm run build:linux
       - run: npm test
+      - run: npm test-coverage
 
       - uses: actions/upload-artifact@v3
+        if: matrix.node-version == '18.x'
         with:
           name: binaries-linux
           path: release/**/Vigad-*.AppImage
+
+      - uses: actions/upload-artifact@v3
+        if: matrix.node-version == '18.x'
+        with:
+          name: test-coverage
+          path: tests/unit/coverage/
 
 
   build-win:
@@ -53,6 +61,7 @@ jobs:
       - run: npm test
 
       - uses: actions/upload-artifact@v3
+        if: matrix.node-version == '18.x'
         with:
           name: binaries-win
           path: release/**/Vigad_*.exe
@@ -78,6 +87,7 @@ jobs:
       - run: npm test
 
       - uses: actions/upload-artifact@v3
+        if: matrix.node-version == '18.x'
         with:
           name: binaries-mac
           path: release/**/Vigad_*.dmg

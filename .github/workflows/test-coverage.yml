@@ -17,15 +17,20 @@ jobs:
         node-version: [16.x, 18.x]
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm install
-    - run: npm run build:linux
-    - run: npm test
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm install
+      - run: npm run build:linux
+      - run: npm test
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: binaries-linux
+          path: release/*/Vigad-0.1.0.AppImage
 
 
   build-win:
@@ -37,15 +42,20 @@ jobs:
         node-version: [16.x, 18.x]
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm install
-    - run: npm run build:win
-    - run: npm test
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm install
+      - run: npm run build:win
+      - run: npm test
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: binaries-win
+          path: release\*\Vigad_0.1.0.exe
 
 
   build-mac:
@@ -57,12 +67,17 @@ jobs:
         node-version: [16.x, 18.x]
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm install
-    - run: npm run build:mac
-    - run: npm test
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm install
+      - run: npm run build:mac
+      - run: npm test
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: binaries-mac
+          path: release/*/Vigad_0.1.0.dmg

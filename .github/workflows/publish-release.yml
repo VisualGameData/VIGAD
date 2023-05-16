@@ -1,0 +1,84 @@
+name: publish-release
+
+on:
+  workflow_run:
+    workflows: [publish-build]
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+    types:
+      - completed
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: true
+          prerelease: false
+
+  upload-artifacts:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download linux artifact
+        id: download-linux
+        uses: actions/download-artifact@v3
+        with:
+          name: binaries-linux
+          path: Vigad-${{ github.ref }}.AppImage
+
+      - name: Upload linux binaries
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.download-linux.outputs.download-path }}
+          asset_name: ${{ steps.download-linux.outputs.download-path }}
+          asset_content_type: application/octet-stream
+
+
+      - name: Download windows artifact
+        id: download-win
+        uses: actions/download-artifact@v3
+        with:
+          name: binaries-win
+          path: Vigad_${{ github.ref }}.exe
+
+      - name: Upload windows binaries
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.download-win.outputs.download-path }}
+          asset_name: ${{ steps.download-win.outputs.download-path }}
+          asset_content_type: application/octet-stream
+
+
+      - name: Download macos artifact
+        id: download-mac
+        uses: actions/download-artifact@v3
+        with:
+          name: binaries-mac
+          path: Vigad_${{ github.ref }}.dmg
+
+
+      - name: Upload macos binaries
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.download-mac.outputs.download-path }}
+          asset_name: ${{ steps.download-mac.outputs.download-path }}
+          asset_content_type: application/octet-stream

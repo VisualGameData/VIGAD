@@ -22,7 +22,6 @@ jobs:
       - run: npm run build:linux
 
       - uses: actions/upload-artifact@v3
-        if: matrix.os == 'ubuntu-latest'
         with:
           name: binaries-linux
           path: release/**/Vigad-*.AppImage
@@ -40,7 +39,6 @@ jobs:
       - run: npm run build:win
 
       - uses: actions/upload-artifact@v3
-        if: matrix.os == 'windows-latest'
         with:
           name: binaries-win
           path: release/**/Vigad_*.exe
@@ -58,7 +56,6 @@ jobs:
       - run: npm run build:mac
 
       - uses: actions/upload-artifact@v3
-        if: matrix.os == 'macos-latest'
         with:
           name: binaries-mac
           path: release/**/Vigad_*.dmg

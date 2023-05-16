@@ -30,7 +30,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: binaries-linux
-          path: release/0.1.0/Vigad-*.AppImage
+          path: release/0.1.0/Vigad-0.1.0.AppImage
 
 
   build-win:
@@ -55,7 +55,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: binaries-win
-          path: release\0.1.0\Vigad_*.exe
+          path: release\0.1.0\Vigad_0.1.0.exe
 
 
   build-mac:
@@ -80,4 +80,4 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: binaries-mac
-          path: release/0.1.0/Vigad_*.dmg
+          path: release/0.1.0/Vigad_0.1.0.dmg

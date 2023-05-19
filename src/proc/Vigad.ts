@@ -2,7 +2,7 @@ import { CaptureArea } from './CaptureArea';
 import { RegexHandler } from './regex/RegexHandler';
 import { StreamHandler } from './StreamHandler';
 import { TesseractHandler } from './TesseractHandler';
-
+import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
 export class Vigad {
     private static instance: Vigad;
     private streamHandler: StreamHandler;
@@ -74,6 +74,8 @@ export class Vigad {
         return ca.getId();
     }
 
+
+    
     /**
      * Delete a capture area by id
      * @param id
@@ -82,8 +84,10 @@ export class Vigad {
     public deleteCaptureArea(id: number): void {
         this.captureAreas.splice(id, 1);
         this.tesseractHandler.removeWorker();
+        this.deleteCaptureAreaNotification(id)
     }
 
+    
     /**
      * Get a capture area by id
      * @param id
@@ -99,6 +103,16 @@ export class Vigad {
      */
     public getAllCaptureAreas(): CaptureArea[] {
         return this.captureAreas;
+    }
+
+    /**
+     * Gives a notficiatino after deletion of CaptureArea
+     * @param captureAreaId
+     */
+    public deleteCaptureAreaNotification(id: number): void{
+        useNotificationSystem().createNotification({
+            title: 'Capture Area Deleted'
+        });
     }
 
     public startTesseract(): void {

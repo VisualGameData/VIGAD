@@ -50,6 +50,8 @@ import {
     isRerendering,
     useForceRerender,
 } from '@/composables/useForceRerender/useForceRerender';
+import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
+
 
 /**
  * Get singelton instance reference to vigad
@@ -61,12 +63,21 @@ const vigad = ref(Vigad.getInstance());
  */
 const captureAreas = ref(vigad.value.getAllCaptureAreas());
 
+/** 
+ * Gives a notification after addition of capture area
+ */
+function addCaptureAreaNotification(){
+    useNotificationSystem().createNotification({
+        title: 'New Capture Area Added'
+    });
+}
 /**
  * Add a new capture area to the list of capture areas
  */
 async function addCaptureArea() {
     vigad.value.addCaptureArea(100, 100, 0, 0);
     await useForceRerender();
+    addCaptureAreaNotification();
 }
 </script>
 

@@ -106,12 +106,13 @@ export class Vigad {
     }
 
     /**
-     * Gives a notficiatino after deletion of CaptureArea
+     * Gives a notficiation after deletion of capture area
      * @param captureAreaId
      */
     public deleteCaptureAreaNotification(id: number): void{
-        useNotificationSystem().createNotification({
-            title: 'Capture Area Deleted'
+        useNotificationSystem().createWarningNotification({
+            title: 'Capture Area Deleted',
+            message: 'The Capture Area ' + id + ' got deleted '
         });
     }
 

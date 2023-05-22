@@ -3,7 +3,6 @@ import { RegexHandler } from './regex/RegexHandler';
 import { StreamHandler } from './StreamHandler';
 import { TesseractHandler } from './TesseractHandler';
 
-import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
 export class Vigad {
     private static instance: Vigad;
     private streamHandler: StreamHandler;

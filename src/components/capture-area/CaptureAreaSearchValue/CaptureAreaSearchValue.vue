@@ -101,7 +101,7 @@ const afterConstraint = vigad.value
 function deleteCaptureAreaNotification(id: number): void{
     useNotificationSystem().createWarningNotification({
             title: 'Capture Area Deleted',
-            message: 'The Capture Area ' + id + ' got deleted '
+            message: 'The Capture Area ' + id + ' got deleted'
     });
     vigad.value.deleteCaptureArea(id);
     

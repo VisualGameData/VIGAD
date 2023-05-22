@@ -1,4 +1,3 @@
-import CaptureAreaSearchValueVue from '@/components/capture-area/CaptureAreaSearchValue/CaptureAreaSearchValue.vue';
 import { CaptureArea } from './CaptureArea';
 import { RegexHandler } from './regex/RegexHandler';
 import { StreamHandler } from './StreamHandler';
@@ -76,8 +75,6 @@ export class Vigad {
         return ca.getId();
     }
 
-
-    
     /**
      * Delete a capture area by id
      * @param id
@@ -88,7 +85,6 @@ export class Vigad {
         this.tesseractHandler.removeWorker();
     }
 
-    
     /**
      * Get a capture area by id
      * @param id
@@ -105,7 +101,6 @@ export class Vigad {
     public getAllCaptureAreas(): CaptureArea[] {
         return this.captureAreas;
     }
-
 
     public startTesseract(): void {
         if (!this.intervalRunning) {

@@ -39,7 +39,7 @@
                 color="error"
                 prepend-icon="mdi-delete"
                 rounded="lg"
-                @click="vigad.deleteCaptureArea(captureAreaId)"
+                @click="deleteCaptureAreaNotification(captureAreaId)"
                 >Delete</v-btn
             >
         </div>
@@ -55,6 +55,7 @@ import {
     defaultAfterConstraintsSettings,
     defaultBeforeConstraintsSettings,
 } from './ResetSettings';
+import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
 
 /**
  * Definied Props
@@ -91,6 +92,21 @@ const afterConstraint = vigad.value
     .getCaptureArea(props.captureAreaId)
     .getRegexGroups()[0]
     .getConstraintRegex()[1];
+
+
+/**
+     * Gives a notficiation after deletion of capture area
+     * @param captureAreaId
+     */
+function deleteCaptureAreaNotification(id: number): void{
+    useNotificationSystem().createWarningNotification({
+            title: 'Capture Area Deleted',
+            message: 'The Capture Area ' + id + ' got deleted'
+    });
+    vigad.value.deleteCaptureArea(id);
+    
+}
+
 </script>
 
 <style lang="scss" scoped>

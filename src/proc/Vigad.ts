@@ -1,7 +1,9 @@
+import CaptureAreaSearchValueVue from '@/components/capture-area/CaptureAreaSearchValue/CaptureAreaSearchValue.vue';
 import { CaptureArea } from './CaptureArea';
 import { RegexHandler } from './regex/RegexHandler';
 import { StreamHandler } from './StreamHandler';
 import { TesseractHandler } from './TesseractHandler';
+
 import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
 export class Vigad {
     private static instance: Vigad;
@@ -84,7 +86,6 @@ export class Vigad {
     public deleteCaptureArea(id: number): void {
         this.captureAreas.splice(id, 1);
         this.tesseractHandler.removeWorker();
-        this.deleteCaptureAreaNotification(id)
     }
 
     
@@ -105,16 +106,6 @@ export class Vigad {
         return this.captureAreas;
     }
 
-    /**
-     * Gives a notficiation after deletion of capture area
-     * @param captureAreaId
-     */
-    public deleteCaptureAreaNotification(id: number): void{
-        useNotificationSystem().createWarningNotification({
-            title: 'Capture Area Deleted',
-            message: 'The Capture Area ' + id + ' got deleted '
-        });
-    }
 
     public startTesseract(): void {
         if (!this.intervalRunning) {

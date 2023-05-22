@@ -70,7 +70,7 @@ async function addCaptureArea() {
     vigad.value.addCaptureArea(100, 100, 0, 0);
     await useForceRerender();
     useNotificationSystem().createNotification({
-        title: 'New Capture Area Added'
+        title: 'New Capture Area added'
     });
 }
 </script>

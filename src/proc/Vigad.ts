@@ -2,6 +2,7 @@ import { CaptureArea } from './CaptureArea';
 import { RegexHandler } from './regex/RegexHandler';
 import { StreamHandler } from './StreamHandler';
 import { TesseractHandler } from './TesseractHandler';
+import useUploadData from '@/composables/useUploadData/useUploadData';
 
 export class Vigad {
     private static instance: Vigad;
@@ -118,8 +119,10 @@ export class Vigad {
                             this.regexHandler.findValue(value.data, regexGrp.getValueRegex(), regexGrp.getConstraintRegex()[0], regexGrp.getConstraintRegex()[1]);
                         }
                         // Fetching GET/POST Testing
-                        const url = 'https://example.com/api/endpoint';
-                        const token = 'your-bearer-token';
+                        const { streamData, streamRegexAndCaptureAreaSettings } = useUploadData();
+                        if (streamData.value || streamRegexAndCaptureAreaSettings.value) {
+                        const url = '';
+                        const token = '';
 
                         const headers = {
                             Authorization: `Bearer ${token}`
@@ -139,6 +142,8 @@ export class Vigad {
                                 console.error(error);
                             });
 
+                        }
+                        
                     });
                 }, this.previewWidth, this.previewHeight);
             }, 500);

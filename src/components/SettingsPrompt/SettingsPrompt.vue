@@ -31,7 +31,7 @@
                     class="rounded-pill"
                     prepend-icon="mdi-play"
                     variant="tonal"
-                    @click="startSession()"
+                    @click="useSession().startSession()"
                     >Start Session</v-btn
                 >
 
@@ -41,7 +41,7 @@
                     class="rounded-pill"
                     prepend-icon="mdi-stop"
                     variant="tonal"
-                    @click="stopSession()"
+                    @click="useSession().stopSession()"
                     >Stop Session</v-btn
                 >
             </v-toolbar>
@@ -144,6 +144,8 @@ import useNotificationSystem from '@/composables/useNotificationSystem/useNotifi
 import useClipboard from '@/composables/useClipboard/useClipboard';
 import useTokenGenerator from '@/composables/useTokenGenerator/useTokenGenerator';
 import { Ref, ref, watch } from 'vue';
+import useUploadData from '@/composables/useUploadData/useUploadData';
+import { useSession, isSessionActive  } from '@/composables/useSession/useSession';
 
 /**
  * Composables
@@ -158,9 +160,7 @@ const accessToken = ref('');
 const isAccessTokenValid = ref(false);
 const errorMessage: Ref<string[]> = ref([]);
 const tokenVisibility = ref(false);
-const isSessionActive = ref(false);
-const streamData = ref(false);
-const streamRegexAndCaptureAreaSettings = ref(false);
+const { streamData, streamRegexAndCaptureAreaSettings } = useUploadData();
 
 /**
  * Dialog visibility
@@ -204,29 +204,6 @@ watch(
 );
 
 /**
- * Start the session
- */
-function startSession() {
-    isSessionActive.value = true;
-    // TODO: Start session functionality
-    useNotificationSystem().createNotification({
-        title: 'Session started',
-    });
-}
-
-/**
- * Stop the session
- */
-function stopSession() {
-    isSessionActive.value = false;
-    // TODO: Stop session functionality
-    useNotificationSystem().createNotification({
-        title: 'Session stopped',
-        type: 'info',
-    });
-}
-
-/**
  * Function which will toggle the visibility of the access token
  */
 function toggleTokenVisibility() {
@@ -255,7 +232,7 @@ function validate() {
         .filter((value) => typeof value === 'string') as string[];
 
     if (!isValid && isSessionActive.value) {
-        stopSession();
+        useSession().stopSession();
         useNotificationSystem().createErrorNotification({
             title: 'Session stopped',
             message: 'The access token is invalid',

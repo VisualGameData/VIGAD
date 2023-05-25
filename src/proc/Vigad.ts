@@ -104,8 +104,8 @@ export class Vigad {
     public startTesseract(): void {
         if (!this.intervalRunning) {
             this.tesseractInterval = setInterval(() => {
-                this.tesseractHandler.run(this.streamHandler.getCurrentSelectedSource(), (result: {ca_id: number, data: string}[]) => {
-                    result.forEach((value: {ca_id: number, data: string}, index: number) => {
+                this.tesseractHandler.run(this.streamHandler.getCurrentSelectedSource(), (result: { ca_id: number, data: string }[]) => {
+                    result.forEach((value: { ca_id: number, data: string }, index: number) => {
                         let ca = this.getCaptureArea(value.ca_id);
                         let regexGrp = ca.getRegexGroups()[0];
                         if (regexGrp.getConstraintRegex()[0].getRegex().toString() === "/(?:)/" && regexGrp.getConstraintRegex()[1].getRegex().toString() === "/(?:)/") {
@@ -117,6 +117,28 @@ export class Vigad {
                         } else {
                             this.regexHandler.findValue(value.data, regexGrp.getValueRegex(), regexGrp.getConstraintRegex()[0], regexGrp.getConstraintRegex()[1]);
                         }
+                        // Fetching GET/POST Testing
+                        const url = 'https://example.com/api/endpoint';
+                        const token = 'your-bearer-token';
+
+                        const headers = {
+                            Authorization: `Bearer ${token}`
+                        };
+
+                        fetch(url, {
+                            method: 'GET',
+                            headers: headers
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                // Handle the response data
+                                console.log(data);
+                            })
+                            .catch(error => {
+                                // Handle any errors
+                                console.error(error);
+                            });
+
                     });
                 }, this.previewWidth, this.previewHeight);
             }, 500);

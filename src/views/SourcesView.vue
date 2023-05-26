@@ -145,6 +145,10 @@ async function fetchAllStreams() {
     isLoadingScreensAndWindows.value = false;
 }
 
+/**
+ * Set the MediaStream to the video node
+ * @param source 
+ */
 async function setSourceForVideoNode(source: any) {
     const constraints: any = {
         video: {

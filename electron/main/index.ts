@@ -42,7 +42,7 @@ const indexHtml = join(process.env.DIST, 'index.html');
 
 async function createWindow() {
     // Determine the icon file based on the current platform
-    let iconFile;
+    let iconFile: string;
     switch (process.platform) {
         case 'win32':
             iconFile = 'icon.ico';
@@ -56,6 +56,7 @@ async function createWindow() {
         default:
             iconFile = 'icon.png';
     }
+
     win = new BrowserWindow({
         title: 'Vigad',
         icon: join(process.env.PUBLIC, iconFile),
@@ -85,13 +86,6 @@ async function createWindow() {
         win.loadFile(indexHtml);
     }
 
-    // Test actively push message to the Electron-Renderer
-    win.webContents.on('did-finish-load', () => {
-        win?.webContents.send(
-            'main-process-message',
-            new Date().toLocaleString()
-        );
-    });
 
     // Make all links open with the browser, not with the application
     win.webContents.setWindowOpenHandler(({ url }) => {
@@ -103,15 +97,6 @@ async function createWindow() {
 
     // Get all screens/windows from the main process to the renderer process
     ipcMain.handle('get-screens', getScreen);
-    ipcMain.handle('minimize-screen', () => {
-        win.minimize();
-    });
-    ipcMain.handle('full-screen', () => {
-        win.isMaximized() ? win.restore() : win.maximize();
-    });
-    ipcMain.handle('close-application', () => {
-        win.close();
-    });
 }
 
 // This method will be called when Electron has finished
@@ -161,7 +146,7 @@ ipcMain.handle('open-win', (_, arg) => {
     }
 });
 
-async function getScreen(event, title) {
+async function getScreen() {
     // In the main process.
     const { desktopCapturer } = require('electron');
 

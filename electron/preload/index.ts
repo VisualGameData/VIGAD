@@ -95,41 +95,16 @@ setTimeout(removeLoading, 4999);
 
 // ! Working with informations from the main process and the renderer process
 const { contextBridge, ipcRenderer } = require('electron');
+const remote = require('@electron/remote/main');
 
 contextBridge.exposeInMainWorld('electronAPI', {
-    getMedia: () => ipcRenderer.invoke('get-screens'),
-    minimizeScreen: () => ipcRenderer.invoke('minimize-screen'),
-    fullScreen: () => ipcRenderer.invoke('full-screen'),
-    closeApplication: () => ipcRenderer.invoke('close-application'),
-});
-
-ipcRenderer.on('SET_SOURCE', async (event, sourceId) => {
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-            audio: false,
-            video: {
-                mandatory: {
-                    chromeMediaSource: 'desktop',
-                    chromeMediaSourceId: sourceId,
-                    minWidth: 1280,
-                    maxWidth: 3840,
-                    minHeight: 720,
-                    maxHeight: 2160,
-                },
-            },
+    getMedia: () => {
+        return new Promise((resolve, reject) => {
+            ipcRenderer.invoke('get-screens').then((media) => {
+                resolve(media);
+            }).catch((error) => {
+                reject(error);
+            });
         });
-        handleStream(stream);
-    } catch (e) {
-        handleError(e);
-    }
+    },
 });
-
-function handleStream(stream) {
-    const video = document.querySelector('video');
-    video.srcObject = stream;
-    video.onloadedmetadata = (e) => video.play();
-}
-
-function handleError(e) {
-    console.log(e);
-}

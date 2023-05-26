@@ -1,4 +1,3 @@
-// Stream handler
 export class StreamHandler {
     private static instance: StreamHandler;
 
@@ -6,6 +5,9 @@ export class StreamHandler {
     private desktopCaptureSources: Object[];
     private allMediaStreams: MediaStream[];
     private isLoadingScreensAndApplications: boolean;
+    private checkInterval: number;
+    private isMediaStatusCheckPaused: boolean;
+    private checkMediaStatusPromise: Promise<void> | null;
 
     /**
      * Create a private constructor to prevent multiple instances
@@ -14,6 +16,10 @@ export class StreamHandler {
         this.desktopCaptureSources = [];
         this.allMediaStreams = [];
         this.isLoadingScreensAndApplications = false;
+        this.checkInterval = 100;
+        this.isMediaStatusCheckPaused = false;
+        this.checkMediaStatusPromise = null;
+        this.startMediaStatusCheck();
     }
 
     /**
@@ -27,6 +33,43 @@ export class StreamHandler {
         }
 
         return this.instance;
+    }
+
+    /**
+     * This function starts the media stream status check at a given interval
+     */
+    private startMediaStatusCheck(): void {
+        setInterval(() => {
+            this.checkMediaStatus();
+        }, this.checkInterval);
+    }
+
+    /**
+     * This function checks the status of all streams
+     */
+    private async checkMediaStatus(): Promise<void> {
+        if (this.checkMediaStatusPromise !== null) {
+            // Media status check is already in progress, pause the interval
+            return;
+        }
+
+        if (!this.currentSelectedSource || !this.currentSelectedSource.active) {
+            // Pause the interval
+            this.isMediaStatusCheckPaused = true;
+
+            // Start a new promise chain for the media status check
+            this.checkMediaStatusPromise = (async () => {
+                await this.fetchAllMediaStreams();
+                await this.setDefaultVideoStream();
+            })();
+
+            // Wait for the media status check to complete
+            await this.checkMediaStatusPromise;
+
+            // Reset the flag and promise after completion
+            this.isMediaStatusCheckPaused = false;
+            this.checkMediaStatusPromise = null;
+        }
     }
 
     /**

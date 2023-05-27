@@ -1,14 +1,8 @@
 <template>
-    <ViewComponent title="Sources" :loading="isLoadingScreensAndWindows">
+    <ViewComponent title="Sources" :loading="isLoadingScreensAndApplications">
         <template v-slot:actions>
-            <v-btn
-                class="rounded-pill"
-                prepend-icon="mdi-refresh"
-                variant="tonal"
-                @click="fetchAllStreams()"
-                :disabled="isLoadingScreensAndWindows"
-                >Refresh</v-btn
-            >
+            <v-btn class="rounded-pill" prepend-icon="mdi-refresh" variant="tonal"
+                @click="fetchAllDesktopCapturableSources()" :disabled="isLoadingScreensAndApplications">Refresh</v-btn>
         </template>
         <template v-slot:default>
             <v-tabs v-model="tabs" class="mb-4" color="primary" grow>
@@ -17,61 +11,31 @@
                 <v-tab width="50%" value="applications"> Applications </v-tab>
             </v-tabs>
 
-            <div v-if="!isLoadingScreensAndWindows" class="windows-wrapper">
+            <div v-if="!isLoadingScreensAndApplications" class="windows-wrapper">
                 <v-window v-model="tabs">
                     <v-window-item value="screens">
-                        <div
-                            v-if="!isLoadingScreensAndWindows"
-                            class="windows-wrapper"
-                        >
-                            <v-card
-                                v-for="(source, index) in onlyScreenSources"
-                                :key="(source as any).id"
-                                @click="
-                                    streamHandler.setCurrentSelectedSource(
-                                        streams[index]
-                                    )
-                                "
-                                class="mb-2"
-                            >
+                        <div v-if="!isLoadingScreensAndApplications" class="windows-wrapper">
+                            <v-card v-for="(source, index) in onlyScreenSources" :key="(source as any).id" @click="
+                                setPreviewVideoStream(mediaStreamsMap[(source as any).id])
+                                " class="mb-2">
                                 <v-card-title>{{ (source as any).name }}</v-card-title>
                                 <v-card-text>
-                                    <video
-                                        autoplay
-                                        :src-object.prop.camel="streams[index]"
-                                        class="preview"
-                                    ></video>
+                                    <video autoplay :src-object.prop.camel="mediaStreamsMap[(source as any).id]"
+                                        class="preview"></video>
                                 </v-card-text>
                             </v-card>
                         </div>
                     </v-window-item>
 
                     <v-window-item value="applications">
-                        <div
-                            v-if="!isLoadingScreensAndWindows"
-                            class="windows-wrapper"
-                        >
-                            <v-card
-                                v-for="(
-                                    source, index
-                                ) in onlyApplicationSources"
-                                :key="(source as any).id"
-                                @click="
-                                    streamHandler.setCurrentSelectedSource(
-                                        streams[lastScreenIndex + index]
-                                    )
-                                "
-                                class="mb-2"
-                            >
+                        <div v-if="!isLoadingScreensAndApplications" class="windows-wrapper">
+                            <v-card v-for="(source, index) in onlyApplicationSources" :key="(source as any).id" @click="
+                                setPreviewVideoStream(mediaStreamsMap[(source as any).id])
+                                " class="mb-2">
                                 <v-card-title>{{ (source as any).name }}</v-card-title>
                                 <v-card-text>
-                                    <video
-                                        autoplay
-                                        :src-object.prop.camel="
-                                            streams[lastScreenIndex + index]
-                                        "
-                                        class="preview"
-                                    ></video>
+                                    <video autoplay :src-object.prop.camel="mediaStreamsMap[(source as any).id]
+                                        " class="preview"></video>
                                 </v-card-text>
                             </v-card>
                         </div>
@@ -85,82 +49,14 @@
 
 <script setup lang="ts">
 import ViewComponent from '@/components/ViewComponent/ViewComponent.vue';
-import { ref, computed, onMounted } from 'vue';
-import { Vigad } from '@/proc/Vigad';
-
-// Get singelton instance reference to vigad
-const vigad = ref(Vigad.getInstance());
-
-// Get singelton instance reference to streamHandler
-const streamHandler = vigad.value.getStreamHandlerInstance();
+import { ref } from 'vue';
+import { useStreamHandler } from '@/composables/useStreamHandler/useStreamHandler';
 
 // For the Screen / Application Tab
 const tabs = ref(null);
 
-// Get all desktop video stream sources
-const desktopVideoStreamSources = ref();
-
-const onlyApplicationSources = ref();
-const onlyScreenSources = ref();
-const lastScreenIndex = computed(() => {
-    return Object.keys(onlyScreenSources.value).length;
-});
-
-// All MediaStream sources
-const streams = ref<MediaStream[]>([]);
-
-// Is the application loading the screens and windows local propertie
-const isLoadingScreensAndWindows = ref(false);
-
-onMounted(() => {
-    fetchAllStreams();
-});
-
-/**
- * Get all available sources
- */
-async function fetchAllStreams() {
-    isLoadingScreensAndWindows.value = true;
-
-    // Reset all sources
-    desktopVideoStreamSources.value = null;
-    onlyApplicationSources.value = null;
-    onlyScreenSources.value = null;
-
-    // wait for the fetched screens and windows
-    desktopVideoStreamSources.value =
-        await streamHandler.getScreenAndApplicationSources();
-
-    // TODO: testing
-    onlyApplicationSources.value =
-        await streamHandler.getOnlyApplicationSources();
-
-    onlyScreenSources.value = await streamHandler.getOnlyScreenSources();
-
-    // Loop through all sources and set the MediaStream to video nodes
-    Array.from(desktopVideoStreamSources.value).forEach(function (element) {
-        setSourceForVideoNode(element);
-    });
-
-    isLoadingScreensAndWindows.value = false;
-}
-
-/**
- * Set the MediaStream to the video node
- * @param source 
- */
-async function setSourceForVideoNode(source: any) {
-    const constraints: any = {
-        video: {
-            mandatory: {
-                chromeMediaSource: 'desktop',
-                chromeMediaSourceId: source.id,
-            },
-        },
-    };
-
-    streams.value.push(await navigator.mediaDevices.getUserMedia(constraints));
-}
+// Stream and application sources
+const { isLoadingScreensAndApplications, mediaStreamsMap, onlyScreenSources, onlyApplicationSources, setPreviewVideoStream, fetchAllDesktopCapturableSources } = useStreamHandler();
 </script>
 
 <style lang="scss" scoped>
@@ -170,13 +66,16 @@ async function setSourceForVideoNode(source: any) {
     height: 80vh;
     object-fit: cover;
 }
+
 .video {
     width: 100%;
 }
+
 .preview {
     width: 100%;
     max-height: 180px;
 }
+
 .windows-wrapper {
     display: grid;
     gap: 8px;

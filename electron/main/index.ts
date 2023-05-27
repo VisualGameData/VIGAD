@@ -97,6 +97,16 @@ async function createWindow() {
 
     // Get all screens/windows from the main process to the renderer process
     ipcMain.handle('get-screens', getScreen);
+
+    try {
+        const allSources = await getScreen();
+
+        // Handle the captured sources or perform any necessary operations
+        console.log('Captured sources:', allSources);
+    } catch (error) {
+        // Handle the error from desktopCapturer
+        console.error('Error capturing sources:', error);
+    }
 }
 
 // This method will be called when Electron has finished
@@ -147,12 +157,15 @@ ipcMain.handle('open-win', (_, arg) => {
 });
 
 async function getScreen() {
-    // In the main process.
     const { desktopCapturer } = require('electron');
 
-    const allSources = await desktopCapturer.getSources({
-        types: ['window', 'screen'],
-    });
+    try {
+        const allSources = await desktopCapturer.getSources({
+            types: ['window', 'screen'],
+        });
 
-    return allSources;
+        return allSources;
+    } catch (error) {
+        throw new Error('Failed to capture sources: ' + error.message);
+    }
 }

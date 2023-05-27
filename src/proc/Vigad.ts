@@ -1,11 +1,10 @@
 import { CaptureArea } from './CaptureArea';
 import { RegexHandler } from './regex/RegexHandler';
-import { StreamHandler } from './StreamHandler';
 import { TesseractHandler } from './TesseractHandler';
+import { useStreamHandler } from '@/composables/useStreamHandler/useStreamHandler';
 
 export class Vigad {
     private static instance: Vigad;
-    private streamHandler: StreamHandler;
     private tesseractHandler: TesseractHandler;
     private regexHandler: RegexHandler;
     private captureAreas: CaptureArea[];
@@ -19,7 +18,6 @@ export class Vigad {
      * Create a private constructor to prevent multiple instances
      */
     private constructor() {
-        this.streamHandler = StreamHandler.getInstance();
         this.tesseractHandler = TesseractHandler.getInstance();
         this.regexHandler = RegexHandler.getInstance();
         this.captureAreas = [];
@@ -47,10 +45,6 @@ export class Vigad {
 
     public setPreviewHeight(height: number): void {
         this.previewHeight = height;
-    }
-
-    public getStreamHandlerInstance(): StreamHandler {
-        return this.streamHandler;
     }
 
     /**
@@ -104,8 +98,9 @@ export class Vigad {
     public startTesseract(): void {
         if (!this.intervalRunning) {
             this.tesseractInterval = setInterval(() => {
-                this.tesseractHandler.run(this.streamHandler.getCurrentSelectedSource(), (result: {ca_id: number, data: string}[]) => {
-                    result.forEach((value: {ca_id: number, data: string}, index: number) => {
+                const { currentSelectedSource } = useStreamHandler();
+                this.tesseractHandler.run(currentSelectedSource.value!, (result: { ca_id: number, data: string }[]) => {
+                    result.forEach((value: { ca_id: number, data: string }, index: number) => {
                         let ca = this.getCaptureArea(value.ca_id);
                         let regexGrp = ca.getRegexGroups()[0];
                         if (regexGrp.getConstraintRegex()[0].getRegex().toString() === "/(?:)/" && regexGrp.getConstraintRegex()[1].getRegex().toString() === "/(?:)/") {

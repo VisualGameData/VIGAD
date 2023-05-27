@@ -60,17 +60,6 @@ export function useStreamHandler() {
         }
 
         currentSelectedSource.value = source;
-
-        const videoElement: HTMLVideoElement | null = document.querySelector('#mainVideo');
-        if (videoElement) {
-            videoElement.srcObject = source;
-        }
-        else {
-            useNotificationSystem().createErrorNotification({
-                title: 'Error setting preview video stream',
-                message: 'Please restart the application and try again.'
-            })
-        }
     }
 
     /**

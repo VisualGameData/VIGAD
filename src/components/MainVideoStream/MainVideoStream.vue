@@ -1,7 +1,7 @@
 <template>
     <div class="video-stream">
         <v-responsive id="stream" ref="stream" class="capture-area-selection">
-            <video preload="none" id="mainVideo" class="video" autoplay></video>
+            <video preload="none"  class="video" autoplay ref="videoRef"></video>
             <VueDragResize
                 v-if="isRerendering"
                 v-for="captureArea in captureAreas"
@@ -42,8 +42,32 @@ import { useElementSize } from '@vueuse/core';
 import { Vigad } from '@/proc/Vigad';
 import { isRerendering } from '@/composables/useForceRerender/useForceRerender';
 import { Rectangle } from './Rectangle';
+import { useStreamHandler } from '@/composables/useStreamHandler/useStreamHandler';
+import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
 // @ts-ignore
 import VueDragResize from 'vue3-drag-resize';
+
+/**
+ * Get reference to the video element that is used to preview the video stream of the main screen 
+ */
+const { currentSelectedSource } = useStreamHandler();
+const videoRef = ref<any>(null);
+
+/**
+ * Set Video Sources Preview to the main screen (the one that is selected)
+ */
+watch(currentSelectedSource, (newSource) => {
+  try {
+    if (newSource && videoRef.value) {
+      videoRef.value.srcObject = newSource;
+    }
+  } catch (error) {
+    useNotificationSystem().createErrorNotification({
+        title: 'An error occured while setting the preview video stream',
+        message: 'Please restart the application and try again.'
+    })
+  }
+});
 
 /**
  * Get singelton instance reference to vigad

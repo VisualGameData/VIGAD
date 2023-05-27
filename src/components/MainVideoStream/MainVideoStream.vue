@@ -1,7 +1,7 @@
 <template>
     <div class="video-stream">
         <v-responsive id="stream" ref="stream" class="capture-area-selection">
-            <video preload="none"  class="video" autoplay ref="videoRef"></video>
+            <video preload="none" class="video" autoplay ref="videoRef"></video>
             <VueDragResize
                 v-if="isRerendering"
                 v-for="captureArea in captureAreas"

@@ -31,17 +31,23 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, watch } from 'vue';
+import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import MainVideoStream from '@/components/MainVideoStream/MainVideoStream.vue';
 import Navigation from '@/components/Navigation/Navigation.vue';
 import NotificantionProvider from '@/components/Notifications/NotificationProvider/NotificationProvider.vue';
 import { NotificationAnchorPosition } from '@/components/Notifications/NotificationAnchorPosition';
+import { useStreamHandler } from '@/composables/useStreamHandler/useStreamHandler';
 
 // Force the application to navigate to the default route
 const router = useRouter();
 
-onMounted(() => {
+// Get the default preview video stream function
+const { setDefaultPreviewVideoStream } = useStreamHandler();
+
+onMounted(async () => {
+    // set the default preview video stream
+    await setDefaultPreviewVideoStream();
     // navigate to the default route
     router.push('/');
 });

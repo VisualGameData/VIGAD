@@ -1,4 +1,4 @@
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import useNotificationSystem from '../useNotificationSystem/useNotificationSystem';
 
 const currentSelectedSource = ref<MediaStream | undefined>();
@@ -9,11 +9,6 @@ const mediaStreamsMap = ref<Record<string, MediaStream>>({});
 const isLoadingScreensAndApplications = ref(false);
 
 export function useStreamHandler() {
-
-    // Set the default video stream when mounted
-    onMounted(async () => {
-        await setDefaultPreviewVideoStream();
-    });
 
     /**
      * Fetches all available desktop capture sources

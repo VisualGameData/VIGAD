@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import useNotificationSystem from '../useNotificationSystem/useNotificationSystem';
+import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
 
 const currentSelectedSource = ref<MediaStream | undefined>();
 const desktopCaptureSources = ref<Object[]>([]);

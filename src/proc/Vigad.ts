@@ -121,29 +121,29 @@ export class Vigad {
                         // Fetching GET/POST Testing
                         const { streamData, streamRegexAndCaptureAreaSettings } = useUploadData();
                         if (streamData.value || streamRegexAndCaptureAreaSettings.value) {
-                        const url = '';
-                        const token = '';
+                            const url = '';
+                            const token = '';
 
-                        const headers = {
-                            Authorization: `Bearer ${token}`
-                        };
+                            const headers = {
+                                Authorization: `Bearer ${token}`
+                            };
 
-                        fetch(url, {
-                            method: 'GET',
-                            headers: headers
-                        })
-                            .then(response => response.json())
-                            .then(data => {
-                                // Handle the response data
-                                console.log(data);
+                            fetch(url, {
+                                method: 'GET',
+                                headers: headers
                             })
-                            .catch(error => {
-                                // Handle any errors
-                                console.error(error);
-                            });
+                                .then(response => response.json())
+                                .then(data => {
+                                    // Handle the response data
+                                    console.log(data);
+                                })
+                                .catch(error => {
+                                    // Handle any errors
+                                    console.error(error);
+                                });
 
                         }
-                        
+
                     });
                 }, this.previewWidth, this.previewHeight);
             }, 500);

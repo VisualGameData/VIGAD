@@ -1,12 +1,16 @@
 <template>
     <ViewComponent title="Sources" :loading="isLoadingScreensAndApplications">
         <template v-slot:actions>
-            <v-btn class="rounded-pill" prepend-icon="mdi-refresh" variant="tonal"
-                @click="fetchAllDesktopCapturableSources()" :disabled="isLoadingScreensAndApplications">Refresh</v-btn>
+            <v-btn
+                class="rounded-pill"
+                prepend-icon="mdi-refresh"
+                variant="tonal"
+                @click="fetchAllDesktopCapturableSources()"
+                :disabled="isLoadingScreensAndApplications"
+                >Refresh</v-btn
+            >
         </template>
         <template v-slot:default>
-
-
             <v-tabs v-model="tabs" class="mb-4" color="primary" grow>
                 <v-tab width="50%" value="screens"> Screens </v-tab>
 
@@ -14,31 +18,67 @@
             </v-tabs>
 
             <div class="card-list-wrapper">
-                <div v-if="!isLoadingScreensAndApplications" class="windows-wrapper">
+                <div
+                    v-if="!isLoadingScreensAndApplications"
+                    class="windows-wrapper"
+                >
                     <v-window v-model="tabs">
                         <v-window-item value="screens">
-                            <div v-if="!isLoadingScreensAndApplications" class="windows-wrapper">
-                                <v-card v-for="(source, index) in onlyScreenSources" :key="(source as any).id" @click="
-                                    setPreviewVideoStream(mediaStreamsMap[(source as any).id])
-                                    " class="mb-2">
-                                    <v-card-title>{{ (source as any).name }}</v-card-title>
+                            <div
+                                v-if="!isLoadingScreensAndApplications"
+                                class="windows-wrapper"
+                            >
+                                <v-card
+                                    v-for="(source, index) in onlyScreenSources"
+                                    :key="(source as any).id"
+                                    @click="
+                                        setPreviewVideoStream(
+                                            mediaStreamsMap[(source as any).id]
+                                        )
+                                    "
+                                    class="mb-2"
+                                >
+                                    <v-card-title>{{
+                                        (source as any).name
+                                    }}</v-card-title>
                                     <v-card-text>
-                                        <video autoplay :src-object.prop.camel="mediaStreamsMap[(source as any).id]"
-                                            class="preview"></video>
+                                        <video
+                                            autoplay
+                                            :src-object.prop.camel="mediaStreamsMap[(source as any).id]"
+                                            class="preview"
+                                        ></video>
                                     </v-card-text>
                                 </v-card>
                             </div>
                         </v-window-item>
 
                         <v-window-item value="applications">
-                            <div v-if="!isLoadingScreensAndApplications" class="windows-wrapper">
-                                <v-card v-for="(source, index) in onlyApplicationSources" :key="(source as any).id" @click="
-                                    setPreviewVideoStream(mediaStreamsMap[(source as any).id])
-                                    " class="mb-2">
-                                    <v-card-title>{{ (source as any).name }}</v-card-title>
+                            <div
+                                v-if="!isLoadingScreensAndApplications"
+                                class="windows-wrapper"
+                            >
+                                <v-card
+                                    v-for="(
+                                        source, index
+                                    ) in onlyApplicationSources"
+                                    :key="(source as any).id"
+                                    @click="
+                                        setPreviewVideoStream(
+                                            mediaStreamsMap[(source as any).id]
+                                        )
+                                    "
+                                    class="mb-2"
+                                >
+                                    <v-card-title>{{
+                                        (source as any).name
+                                    }}</v-card-title>
                                     <v-card-text>
-                                        <video autoplay :src-object.prop.camel="mediaStreamsMap[(source as any).id]
-                                            " class="preview"></video>
+                                        <video
+                                            autoplay
+                                            :src-object.prop.camel="mediaStreamsMap[(source as any).id]
+                                            "
+                                            class="preview"
+                                        ></video>
                                     </v-card-text>
                                 </v-card>
                             </div>
@@ -47,7 +87,12 @@
                 </div>
                 <div v-else class="mr-2 ml-2 max-height">
                     <div class="circular-loading">
-                        <v-progress-circular :size="70" :width="10" color="primary" indeterminate></v-progress-circular>
+                        <v-progress-circular
+                            :size="70"
+                            :width="10"
+                            color="primary"
+                            indeterminate
+                        ></v-progress-circular>
                     </div>
                 </div>
             </div>
@@ -56,15 +101,22 @@
 </template>
 
 <script setup lang="ts">
-import ViewComponent from '@/components/ViewComponent/ViewComponent.vue';
 import { onMounted, ref } from 'vue';
+import ViewComponent from '@/components/ViewComponent/ViewComponent.vue';
 import useStreamHandler from '@/composables/useStreamHandler/useStreamHandler';
 
 // For the Screen / Application Tab
 const tabs = ref(null);
 
 // Stream and application sources
-const { isLoadingScreensAndApplications, mediaStreamsMap, onlyScreenSources, onlyApplicationSources, setPreviewVideoStream, fetchAllDesktopCapturableSources } = useStreamHandler();
+const {
+    isLoadingScreensAndApplications,
+    mediaStreamsMap,
+    onlyScreenSources,
+    onlyApplicationSources,
+    setPreviewVideoStream,
+    fetchAllDesktopCapturableSources,
+} = useStreamHandler();
 
 // Fetch all the desktop capturable sources on mount of the component so it always has the latest sources
 onMounted(async () => {

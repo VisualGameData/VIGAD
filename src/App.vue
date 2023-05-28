@@ -6,7 +6,11 @@
             <v-container fluid>
                 <v-row cols="12" no-gutters>
                     <v-col cols="2" md="4" id="side-panel-container">
-                        <v-sheet color="background" rounded="lg" class="proper-height">
+                        <v-sheet
+                            color="background"
+                            rounded="lg"
+                            class="proper-height"
+                        >
                             <router-view />
                         </v-sheet>
                     </v-col>
@@ -26,7 +30,9 @@
         <Navigation />
 
         <!-- Notification Prompts -->
-        <NotificantionProvider :location="NotificationAnchorPosition.TOP_RIGHT" />
+        <NotificantionProvider
+            :location="NotificationAnchorPosition.TOP_RIGHT"
+        />
     </v-app>
 </template>
 
@@ -96,8 +102,12 @@ body {
 }
 
 .proper-height {
-    min-height: calc(#{$viewport-height} - #{$bottom-nav-height} - #{$container-padding} - #{$container-padding});
-    max-height: calc(#{$viewport-height} - #{$bottom-nav-height} - #{$container-padding} - #{$container-padding});
+    min-height: calc(
+        #{$viewport-height} - #{$bottom-nav-height} - #{$container-padding} - #{$container-padding}
+    );
+    max-height: calc(
+        #{$viewport-height} - #{$bottom-nav-height} - #{$container-padding} - #{$container-padding}
+    );
     overflow: hidden;
 }
 
@@ -110,7 +120,9 @@ body {
 }
 
 #video-stream-container {
-    min-height: calc(#{$viewport-height} - #{$bottom-nav-height} - #{$container-padding} - #{$container-padding});
+    min-height: calc(
+        #{$viewport-height} - #{$bottom-nav-height} - #{$container-padding} - #{$container-padding}
+    );
     width: 100%;
     display: flex;
     align-items: center;

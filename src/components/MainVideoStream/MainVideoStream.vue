@@ -48,7 +48,7 @@ import useNotificationSystem from '@/composables/useNotificationSystem/useNotifi
 import VueDragResize from 'vue3-drag-resize';
 
 /**
- * Get reference to the video element that is used to preview the video stream of the main screen 
+ * Get reference to the video element that is used to preview the video stream of the main screen
  */
 const { currentSelectedSource } = useStreamHandler();
 const videoRef = ref<any>(null);
@@ -57,16 +57,16 @@ const videoRef = ref<any>(null);
  * Set Video Sources Preview to the main screen (the one that is selected)
  */
 watch(currentSelectedSource, (newSource) => {
-  try {
-    if (newSource && videoRef.value) {
-      videoRef.value.srcObject = newSource;
+    try {
+        if (newSource && videoRef.value) {
+            videoRef.value.srcObject = newSource;
+        }
+    } catch (error) {
+        useNotificationSystem().createErrorNotification({
+            title: 'An error occured while setting the preview video stream',
+            message: 'Please restart the application and try again.',
+        });
     }
-  } catch (error) {
-    useNotificationSystem().createErrorNotification({
-        title: 'An error occured while setting the preview video stream',
-        message: 'Please restart the application and try again.'
-    })
-  }
 });
 
 /**

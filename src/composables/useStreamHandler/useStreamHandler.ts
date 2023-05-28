@@ -9,7 +9,6 @@ const mediaStreamsMap = ref<Record<string, MediaStream>>({});
 const isLoadingScreensAndApplications = ref(false);
 
 export default function useStreamHandler() {
-
     /**
      * Fetches all available desktop capture sources
      */
@@ -18,36 +17,39 @@ export default function useStreamHandler() {
 
         try {
             // Get the available video sources
-            desktopCaptureSources.value = await (window as any).electronAPI.getMedia();
+            desktopCaptureSources.value = await (
+                window as any
+            ).electronAPI.getMedia();
 
             // Populate the reactive arrays
             onlyScreenSources.value = desktopCaptureSources.value.filter(
-                (source: any) => source.id.substring(0, source.id.indexOf(':')) === 'screen'
+                (source: any) =>
+                    source.id.substring(0, source.id.indexOf(':')) === 'screen'
             );
 
             // Populate the reactive arrays
             onlyApplicationSources.value = desktopCaptureSources.value.filter(
-                (source: any) => source.id.substring(0, source.id.indexOf(':')) === 'window'
+                (source: any) =>
+                    source.id.substring(0, source.id.indexOf(':')) === 'window'
             );
 
             // get the media streams
             Array.from(desktopCaptureSources.value).forEach(function (element) {
                 getMediaStreams(element);
             });
-
         } catch (error) {
             useNotificationSystem().createErrorNotification({
                 title: 'Error fetching screens and applications sources',
-                message: 'Please restart the application and try again.'
-            })
+                message: 'Please restart the application and try again.',
+            });
         }
 
         isLoadingScreensAndApplications.value = false;
-    }
+    };
 
     /**
      * Sets the preview video stream to the given source
-     * @param source 
+     * @param source
      */
     const setPreviewVideoStream = (source: MediaStream): void => {
         if (source === currentSelectedSource.value) {
@@ -55,7 +57,7 @@ export default function useStreamHandler() {
         }
 
         currentSelectedSource.value = source;
-    }
+    };
 
     /**
      * This function sets the main monitor screen of the user as the default video source
@@ -64,23 +66,25 @@ export default function useStreamHandler() {
         try {
             await fetchAllDesktopCapturableSources();
 
-            const mediaStream = await getMediaStreamFromSource(desktopCaptureSources.value[0]);
+            const mediaStream = await getMediaStreamFromSource(
+                desktopCaptureSources.value[0]
+            );
 
             await setPreviewVideoStream(mediaStream);
         } catch (error) {
             useNotificationSystem().createErrorNotification({
                 title: 'Error setting default preview video stream',
-                message: 'Please restart the application and try again.'
+                message: 'Please restart the application and try again.',
             });
         }
-    }
+    };
 
     /**
      * Sets the media streams to the given source and adds it to the mediastreams map
-     * @param source 
+     * @param source
      */
     const getMediaStreams = async (source: any) => {
-        const stream = await getMediaStreamFromSource(source)
+        const stream = await getMediaStreamFromSource(source);
 
         stream.addEventListener('inactive', () => {
             // Check if the stream is the currently previewed stream
@@ -91,14 +95,16 @@ export default function useStreamHandler() {
         });
 
         mediaStreamsMap.value[source.id] = stream;
-    }
+    };
 
     /**
      * Returns a media stream from the given source
-     * @param source 
+     * @param source
      * @returns media stream
      */
-    const getMediaStreamFromSource = async (source: any): Promise<MediaStream> => {
+    const getMediaStreamFromSource = async (
+        source: any
+    ): Promise<MediaStream> => {
         // MediaStream Constraints
         const constraints: any = {
             video: {
@@ -110,7 +116,7 @@ export default function useStreamHandler() {
         };
 
         return await navigator.mediaDevices.getUserMedia(constraints);
-    }
+    };
 
     return {
         currentSelectedSource,

@@ -34,7 +34,7 @@ const props = defineProps<{
     width: 100%;
 }
 
-.scrollable>* {
+.scrollable > * {
     width: 100%;
 }
 </style>

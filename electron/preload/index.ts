@@ -100,11 +100,14 @@ const remote = require('@electron/remote/main');
 contextBridge.exposeInMainWorld('electronAPI', {
     getMedia: () => {
         return new Promise((resolve, reject) => {
-            ipcRenderer.invoke('get-screens').then((media) => {
-                resolve(media);
-            }).catch((error) => {
-                reject(error);
-            });
+            ipcRenderer
+                .invoke('get-screens')
+                .then((media) => {
+                    resolve(media);
+                })
+                .catch((error) => {
+                    reject(error);
+                });
         });
     },
 });

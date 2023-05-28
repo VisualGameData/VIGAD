@@ -9,15 +9,11 @@
             <v-list v-else lines="three" disabled class="reverse">
                 <v-list-item v-for="(item, i) in matchedElements" :key="i">
                     <template v-slot:prepend>
-                        <v-icon
-                            :color="item.rating > 0 ? 'success' : 'error'"
-                            icon="mdi-information"
-                        ></v-icon>
+                        <v-icon :color="item.rating > 0 ? 'success' : 'error'" icon="mdi-information"></v-icon>
                     </template>
 
                     <v-list-item-title expand-icon="mdi-menu-down">
-                        {{ item.timestamp }}</v-list-item-title
-                    >
+                        {{ item.timestamp }}</v-list-item-title>
                     <div>Element: {{ item.match.element }}</div>
                     <div>Rating: {{ item.rating }}</div>
                 </v-list-item>
@@ -29,11 +25,14 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { Vigad } from '@/proc/Vigad';
-import { isRunning } from '@/composables/useRunning/useRunning';
+import useRunning from '@/composables/useRunning/useRunning';
 
 const props = defineProps<{
     captureAreaId: number;
 }>();
+
+// Use the useRunning composable to get the isRunning state and the start/stop functions
+const { isRunning } = useRunning();
 
 /**
  * Get singelton instance reference to vigad
@@ -90,6 +89,7 @@ watch(isRunning, (newValue) => {
     max-height: 400px;
     overflow-y: auto;
 }
+
 .reverse {
     display: flex;
     flex-direction: column-reverse;

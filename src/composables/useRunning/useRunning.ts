@@ -5,15 +5,18 @@ import useNotificationSystem from '@/composables/useNotificationSystem/useNotifi
 /**
  * Reactive boolean that can be used to check the capture status.
  */
-export const isRunning = ref(false);
+const isRunning = ref(false);
 
 /**
  * Function that can be used to start and stop the capturing.
  */
-export const useRunning = () => {
+export default function useRunning() {
     const vigad = Vigad.getInstance();
 
-    const start = () => {
+    /**
+     * Start capturing.
+     */
+    const start = (): void => {
         isRunning.value = true;
         vigad.startTesseract();
         useNotificationSystem().createNotification({
@@ -22,13 +25,16 @@ export const useRunning = () => {
         });
     };
 
-    const stop = () => {
+    /**
+     * Stop capturing.
+     */
+    const stop = (): void => {
         isRunning.value = false;
         vigad.stopTesseract();
         useNotificationSystem().createWarningNotification({
             title: 'Stopped Capturing',
             message: 'Capturing was stopped'
-        })
+        });
     };
 
     return {
@@ -36,4 +42,4 @@ export const useRunning = () => {
         start,
         stop,
     };
-};
+}

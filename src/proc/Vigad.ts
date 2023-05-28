@@ -1,7 +1,7 @@
 import { CaptureArea } from './CaptureArea';
 import { RegexHandler } from './regex/RegexHandler';
 import { TesseractHandler } from './TesseractHandler';
-import { useStreamHandler } from '@/composables/useStreamHandler/useStreamHandler';
+import useStreamHandler from '@/composables/useStreamHandler/useStreamHandler';
 
 export class Vigad {
     private static instance: Vigad;

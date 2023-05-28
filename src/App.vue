@@ -37,7 +37,7 @@ import MainVideoStream from '@/components/MainVideoStream/MainVideoStream.vue';
 import Navigation from '@/components/Navigation/Navigation.vue';
 import NotificantionProvider from '@/components/Notifications/NotificationProvider/NotificationProvider.vue';
 import { NotificationAnchorPosition } from '@/components/Notifications/NotificationAnchorPosition';
-import { useStreamHandler } from '@/composables/useStreamHandler/useStreamHandler';
+import useStreamHandler from '@/composables/useStreamHandler/useStreamHandler';
 
 // Force the application to navigate to the default route
 const router = useRouter();

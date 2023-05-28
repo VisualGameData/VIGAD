@@ -8,12 +8,12 @@ const onlyApplicationSources = ref<Object[]>([]);
 const mediaStreamsMap = ref<Record<string, MediaStream>>({});
 const isLoadingScreensAndApplications = ref(false);
 
-export function useStreamHandler() {
+export default function useStreamHandler() {
 
     /**
      * Fetches all available desktop capture sources
      */
-    async function fetchAllDesktopCapturableSources(): Promise<void> {
+    const fetchAllDesktopCapturableSources = async (): Promise<void> => {
         isLoadingScreensAndApplications.value = true;
 
         try {
@@ -49,7 +49,7 @@ export function useStreamHandler() {
      * Sets the preview video stream to the given source
      * @param source 
      */
-    function setPreviewVideoStream(source: MediaStream): void {
+    const setPreviewVideoStream = (source: MediaStream): void => {
         if (source === currentSelectedSource.value) {
             return;
         }
@@ -60,7 +60,7 @@ export function useStreamHandler() {
     /**
      * This function sets the main monitor screen of the user as the default video source
      */
-    async function setDefaultPreviewVideoStream(): Promise<void> {
+    const setDefaultPreviewVideoStream = async (): Promise<void> => {
         try {
             await fetchAllDesktopCapturableSources();
 
@@ -79,7 +79,7 @@ export function useStreamHandler() {
      * Sets the media streams to the given source and adds it to the mediastreams map
      * @param source 
      */
-    async function getMediaStreams(source: any) {
+    const getMediaStreams = async (source: any) => {
         const stream = await getMediaStreamFromSource(source)
 
         stream.addEventListener('inactive', () => {
@@ -98,7 +98,7 @@ export function useStreamHandler() {
      * @param source 
      * @returns media stream
      */
-    async function getMediaStreamFromSource(source: any): Promise<MediaStream> {
+    const getMediaStreamFromSource = async (source: any): Promise<MediaStream> => {
         // MediaStream Constraints
         const constraints: any = {
             video: {

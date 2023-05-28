@@ -42,7 +42,7 @@ import { useElementSize } from '@vueuse/core';
 import { Vigad } from '@/proc/Vigad';
 import { isRerendering } from '@/composables/useForceRerender/useForceRerender';
 import { Rectangle } from './Rectangle';
-import { useStreamHandler } from '@/composables/useStreamHandler/useStreamHandler';
+import useStreamHandler from '@/composables/useStreamHandler/useStreamHandler';
 import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
 // @ts-ignore
 import VueDragResize from 'vue3-drag-resize';

@@ -58,7 +58,7 @@
 <script setup lang="ts">
 import ViewComponent from '@/components/ViewComponent/ViewComponent.vue';
 import { onMounted, ref } from 'vue';
-import { useStreamHandler } from '@/composables/useStreamHandler/useStreamHandler';
+import useStreamHandler from '@/composables/useStreamHandler/useStreamHandler';
 
 // For the Screen / Application Tab
 const tabs = ref(null);

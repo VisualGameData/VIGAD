@@ -1,25 +1,42 @@
 import { ref } from 'vue';
 
-/**
- 
-Upload data composable*/
-export default function useUploadData() {
-    const streamData = ref(true);
-    const streamRegexAndCaptureAreaSettings = ref(false);
+const streamData = ref(true);
+const streamRegexAndCaptureAreaSettings = ref(false);
 
-    const getStreamData = () => {
+/**
+ * Uploadable data composable
+ */
+export default function useUploadData() {
+
+    /**
+     * Get the current value of streamData.
+     * @returns {boolean} The current value of streamData.
+     */
+    const getStreamData = (): boolean => {
         return streamData.value;
     };
 
-    const getStreamRegexAndCaptureAreaSettings = () => {
+    /**
+     * Get the current value of streamRegexAndCaptureAreaSettings.
+     * @returns {boolean} The current value of streamRegexAndCaptureAreaSettings.
+     */
+    const getStreamRegexAndCaptureAreaSettings = (): boolean => {
         return streamRegexAndCaptureAreaSettings.value;
     };
 
-    const setStreamData = (value: boolean) => {
+    /**
+     * Set the value of streamData.
+     * @param {boolean} value 
+     */
+    const setStreamData = (value: boolean): void => {
         streamData.value = value;
     };
 
-    const setStreamRegexAndCaptureAreaSettings = (value: boolean) => {
+    /**
+     * Set the value of streamRegexAndCaptureAreaSettings.
+     * @param {boolean} value 
+     */
+    const setStreamRegexAndCaptureAreaSettings = (value: boolean): void => {
         streamRegexAndCaptureAreaSettings.value = value;
     };
 
@@ -29,6 +46,6 @@ export default function useUploadData() {
         getStreamData,
         getStreamRegexAndCaptureAreaSettings,
         setStreamData,
-        setStreamRegexAndCaptureAreaSettings
+        setStreamRegexAndCaptureAreaSettings,
     };
-};
+}

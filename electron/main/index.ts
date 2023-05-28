@@ -97,16 +97,6 @@ async function createWindow() {
 
     // Get all screens/windows from the main process to the renderer process
     ipcMain.handle('get-screens', getScreen);
-
-    try {
-        const allSources = await getScreen();
-
-        // Handle the captured sources or perform any necessary operations
-        console.log('Captured sources:', allSources);
-    } catch (error) {
-        // Handle the error from desktopCapturer
-        console.error('Error capturing sources:', error);
-    }
 }
 
 // This method will be called when Electron has finished

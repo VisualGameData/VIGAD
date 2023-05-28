@@ -1,14 +1,29 @@
 <template>
     <v-bottom-navigation :elevation="24" bg-color="surface" grow>
-        <v-btn :disabled="isRunning" to="/capture" prepend-icon="mdi-play" value="run">
+        <v-btn
+            :disabled="isRunning"
+            to="/capture"
+            prepend-icon="mdi-play"
+            value="run"
+        >
             Capturing
         </v-btn>
 
-        <v-btn :disabled="isRunning" to="/" prepend-icon="mdi-monitor" value="source">
+        <v-btn
+            :disabled="isRunning"
+            to="/"
+            prepend-icon="mdi-monitor"
+            value="source"
+        >
             Source
         </v-btn>
 
-        <v-btn :disabled="isRunning" to="/regex" prepend-icon="mdi-regex" value="regex">
+        <v-btn
+            :disabled="isRunning"
+            to="/regex"
+            prepend-icon="mdi-regex"
+            value="regex"
+        >
             Regex
         </v-btn>
 

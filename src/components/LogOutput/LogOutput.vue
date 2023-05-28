@@ -9,11 +9,15 @@
             <v-list v-else lines="three" disabled class="reverse">
                 <v-list-item v-for="(item, i) in matchedElements" :key="i">
                     <template v-slot:prepend>
-                        <v-icon :color="item.rating > 0 ? 'success' : 'error'" icon="mdi-information"></v-icon>
+                        <v-icon
+                            :color="item.rating > 0 ? 'success' : 'error'"
+                            icon="mdi-information"
+                        ></v-icon>
                     </template>
 
                     <v-list-item-title expand-icon="mdi-menu-down">
-                        {{ item.timestamp }}</v-list-item-title>
+                        {{ item.timestamp }}</v-list-item-title
+                    >
                     <div>Element: {{ item.match.element }}</div>
                     <div>Rating: {{ item.rating }}</div>
                 </v-list-item>

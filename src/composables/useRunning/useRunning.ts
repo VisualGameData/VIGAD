@@ -21,7 +21,7 @@ export default function useRunning() {
         vigad.startTesseract();
         useNotificationSystem().createNotification({
             title: 'Started Capturing',
-            message: 'Capturing is now running'
+            message: 'Capturing is now running',
         });
     };
 
@@ -33,7 +33,7 @@ export default function useRunning() {
         vigad.stopTesseract();
         useNotificationSystem().createWarningNotification({
             title: 'Stopped Capturing',
-            message: 'Capturing was stopped'
+            message: 'Capturing was stopped',
         });
     };
 

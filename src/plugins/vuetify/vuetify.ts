@@ -14,40 +14,6 @@ import * as directives from 'vuetify/directives';
 export default createVuetify({
     theme: {
         defaultTheme: 'dark',
-        themes: {
-            // Custom Dark Theme
-            // dark: {
-            //     dark: true,
-            //     colors: {
-            //         primary: '#BB86FC',
-            //         secondary: '#181F32',
-            //         background: '#121212',
-            //         surface: '#1E1E1E',
-            //         accent: '#82B1FF',
-            //         error: '#FF5252',
-            //         info: '#2196F3',
-            //         success: '#4CAF50',
-            //         warning: '#FFC107',
-            //         font: '#DBE6EB',
-            //     },
-            // },
-            // Custom Light Theme
-            // light: {
-            //     dark: false,
-            //     colors: {
-            //         primary: '#5E35B1',
-            //         secondary: '#181F32',
-            //         background: '#121827',
-            //         surface: '#181F32',
-            //         accent: '#82B1FF',
-            //         error: '#FF5252',
-            //         info: '#2196F3',
-            //         success: '#4CAF50',
-            //         warning: '#FFC107',
-            //         font: '#DBE6EB',
-            //     },
-            // },
-        },
     },
     components,
     directives,

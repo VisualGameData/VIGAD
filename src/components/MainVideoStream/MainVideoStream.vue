@@ -1,7 +1,7 @@
 <template>
     <div class="video-stream">
         <v-responsive id="stream" ref="stream" class="capture-area-selection">
-            <video preload="none" id="mainVideo" class="video" autoplay></video>
+            <video preload="none" class="video" autoplay ref="videoRef"></video>
             <VueDragResize
                 v-if="isRerendering"
                 v-for="captureArea in captureAreas"
@@ -37,23 +37,44 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useElementSize } from '@vueuse/core';
 import { Vigad } from '@/proc/Vigad';
+import useForceRerender from '@/composables/useForceRerender/useForceRerender';
+import { Rectangle } from './Rectangle';
+import useStreamHandler from '@/composables/useStreamHandler/useStreamHandler';
+import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
 // @ts-ignore
 import VueDragResize from 'vue3-drag-resize';
-import { isRerendering } from '@/composables/useForceRerender/useForceRerender';
-import { Rectangle } from './Rectangle';
 
 /**
- * Get singelton instance reference to vigad
+ * Use the useForceRerender composable to get the isRerendering state and the forceRerender functions
+ */
+const { isRerendering } = useForceRerender();
+
+const { currentSelectedSource } = useStreamHandler();
+const videoRef = ref<any>(null);
+
+/**
+ * Set Video Sources Preview to the main screen (the one that is selected)
+ */
+watch(currentSelectedSource, (newSource) => {
+    try {
+        if (newSource && videoRef.value) {
+            videoRef.value.srcObject = newSource;
+        }
+    } catch (error) {
+        useNotificationSystem().createErrorNotification({
+            title: 'An error occured while setting the preview video stream',
+            message: 'Please restart the application and try again.',
+        });
+    }
+});
+
+/**
+ * Get singelton instance reference to 
  */
 const vigad = ref(Vigad.getInstance());
-
-/**
- * Get singelton instance reference to streamHandler
- */
-const streamHandler = vigad.value.getStreamHandlerInstance();
 
 /**
  * Get reference to all the capture areas that are currently active
@@ -77,14 +98,6 @@ watch(hParent, (newValue) => {
 /**
  * fetches everything and sets the main video stream to the main screen
  */
-async function setDefaultVideoStream() {
-    // set the default video stream to the main screen
-    await streamHandler.setDefaultVideoStream();
-}
-
-/**
- * fetches everything and sets the main video stream to the main screen
- */
 function changePosition(newRect: Rectangle, item: any) {
     item.width = newRect.width;
     item.height = newRect.height;
@@ -101,13 +114,6 @@ function changeSize(newRect: Rectangle, item: any) {
     item.top = newRect.top;
     item.left = newRect.left;
 }
-
-/**
- * On Mount of this component set the default video stream
- */
-onMounted(() => {
-    setDefaultVideoStream();
-});
 </script>
 
 <style lang="scss" scoped>
@@ -115,15 +121,18 @@ onMounted(() => {
     width: inherit;
     height: inherit;
     align-self: center;
+
     .capture-area-selection {
         margin: 0 auto;
         width: fit-content;
+
         .video {
             width: 100%;
             max-height: calc(100vh - 56px - 16px - 16px);
         }
     }
 }
+
 .draggable-capture-area {
     text-align: center;
     background-color: rgba($color: #03dac6, $alpha: 0.15);

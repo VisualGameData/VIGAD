@@ -1,14 +1,13 @@
 import { CaptureArea } from './CaptureArea';
 import { RegexHandler } from './regex/RegexHandler';
-import { StreamHandler } from './StreamHandler';
 import { TesseractHandler } from './TesseractHandler';
 import useSession from '@/composables/useSession/useSession';
 import useUploadData from '@/composables/useUploadData/useUploadData';
 import useAPI from '@/composables/useAPI/useAPI';
+import useStreamHandler from '@/composables/useStreamHandler/useStreamHandler';
 
 export class Vigad {
     private static instance: Vigad;
-    private streamHandler: StreamHandler;
     private tesseractHandler: TesseractHandler;
     private regexHandler: RegexHandler;
     private captureAreas: CaptureArea[];
@@ -22,7 +21,6 @@ export class Vigad {
      * Create a private constructor to prevent multiple instances
      */
     private constructor() {
-        this.streamHandler = StreamHandler.getInstance();
         this.tesseractHandler = TesseractHandler.getInstance();
         this.regexHandler = RegexHandler.getInstance();
         this.captureAreas = [];
@@ -50,10 +48,6 @@ export class Vigad {
 
     public setPreviewHeight(height: number): void {
         this.previewHeight = height;
-    }
-
-    public getStreamHandlerInstance(): StreamHandler {
-        return this.streamHandler;
     }
 
     /**
@@ -107,8 +101,9 @@ export class Vigad {
     public startTesseract(): void {
         if (!this.intervalRunning) {
             this.tesseractInterval = setInterval(() => {
+              const { currentSelectedSource } = useStreamHandler();
                 this.tesseractHandler.run(
-                    this.streamHandler.getCurrentSelectedSource(),
+                    currentSelectedSource.value!,
                     async (result: { ca_id: number; data: string }[]) => {
                         result.forEach(
                             (

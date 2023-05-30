@@ -32,8 +32,11 @@
 </template>
 
 <script setup lang="ts">
-import { isRunning } from '@/composables/useRunning/useRunning';
+import useRunning from '@/composables/useRunning/useRunning';
 import SettingsPrompt from '@/components/SettingsPrompt/SettingsPrompt.vue';
+
+// Use the useRunning composable to get the isRunning state
+const { isRunning } = useRunning();
 </script>
 
 <style lang="scss" scoped></style>

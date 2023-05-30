@@ -42,8 +42,13 @@ import { useElementSize } from '@vueuse/core';
 import { Vigad } from '@/proc/Vigad';
 // @ts-ignore
 import VueDragResize from 'vue3-drag-resize';
-import { isRerendering } from '@/composables/useForceRerender/useForceRerender';
+import useForceRerender from '@/composables/useForceRerender/useForceRerender';
 import { Rectangle } from './Rectangle';
+
+/**
+ * Use the useForceRerender composable to get the isRerendering state and the forceRerender functions
+ */
+const { isRerendering } = useForceRerender();
 
 /**
  * Get singelton instance reference to vigad

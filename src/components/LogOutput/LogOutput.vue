@@ -29,11 +29,14 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { Vigad } from '@/proc/Vigad';
-import { isRunning } from '@/composables/useRunning/useRunning';
+import useRunning from '@/composables/useRunning/useRunning';
 
 const props = defineProps<{
     captureAreaId: number;
 }>();
+
+// Use the useRunning composable to get the isRunning state and the start/stop functions
+const { isRunning } = useRunning();
 
 /**
  * Get singelton instance reference to vigad
@@ -90,6 +93,7 @@ watch(isRunning, (newValue) => {
     max-height: 400px;
     overflow-y: auto;
 }
+
 .reverse {
     display: flex;
     flex-direction: column-reverse;

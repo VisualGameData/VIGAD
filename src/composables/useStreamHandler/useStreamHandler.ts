@@ -70,7 +70,7 @@ export default function useStreamHandler() {
                 desktopCaptureSources.value[0]
             );
 
-            await setPreviewVideoStream(mediaStream);
+            setPreviewVideoStream(mediaStream);
         } catch (error) {
             useNotificationSystem().createErrorNotification({
                 title: 'Error setting default preview video stream',

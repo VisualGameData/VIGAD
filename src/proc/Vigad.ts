@@ -2,7 +2,9 @@ import { CaptureArea } from './CaptureArea';
 import { RegexHandler } from './regex/RegexHandler';
 import { StreamHandler } from './StreamHandler';
 import { TesseractHandler } from './TesseractHandler';
+import useSession from '@/composables/useSession/useSession';
 import useUploadData from '@/composables/useUploadData/useUploadData';
+import useAPI from '@/composables/useAPI/useAPI';
 
 export class Vigad {
     private static instance: Vigad;
@@ -105,56 +107,107 @@ export class Vigad {
     public startTesseract(): void {
         if (!this.intervalRunning) {
             this.tesseractInterval = setInterval(() => {
-                this.tesseractHandler.run(this.streamHandler.getCurrentSelectedSource(), (result: { ca_id: number, data: string }[]) => {
-                    result.forEach((value: { ca_id: number, data: string }, index: number) => {
-                        let ca = this.getCaptureArea(value.ca_id);
-                        let regexGrp = ca.getRegexGroups()[0];
-                        if (regexGrp.getConstraintRegex()[0].getRegex().toString() === "/(?:)/" && regexGrp.getConstraintRegex()[1].getRegex().toString() === "/(?:)/") {
-                            this.regexHandler.findValue(value.data, regexGrp.getValueRegex());
-                        } else if (regexGrp.getConstraintRegex()[0].getRegex().toString() === "/(?:)/") {
-                            this.regexHandler.findValue(value.data, regexGrp.getValueRegex(), regexGrp.getConstraintRegex()[1]);
-                        } else if (regexGrp.getConstraintRegex()[1].getRegex().toString() === "/(?:)/") {
-                            this.regexHandler.findValue(value.data, regexGrp.getValueRegex(), regexGrp.getConstraintRegex()[0]);
+                this.tesseractHandler.run(
+                    this.streamHandler.getCurrentSelectedSource(),
+                    async (result: { ca_id: number; data: string }[]) => {
+                        result.forEach(
+                            (
+                                value: { ca_id: number; data: string },
+                                index: number
+                            ) => {
+                                let ca = this.getCaptureArea(value.ca_id);
+                                let regexGrp = ca.getRegexGroups()[0];
+                                if (
+                                    regexGrp
+                                        .getConstraintRegex()[0]
+                                        .getRegex()
+                                        .toString() === '/(?:)/' &&
+                                    regexGrp
+                                        .getConstraintRegex()[1]
+                                        .getRegex()
+                                        .toString() === '/(?:)/'
+                                ) {
+                                    this.regexHandler.findValue(
+                                        value.data,
+                                        regexGrp.getValueRegex()
+                                    );
+                                } else if (
+                                    regexGrp
+                                        .getConstraintRegex()[0]
+                                        .getRegex()
+                                        .toString() === '/(?:)/'
+                                ) {
+                                    this.regexHandler.findValue(
+                                        value.data,
+                                        regexGrp.getValueRegex(),
+                                        regexGrp.getConstraintRegex()[1]
+                                    );
+                                } else if (
+                                    regexGrp
+                                        .getConstraintRegex()[1]
+                                        .getRegex()
+                                        .toString() === '/(?:)/'
+                                ) {
+                                    this.regexHandler.findValue(
+                                        value.data,
+                                        regexGrp.getValueRegex(),
+                                        regexGrp.getConstraintRegex()[0]
+                                    );
+                                } else {
+                                    this.regexHandler.findValue(
+                                        value.data,
+                                        regexGrp.getValueRegex(),
+                                        regexGrp.getConstraintRegex()[0],
+                                        regexGrp.getConstraintRegex()[1]
+                                    );
+                                }
+                            }
+                        );
+                        // Uploading Data to the server
+                        const { isSessionActive } = useSession();
+                        const { get, post } = useAPI();
+                        const {
+                            streamData,
+                            streamRegexAndCaptureAreaSettings,
+                        } = useUploadData();
+
+                        // Check whether the user streamData or streamRegexAndCaptureAreaSettings is enabled and if the session is active at all
+                        if (
+                            isSessionActive.value &&
+                            (streamData.value ||
+                                streamRegexAndCaptureAreaSettings.value)
+                        ) {
+                            for (let i = 0; i < result.length; i++) {
+                                const postResult = await post(
+                                    `session/abc/data/ca/${result[i].ca_id}`,
+                                    {
+                                        data: `${result[i].data}`,
+                                    }
+                                );
+                                console.log('Post', postResult);
+                                console.log(
+                                    'Get',
+                                    await get('session/abc/data')
+                                );
+                            }
                         } else {
-                            this.regexHandler.findValue(value.data, regexGrp.getValueRegex(), regexGrp.getConstraintRegex()[0], regexGrp.getConstraintRegex()[1]);
+                            console.log(
+                                'Session is not active or streamData/streamRegexAndCaptureAreaSettings is not enabled'
+                            );
                         }
-                        // Fetching GET/POST Testing
-                        const { streamData, streamRegexAndCaptureAreaSettings } = useUploadData();
-                        if (streamData.value || streamRegexAndCaptureAreaSettings.value) {
-                            const url = '';
-                            const token = '';
-
-                            const headers = {
-                                Authorization: `Bearer ${token}`
-                            };
-
-                            fetch(url, {
-                                method: 'GET',
-                                headers: headers
-                            })
-                                .then(response => response.json())
-                                .then(data => {
-                                    // Handle the response data
-                                    console.log(data);
-                                })
-                                .catch(error => {
-                                    // Handle any errors
-                                    console.error(error);
-                                });
-
-                        }
-
-                    });
-                }, this.previewWidth, this.previewHeight);
+                    },
+                    this.previewWidth,
+                    this.previewHeight
+                );
             }, 500);
             this.intervalRunning = true;
-            console.log("started tesseract");
+            console.log('started tesseract');
         }
     }
 
     public stopTesseract(): void {
         clearInterval(this.tesseractInterval);
         this.intervalRunning = false;
-        console.log("stopped tesseract");
+        console.log('stopped tesseract');
     }
 }

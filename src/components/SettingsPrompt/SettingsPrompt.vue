@@ -31,7 +31,7 @@
                     class="rounded-pill"
                     prepend-icon="mdi-play"
                     variant="tonal"
-                    @click="useSession().startSession()"
+                    @click="startSession()"
                     >Start Session</v-btn
                 >
 
@@ -41,7 +41,7 @@
                     class="rounded-pill"
                     prepend-icon="mdi-stop"
                     variant="tonal"
-                    @click="useSession().stopSession()"
+                    @click="stopSession()"
                     >Stop Session</v-btn
                 >
             </v-toolbar>
@@ -140,18 +140,20 @@
 </template>
 
 <script setup lang="ts">
+import { Ref, ref, watch } from 'vue';
 import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
 import useClipboard from '@/composables/useClipboard/useClipboard';
 import useTokenGenerator from '@/composables/useTokenGenerator/useTokenGenerator';
-import { Ref, ref, watch } from 'vue';
 import useUploadData from '@/composables/useUploadData/useUploadData';
-import { useSession, isSessionActive  } from '@/composables/useSession/useSession';
+import useSession from '@/composables/useSession/useSession';
 
 /**
  * Composables
  */
+const { isSessionActive, startSession, stopSession } = useSession();
 const { writeClipboardText } = useClipboard();
 const { defaultRules, generateValidToken } = useTokenGenerator();
+const { streamData, streamRegexAndCaptureAreaSettings } = useUploadData();
 
 /**
  * Data
@@ -160,7 +162,6 @@ const accessToken = ref('');
 const isAccessTokenValid = ref(false);
 const errorMessage: Ref<string[]> = ref([]);
 const tokenVisibility = ref(false);
-const { streamData, streamRegexAndCaptureAreaSettings } = useUploadData();
 
 /**
  * Dialog visibility
@@ -232,7 +233,7 @@ function validate() {
         .filter((value) => typeof value === 'string') as string[];
 
     if (!isValid && isSessionActive.value) {
-        useSession().stopSession();
+        stopSession();
         useNotificationSystem().createErrorNotification({
             title: 'Session stopped',
             message: 'The access token is invalid',

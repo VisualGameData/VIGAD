@@ -1,18 +1,24 @@
-import { ref } from 'vue';
+import { ref, Ref } from 'vue';
 import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
 
-export const isSessionActive = ref(false);
+// Reactive variable to track session status
+const isSessionActive: Ref<boolean> = ref(false);
 
-export const useSession = () => {
-
-    const startSession = () => {
+export default function useSession() {
+    /**
+     * Starts the session
+     */
+    const startSession = (): void => {
         isSessionActive.value = true;
         useNotificationSystem().createNotification({
             title: 'Session started',
         });
     };
 
-    const stopSession = () => {
+    /**
+     * Stops the session
+     */
+    const stopSession = (): void => {
         isSessionActive.value = false;
         useNotificationSystem().createNotification({
             title: 'Session stopped',
@@ -23,6 +29,6 @@ export const useSession = () => {
     return {
         isSessionActive,
         startSession,
-        stopSession
+        stopSession,
     };
-};
+}

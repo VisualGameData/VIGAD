@@ -30,7 +30,7 @@ export default function useAPI() {
                 throw new Error('Failed to fetch data');
             }
 
-            return await response.json() as ApiResponse;
+            return (await response.json()) as ApiResponse;
         } catch (error) {
             useNotificationSystem().createErrorNotification({
                 title: 'Error occurred while fetching data',
@@ -47,7 +47,10 @@ export default function useAPI() {
      * @returns {Promise<ApiResponse>} A Promise that resolves to the API response.
      * @throws {Error} If the request fails or the response is not OK.
      */
-    const post = async (endpoint: string, data: object): Promise<ApiResponse> => {
+    const post = async (
+        endpoint: string,
+        data: object
+    ): Promise<ApiResponse> => {
         try {
             const url: string = `${baseUrl}/${endpoint}`;
             const response = await fetch(url, {
@@ -66,7 +69,7 @@ export default function useAPI() {
                 throw new Error('Failed to post data');
             }
 
-            return await response.json() as ApiResponse;
+            return (await response.json()) as ApiResponse;
         } catch (error) {
             useNotificationSystem().createErrorNotification({
                 title: 'Error occurred while posting data',

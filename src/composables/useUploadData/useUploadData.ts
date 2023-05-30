@@ -7,7 +7,6 @@ const streamRegexAndCaptureAreaSettings = ref(false);
  * Uploadable data composable
  */
 export default function useUploadData() {
-
     /**
      * Get the current value of streamData.
      * @returns {boolean} The current value of streamData.
@@ -26,7 +25,7 @@ export default function useUploadData() {
 
     /**
      * Set the value of streamData.
-     * @param {boolean} value 
+     * @param {boolean} value
      */
     const setStreamData = (value: boolean): void => {
         streamData.value = value;
@@ -34,7 +33,7 @@ export default function useUploadData() {
 
     /**
      * Set the value of streamRegexAndCaptureAreaSettings.
-     * @param {boolean} value 
+     * @param {boolean} value
      */
     const setStreamRegexAndCaptureAreaSettings = (value: boolean): void => {
         streamRegexAndCaptureAreaSettings.value = value;

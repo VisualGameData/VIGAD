@@ -131,6 +131,7 @@
                             class="mr-4"
                             color="primary"
                             inset
+                            :disabled="true"
                         ></v-switch>
                     </template>
                 </v-list-item>

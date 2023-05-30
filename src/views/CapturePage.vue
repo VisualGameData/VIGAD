@@ -7,7 +7,7 @@
                 prepend-icon="mdi-play"
                 variant="tonal"
                 :disabled="captureAreas.length === 0"
-                @click="useRunning().start()"
+                @click="start()"
                 >Start</v-btn
             >
             <v-btn
@@ -15,7 +15,7 @@
                 class="rounded-pill"
                 prepend-icon="mdi-stop"
                 variant="tonal"
-                @click="useRunning().stop()"
+                @click="stop()"
                 >Stop</v-btn
             >
         </template>
@@ -41,11 +41,13 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useRunning, isRunning } from '@/composables/useRunning/useRunning';
 import { Vigad } from '@/proc/Vigad';
-
 import ViewComponent from '@/components/ViewComponent/ViewComponent.vue';
 import LogOutput from '@/components/LogOutput/LogOutput.vue';
+import useRunning from '@/composables/useRunning/useRunning';
+
+// Use the useRunning composable to get the isRunning state and the start/stop functions
+const { isRunning, start, stop } = useRunning();
 
 /**
  * Get singelton instance reference to vigad

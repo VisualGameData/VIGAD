@@ -40,7 +40,7 @@
 import { ref, watch } from 'vue';
 import { useElementSize } from '@vueuse/core';
 import { Vigad } from '@/proc/Vigad';
-import { isRerendering } from '@/composables/useForceRerender/useForceRerender';
+import useForceRerender from '@/composables/useForceRerender/useForceRerender';
 import { Rectangle } from './Rectangle';
 import useStreamHandler from '@/composables/useStreamHandler/useStreamHandler';
 import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
@@ -48,8 +48,10 @@ import useNotificationSystem from '@/composables/useNotificationSystem/useNotifi
 import VueDragResize from 'vue3-drag-resize';
 
 /**
- * Get reference to the video element that is used to preview the video stream of the main screen
+ * Use the useForceRerender composable to get the isRerendering state and the forceRerender functions
  */
+const { isRerendering } = useForceRerender();
+
 const { currentSelectedSource } = useStreamHandler();
 const videoRef = ref<any>(null);
 
@@ -70,7 +72,7 @@ watch(currentSelectedSource, (newSource) => {
 });
 
 /**
- * Get singelton instance reference to vigad
+ * Get singelton instance reference to 
  */
 const vigad = ref(Vigad.getInstance());
 

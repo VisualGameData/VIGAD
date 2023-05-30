@@ -3,20 +3,27 @@ import { nextTick, ref } from 'vue';
 /**
  * Reactive boolean that can be used to force a component to rerender.
  */
-export const isRerendering = ref(true);
+const isRerendering = ref(true);
 
 /**
  * Tries to rerender the component by removing it from the DOM and adding it back in.
  *
- * Only works if the compnent has a v-if="rerender" directive. active
+ * Only works if the component has a v-if="rerender" directive.
  */
-export const useForceRerender = async () => {
-    // Remove component from the DOM
-    isRerendering.value = false;
+export default function useForceRerender() {
+    const forceRerender = async () => {
+        // Remove component from the DOM
+        isRerendering.value = false;
 
-    // Wait for the change to get flushed to the DOM
-    await nextTick();
+        // Wait for the change to get flushed to the DOM
+        await nextTick();
 
-    // Add the component back in
-    isRerendering.value = true;
-};
+        // Add the component back in
+        isRerendering.value = true;
+    };
+
+    return {
+        forceRerender,
+        isRerendering,
+    };
+}

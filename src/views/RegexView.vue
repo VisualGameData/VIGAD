@@ -46,11 +46,13 @@ import { ref } from 'vue';
 import ViewComponent from '@/components/ViewComponent/ViewComponent.vue';
 import CaptureAreaSearchValue from '@/components/capture-area/CaptureAreaSearchValue/CaptureAreaSearchValue.vue';
 import { Vigad } from '@/proc/Vigad';
-import {
-    isRerendering,
-    useForceRerender,
-} from '@/composables/useForceRerender/useForceRerender';
+import useForceRerender from '@/composables/useForceRerender/useForceRerender';
 import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
+
+/**
+ * Use the useForceRerender composable to get the isRerendering state and the forceRerender functions
+ */
+const { isRerendering, forceRerender } = useForceRerender();
 
 /**
  * Get singelton instance reference to vigad
@@ -67,7 +69,7 @@ const captureAreas = ref(vigad.value.getAllCaptureAreas());
  */
 async function addCaptureArea() {
     vigad.value.addCaptureArea(100, 100, 0, 0);
-    await useForceRerender();
+    await forceRerender();
     useNotificationSystem().createNotification({
         title: 'New Capture Area added',
     });

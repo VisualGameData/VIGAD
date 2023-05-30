@@ -1,13 +1,22 @@
 {
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "typescript.tsc.autoDetect": "off",
-  "json.schemas": [
-    {
-      "fileMatch": [
-        "/*electron-builder.json5",
-        "/*electron-builder.json"
-      ],
-      "url": "https://json.schemastore.org/electron-builder"
-    }
-  ]
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "typescript.tsc.autoDetect": "off",
+    "json.schemas": [
+        {
+            "fileMatch": [
+                "/*electron-builder.json5",
+                "/*electron-builder.json"
+            ],
+            "url": "https://json.schemastore.org/electron-builder"
+        }
+    ],
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": false,
+    "editor.inlineSuggest.enabled": true,
+    "eslint.enable": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    "eslint.validate": ["javascript", "typescript"]
 }

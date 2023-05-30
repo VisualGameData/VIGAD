@@ -93,20 +93,17 @@ const afterConstraint = vigad.value
     .getRegexGroups()[0]
     .getConstraintRegex()[1];
 
-
 /**
-     * Gives a notficiation after deletion of capture area
-     * @param captureAreaId
-     */
-function deleteCaptureAreaNotification(id: number): void{
+ * Gives a notficiation after deletion of capture area
+ * @param captureAreaId
+ */
+function deleteCaptureAreaNotification(id: number): void {
     useNotificationSystem().createWarningNotification({
-            title: 'Capture Area Deleted',
-            message: 'The Capture Area ' + id + ' got deleted'
+        title: 'Capture Area Deleted',
+        message: 'The Capture Area ' + id + ' got deleted',
     });
     vigad.value.deleteCaptureArea(id);
-    
 }
-
 </script>
 
 <style lang="scss" scoped>

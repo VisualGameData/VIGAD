@@ -27,6 +27,7 @@ const props = defineProps<{
     display: flex;
     justify-content: space-between;
 }
+
 .scrollable {
     max-height: calc(100vh - 56px - 16px - 16px - 68px - 16px);
     overflow: auto;

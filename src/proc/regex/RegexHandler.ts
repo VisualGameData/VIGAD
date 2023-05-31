@@ -6,8 +6,6 @@ import { StringSimilarity } from '../StringSimilarity';
 export class RegexHandler {
     private static instance: RegexHandler;
 
-    private constructor() {}
-
     /**
      * This function gets the singelton instance of RegexHandler.ts
      *
@@ -38,7 +36,7 @@ export class RegexHandler {
         // replace all occurences of \n in data with spaces
         data = data.replace(/\n/g, ' ');
 
-        let constraintRegex: ConstraintRegex[] = [];
+        const constraintRegex: ConstraintRegex[] = [];
         if (typeof cRegexBefore !== 'undefined') {
             constraintRegex.push(cRegexBefore);
         }
@@ -137,7 +135,7 @@ export class RegexHandler {
      * @return {bestMatch: {target: string, rating: number}, ratings: {target: string, rating: number}[]}
      */
     public static bestMatch(data: string, genMatches: string[]) {
-        let matches = StringSimilarity.findBestMatch(data, genMatches);
+        const matches = StringSimilarity.findBestMatch(data, genMatches);
         return matches.bestMatch;
     }
 
@@ -154,7 +152,7 @@ export class RegexHandler {
         let highestRating = 0;
         let highestRatingElem = { index: -1, element: '' };
         substrings.every((element) => {
-            let bestMatch = RegexHandler.bestMatch(
+            const bestMatch = RegexHandler.bestMatch(
                 element.element,
                 regexMatches
             );

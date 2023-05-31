@@ -8,10 +8,10 @@
         variant="outlined"
         hide-details="auto"
     >
-        <template v-slot:prepend-inner>
+        <template #prepend-inner>
             <v-icon :icon="prependIcon"></v-icon>
         </template>
-        <template v-slot:append-inner>
+        <template #append-inner>
             <v-fade-transition leave-absolute>
                 <v-progress-circular
                     v-if="false"
@@ -24,10 +24,10 @@
     </v-text-field>
 
     <v-btn
-        @click="expand = !expand"
         class="rounded"
         size="x-small"
         variant="text"
+        @click="expand = !expand"
     >
         {{ !expand ? 'More Options' : 'Less Options' }}
     </v-btn>
@@ -64,18 +64,18 @@
                 :rules="[(v:number) => !!Number(v) || 'Please enter a number']"
                 hide-details="auto"
             >
-                <template v-slot:prepend-inner>
+                <template #prepend-inner>
                     <v-icon icon="mdi-numeric"></v-icon>
                 </template>
             </v-text-field>
 
             <v-btn
-                @click="reset()"
                 class="rounded mt-2 mb-2"
                 size="small"
                 variant="text"
                 color="primary"
                 width="100%"
+                @click="reset()"
             >
                 Reset options
             </v-btn>

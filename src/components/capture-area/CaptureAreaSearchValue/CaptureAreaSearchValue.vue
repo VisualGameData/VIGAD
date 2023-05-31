@@ -5,9 +5,9 @@
                 label="Search value"
                 placeholder="Enter search value"
                 prepend-icon="mdi-table-column"
-                :captureAreaId="captureAreaId"
+                :capture-area-id="captureAreaId"
                 :regex="valueRegex"
-                :resetOptions="defaultValueRegexSettings"
+                :reset-options="defaultValueRegexSettings"
             />
         </div>
 
@@ -16,9 +16,9 @@
                 label="Before Constraint"
                 placeholder="Enter a constraint value"
                 prepend-icon="mdi-table-column-plus-before"
-                :captureAreaId="captureAreaId"
+                :capture-area-id="captureAreaId"
                 :regex="beforeConstraint"
-                :resetOptions="defaultBeforeConstraintsSettings"
+                :reset-options="defaultBeforeConstraintsSettings"
             />
         </div>
 
@@ -27,9 +27,9 @@
                 label="After Constraint"
                 placeholder="Enter a constraint value"
                 prepend-icon="mdi-table-column-plus-after"
-                :captureAreaId="captureAreaId"
+                :capture-area-id="captureAreaId"
                 :regex="afterConstraint"
-                :resetOptions="defaultAfterConstraintsSettings"
+                :reset-options="defaultAfterConstraintsSettings"
             />
         </div>
 

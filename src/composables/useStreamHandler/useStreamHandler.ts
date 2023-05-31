@@ -2,9 +2,9 @@ import { ref } from 'vue';
 import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
 
 const currentSelectedSource = ref<MediaStream | undefined>();
-const desktopCaptureSources = ref<Object[]>([]);
-const onlyScreenSources = ref<Object[]>([]);
-const onlyApplicationSources = ref<Object[]>([]);
+const desktopCaptureSources = ref<object[]>([]);
+const onlyScreenSources = ref<object[]>([]);
+const onlyApplicationSources = ref<object[]>([]);
 const mediaStreamsMap = ref<Record<string, MediaStream>>({});
 const isLoadingScreensAndApplications = ref(false);
 

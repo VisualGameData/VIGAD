@@ -95,7 +95,6 @@ setTimeout(removeLoading, 4999);
 
 // ! Working with informations from the main process and the renderer process
 const { contextBridge, ipcRenderer } = require('electron');
-const remote = require('@electron/remote/main');
 
 contextBridge.exposeInMainWorld('electronAPI', {
     getMedia: () => {

@@ -61,7 +61,7 @@ export class Vigad {
         top: number,
         left: number
     ): number {
-        let ca = new CaptureArea(width, height, top, left);
+        const ca = new CaptureArea(width, height, top, left);
         this.captureAreas.push(ca);
         ca.setId(this.captureAreas.length - 1);
         this.tesseractHandler.enableCaptureArea(ca);
@@ -107,8 +107,8 @@ export class Vigad {
                                 value: { ca_id: number; data: string },
                                 index: number
                             ) => {
-                                let ca = this.getCaptureArea(value.ca_id);
-                                let regexGrp = ca.getRegexGroups()[0];
+                                const ca = this.getCaptureArea(value.ca_id);
+                                const regexGrp = ca.getRegexGroups()[0];
                                 if (
                                     regexGrp
                                         .getConstraintRegex()[0]

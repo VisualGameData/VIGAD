@@ -75,12 +75,14 @@ export class TesseractHandler {
      */
     public async run(
         stream: MediaStream,
+        // eslint-disable-next-line @typescript-eslint/ban-types
         callback: Function,
         previewWidth: number,
         previewHeight: number
     ): Promise<void> {
         if (!this.running) {
             this.running = true;
+            // eslint-disable-next-line no-async-promise-executor
             await new Promise(async () => {
                 const scheduler = createScheduler();
                 this.worker.forEach((worker) => {
@@ -111,7 +113,7 @@ export class TesseractHandler {
 
                     // create rectangles from capture areas
                     const rectangles = this.enabledCaptureAreas.map((ca) => {
-                        let streamScales = ca.getStreamScales(
+                        const streamScales = ca.getStreamScales(
                             stream,
                             previewWidth,
                             previewHeight

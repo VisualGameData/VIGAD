@@ -1,6 +1,6 @@
 <template>
     <ViewComponent title="Regex" :loading="false">
-        <template v-slot:actions>
+        <template #actions>
             <v-btn
                 class="rounded-pill"
                 prepend-icon="mdi-plus"
@@ -9,10 +9,9 @@
                 >Add Capture Area</v-btn
             >
         </template>
-        <template v-slot:default>
+        <template #default>
             <v-expansion-panels v-if="captureAreas.length !== 0" multiple>
                 <v-expansion-panel
-                    v-if="isRerendering"
                     v-for="captureArea in captureAreas"
                     :key="captureArea.getId()"
                 >

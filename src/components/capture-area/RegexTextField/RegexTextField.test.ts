@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { ref } from 'vue';
-import { shallowMount, mount } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import RegexTextField from '@/components/capture-area/RegexTextField/RegexTextField.vue';
 import { Vigad } from '@/proc/Vigad';
 import {

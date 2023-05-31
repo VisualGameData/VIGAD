@@ -143,10 +143,10 @@ export abstract class Regex {
      * @return string[]
      */
     public genMatches(max: number = this.matchesNum) {
-        let regLev0: string[] = [];
-        let randexp = new RandExp(this.regex);
+        const regLev0: string[] = [];
+        const randexp = new RandExp(this.regex);
         for (let i = 0; i < max; i++) {
-            let exp = randexp.gen();
+            const exp = randexp.gen();
             if (!regLev0.includes(exp)) {
                 regLev0.push(exp);
             } else {
@@ -164,9 +164,8 @@ export abstract class Regex {
     private getAllSubstrings(
         str: string
     ): { index: number; element: string }[] {
-        var i,
-            j,
-            result = [];
+        let i, j;
+        const result = [];
 
         for (i = 0; i < str.length; i++) {
             for (j = i + 1; j < str.length + 1; j++) {
@@ -189,7 +188,7 @@ export abstract class Regex {
         switch (this.matching) {
             case Matching.EXACT:
                 this.substrings.every((element) => {
-                    let exactMatch = element.element.match(this.regex);
+                    const exactMatch = element.element.match(this.regex);
                     if (
                         exactMatch !== null &&
                         bestMatch.match.element.length < exactMatch[0].length
@@ -354,8 +353,8 @@ export abstract class Regex {
      * @param before: boolean
      * @return number
      */
-    private indexOfFirst(data: string, before: boolean = false): number {
-        let match = data.match(this.regex);
+    private indexOfFirst(data: string, before = false): number {
+        const match = data.match(this.regex);
         if (!match) {
             return -1;
         }

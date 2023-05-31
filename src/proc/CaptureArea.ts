@@ -1,11 +1,11 @@
 import { RegexGroup } from './regex/RegexGroup';
 
 export class CaptureArea {
-    private id: number = 0;
-    private width: number = 0;
-    private height: number = 0;
-    private top: number = 0;
-    private left: number = 0;
+    private id = 0;
+    private width = 0;
+    private height = 0;
+    private top = 0;
+    private left = 0;
     private regexGroups: RegexGroup[] = [];
     private enabled: boolean;
 
@@ -72,16 +72,16 @@ export class CaptureArea {
         previewWidth: number,
         previewHeight: number
     ): { width: number; height: number; left: number; top: number } {
-        let streamWidth = stream.getVideoTracks()[0].getSettings().width;
-        let streamHeight = stream.getVideoTracks()[0].getSettings().height;
+        const streamWidth = stream.getVideoTracks()[0].getSettings().width;
+        const streamHeight = stream.getVideoTracks()[0].getSettings().height;
 
-        let scaleX = streamWidth! / previewWidth;
-        let scaleY = streamHeight! / previewHeight;
+        const scaleX = streamWidth! / previewWidth;
+        const scaleY = streamHeight! / previewHeight;
 
-        let scaledWidth = this.width * scaleX;
-        let scaledHeight = this.height * scaleY;
-        let scaledLeft = this.left * scaleX;
-        let scaledTop = this.top * scaleY;
+        const scaledWidth = this.width * scaleX;
+        const scaledHeight = this.height * scaleY;
+        const scaledLeft = this.left * scaleX;
+        const scaledTop = this.top * scaleY;
 
         return {
             width: scaledWidth,

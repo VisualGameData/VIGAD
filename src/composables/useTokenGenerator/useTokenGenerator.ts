@@ -38,7 +38,7 @@ export default function useTokenGenerator() {
      * Generate a random token using crypto module in Node.js or browser depending on the environment (Node.js or browser) - browser for application and Node.js for tests and GitHub Actions
      */
     const generateToken = (
-        lenght: number = 32,
+        lenght = 32,
         alphabet: string = characterSet
     ): string => {
         let generatedToken = '';

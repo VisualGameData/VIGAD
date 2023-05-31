@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest';
 import useClipboard from '@/composables/useClipboard/useClipboard';
-import clipboard from 'clipboardy';
 
 describe('useClipboard Composable', () => {
     const { clipboardText, writeClipboardText, readClipboardText } =

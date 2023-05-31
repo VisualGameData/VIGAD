@@ -7,14 +7,13 @@ module.exports = {
     },
     plugins: ['vue', 'vuetify', '@typescript-eslint', 'prettier'],
     extends: [
-        'plugin:vue/vue3-recommended',
+        'eslint:recommended',
         'plugin:vue/base',
+        'plugin:vue/vue3-recommended',
         'plugin:vuetify/base',
         'plugin:vuetify/recommended',
-        'eslint:recommended',
         'plugin:@typescript-eslint/recommended',
         'plugin:prettier/recommended',
-        'prettier',
     ],
     parser: 'vue-eslint-parser',
     parserOptions: {
@@ -27,7 +26,6 @@ module.exports = {
         'vue/script-setup-uses-vars': 'off',
         '@typescript-eslint/no-var-requires': 'off',
         '@typescript-eslint/no-explicit-any': 'warn',
-        'prettier/prettier': 'error',
         'grid-unknown-attributes': 'off',
     },
 };

@@ -164,7 +164,9 @@ export abstract class Regex {
     private getAllSubstrings(
         str: string
     ): { index: number; element: string }[] {
-        var i, j, result = [];
+        var i,
+            j,
+            result = [];
 
         for (i = 0; i < str.length; i++) {
             for (j = i + 1; j < str.length + 1; j++) {
@@ -204,7 +206,11 @@ export abstract class Regex {
                 });
                 break;
             case Matching.APPROX:
-                if (this.generatedMatches.length === 0 || this.lastRegex.toString() !== this.regex.toString() || this.matchesNum !== this.lastMatchesNum) {
+                if (
+                    this.generatedMatches.length === 0 ||
+                    this.lastRegex.toString() !== this.regex.toString() ||
+                    this.matchesNum !== this.lastMatchesNum
+                ) {
                     this.generatedMatches = this.genMatches();
                     this.lastRegex = this.regex;
                     this.lastMatchesNum = this.matchesNum;

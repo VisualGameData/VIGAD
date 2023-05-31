@@ -1,4 +1,4 @@
-import { RegexGroup } from "./regex/RegexGroup";
+import { RegexGroup } from './regex/RegexGroup';
 
 export class CaptureArea {
     private id: number = 0;
@@ -9,7 +9,12 @@ export class CaptureArea {
     private regexGroups: RegexGroup[] = [];
     private enabled: boolean;
 
-    public constructor(width:number, height:number, top:number, left:number) {
+    public constructor(
+        width: number,
+        height: number,
+        top: number,
+        left: number
+    ) {
         this.width = width;
         this.height = height;
         this.top = top;
@@ -22,7 +27,7 @@ export class CaptureArea {
         return this.id;
     }
 
-    public setId(id:number) {
+    public setId(id: number) {
         this.id = id;
     }
 
@@ -30,7 +35,7 @@ export class CaptureArea {
         return this.width;
     }
 
-    public setWidth(width:number) {
+    public setWidth(width: number) {
         this.width = width;
     }
 
@@ -38,7 +43,7 @@ export class CaptureArea {
         return this.height;
     }
 
-    public setHeight(height:number) {
+    public setHeight(height: number) {
         this.height = height;
     }
 
@@ -46,7 +51,7 @@ export class CaptureArea {
         return this.top;
     }
 
-    public setTop(top:number) {
+    public setTop(top: number) {
         this.top = top;
     }
 
@@ -54,7 +59,7 @@ export class CaptureArea {
         return this.left;
     }
 
-    public setLeft(left:number) {
+    public setLeft(left: number) {
         this.left = left;
     }
 
@@ -62,7 +67,11 @@ export class CaptureArea {
         return this.regexGroups;
     }
 
-    public getStreamScales(stream: MediaStream, previewWidth: number, previewHeight: number): {width: number, height: number, left: number, top: number} {
+    public getStreamScales(
+        stream: MediaStream,
+        previewWidth: number,
+        previewHeight: number
+    ): { width: number; height: number; left: number; top: number } {
         let streamWidth = stream.getVideoTracks()[0].getSettings().width;
         let streamHeight = stream.getVideoTracks()[0].getSettings().height;
 
@@ -74,6 +83,11 @@ export class CaptureArea {
         let scaledLeft = this.left * scaleX;
         let scaledTop = this.top * scaleY;
 
-        return {width: scaledWidth, height: scaledHeight, left: scaledLeft, top: scaledTop};
+        return {
+            width: scaledWidth,
+            height: scaledHeight,
+            left: scaledLeft,
+            top: scaledTop,
+        };
     }
 }

@@ -16,18 +16,22 @@ A common use case would be for example to extract the players health points from
 Overall Vigad offers a wide range of use cases, even outside of gaming.
 
 ## Compatibility
+
 Vigad has been tested on the following platforms:
 
-- Windows 10 and newer
-- Ubuntu 22.04 (likely to work on similar distributions as well)
-- Mac (13.3.1(a))
+-   Windows 10 and newer
+-   Ubuntu 22.04 (likely to work on similar distributions as well)
+-   Mac (13.3.1(a))
 
 ## Installation
+
 Download the executable for the latest version [here](https://github.com/VisualGameData/VIGAD/releases/latest/) (Win: .exe, Linux: .AppImage, Mac: .dmg)
 
 Note: In order to run the .AppImage executable, fuse is required.
-- Install fuse:
-> apt install fuse
+
+-   Install fuse:
+    > apt install fuse
 
 ## Contributors
+
 A big thank you goes to all contributors of ideas, code, docs and overall support!

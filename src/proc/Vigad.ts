@@ -99,30 +99,75 @@ export class Vigad {
         if (!this.intervalRunning) {
             this.tesseractInterval = setInterval(() => {
                 const { currentSelectedSource } = useStreamHandler();
-                this.tesseractHandler.run(currentSelectedSource.value!, (result: { ca_id: number, data: string }[]) => {
-                    result.forEach((value: { ca_id: number, data: string }, index: number) => {
-                        let ca = this.getCaptureArea(value.ca_id);
-                        let regexGrp = ca.getRegexGroups()[0];
-                        if (regexGrp.getConstraintRegex()[0].getRegex().toString() === "/(?:)/" && regexGrp.getConstraintRegex()[1].getRegex().toString() === "/(?:)/") {
-                            this.regexHandler.findValue(value.data, regexGrp.getValueRegex());
-                        } else if (regexGrp.getConstraintRegex()[0].getRegex().toString() === "/(?:)/") {
-                            this.regexHandler.findValue(value.data, regexGrp.getValueRegex(), regexGrp.getConstraintRegex()[1]);
-                        } else if (regexGrp.getConstraintRegex()[1].getRegex().toString() === "/(?:)/") {
-                            this.regexHandler.findValue(value.data, regexGrp.getValueRegex(), regexGrp.getConstraintRegex()[0]);
-                        } else {
-                            this.regexHandler.findValue(value.data, regexGrp.getValueRegex(), regexGrp.getConstraintRegex()[0], regexGrp.getConstraintRegex()[1]);
-                        }
-                    });
-                }, this.previewWidth, this.previewHeight);
+                this.tesseractHandler.run(
+                    currentSelectedSource.value!,
+                    (result: { ca_id: number; data: string }[]) => {
+                        result.forEach(
+                            (
+                                value: { ca_id: number; data: string },
+                                index: number
+                            ) => {
+                                let ca = this.getCaptureArea(value.ca_id);
+                                let regexGrp = ca.getRegexGroups()[0];
+                                if (
+                                    regexGrp
+                                        .getConstraintRegex()[0]
+                                        .getRegex()
+                                        .toString() === '/(?:)/' &&
+                                    regexGrp
+                                        .getConstraintRegex()[1]
+                                        .getRegex()
+                                        .toString() === '/(?:)/'
+                                ) {
+                                    this.regexHandler.findValue(
+                                        value.data,
+                                        regexGrp.getValueRegex()
+                                    );
+                                } else if (
+                                    regexGrp
+                                        .getConstraintRegex()[0]
+                                        .getRegex()
+                                        .toString() === '/(?:)/'
+                                ) {
+                                    this.regexHandler.findValue(
+                                        value.data,
+                                        regexGrp.getValueRegex(),
+                                        regexGrp.getConstraintRegex()[1]
+                                    );
+                                } else if (
+                                    regexGrp
+                                        .getConstraintRegex()[1]
+                                        .getRegex()
+                                        .toString() === '/(?:)/'
+                                ) {
+                                    this.regexHandler.findValue(
+                                        value.data,
+                                        regexGrp.getValueRegex(),
+                                        regexGrp.getConstraintRegex()[0]
+                                    );
+                                } else {
+                                    this.regexHandler.findValue(
+                                        value.data,
+                                        regexGrp.getValueRegex(),
+                                        regexGrp.getConstraintRegex()[0],
+                                        regexGrp.getConstraintRegex()[1]
+                                    );
+                                }
+                            }
+                        );
+                    },
+                    this.previewWidth,
+                    this.previewHeight
+                );
             }, 500);
             this.intervalRunning = true;
-            console.log("started tesseract");
+            console.log('started tesseract');
         }
     }
 
     public stopTesseract(): void {
         clearInterval(this.tesseractInterval);
         this.intervalRunning = false;
-        console.log("stopped tesseract");
+        console.log('stopped tesseract');
     }
 }

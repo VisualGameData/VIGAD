@@ -72,7 +72,7 @@ watch(currentSelectedSource, (newSource) => {
 });
 
 /**
- * Get singelton instance reference to 
+ * Get singelton instance reference to
  */
 const vigad = ref(Vigad.getInstance());
 

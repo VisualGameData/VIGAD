@@ -101,7 +101,7 @@ export class Vigad {
     public startTesseract(): void {
         if (!this.intervalRunning) {
             this.tesseractInterval = setInterval(() => {
-              const { currentSelectedSource } = useStreamHandler();
+                const { currentSelectedSource } = useStreamHandler();
                 this.tesseractHandler.run(
                     currentSelectedSource.value!,
                     async (result: { ca_id: number; data: string }[]) => {
@@ -173,16 +173,11 @@ export class Vigad {
                                 streamRegexAndCaptureAreaSettings.value)
                         ) {
                             for (let i = 0; i < result.length; i++) {
-                                const postResult = await post(
+                                await post(
                                     `session/abc/data/ca/${result[i].ca_id}`,
                                     {
                                         data: `${result[i].data}`,
                                     }
-                                );
-                                console.log('Post', postResult);
-                                console.log(
-                                    'Get',
-                                    await get('session/abc/data')
                                 );
                             }
                         } else {

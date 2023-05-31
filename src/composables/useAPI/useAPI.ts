@@ -7,10 +7,10 @@ export default function useAPI() {
     /**
      * Perform a GET request to the specified API endpoint.
      * @param {string} endpoint - The API endpoint to fetch data from.
-     * @returns {Promise<ApiResponse>} A Promise that resolves to the API response.
+     * @returns {Promise<object>} A Promise that resolves to the API response.
      * @throws {Error} If the request fails or the response is not OK.
      */
-    const get = async (endpoint: string): Promise<ApiResponse> => {
+    const get = async (endpoint: string): Promise<object> => {
         try {
             const url: string = `${import.meta.env.VITE_BASEURL}/${endpoint}`;
             const response = await fetch(url, {
@@ -27,7 +27,7 @@ export default function useAPI() {
                 throw new Error('Failed to fetch data');
             }
 
-            return (await response.json()) as ApiResponse;
+            return await response.json();
         } catch (error) {
             useNotificationSystem().createErrorNotification({
                 title: 'Error occurred while fetching data',
@@ -41,13 +41,10 @@ export default function useAPI() {
      * Perform a POST request to the specified API endpoint.
      * @param {string} endpoint - The API endpoint to post data to.
      * @param {object} data - The data to be posted to the API.
-     * @returns {Promise<ApiResponse>} A Promise that resolves to the API response.
+     * @returns {Promise<object>} A Promise that resolves to the API response.
      * @throws {Error} If the request fails or the response is not OK.
      */
-    const post = async (
-        endpoint: string,
-        data: object
-    ): Promise<ApiResponse> => {
+    const post = async (endpoint: string, data: object): Promise<object> => {
         try {
             const url: string = `${import.meta.env.VITE_BASEURL}/${endpoint}`;
             const response = await fetch(url, {
@@ -66,7 +63,7 @@ export default function useAPI() {
                 throw new Error('Failed to post data');
             }
 
-            return (await response.json()) as ApiResponse;
+            return await response.json();
         } catch (error) {
             useNotificationSystem().createErrorNotification({
                 title: 'Error occurred while posting data',
@@ -80,8 +77,4 @@ export default function useAPI() {
         get,
         post,
     };
-}
-
-interface ApiResponse {
-    // Define the structure of your API response here
 }

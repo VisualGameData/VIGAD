@@ -14,7 +14,11 @@
         "build:mac": "vue-tsc --noEmit && vite build && electron-builder --mac --publish never",
         "build:linux": "vue-tsc --noEmit && vite build && electron-builder --linux --publish never",
         "build:all": "vue-tsc --noEmit && vite build && electron-builder --mac --win --linux --publish never",
-        "gen-uml": "tplant --input src/proc/**/*.ts --output docs/proc-uml.svg -A"
+        "gen-uml": "tplant --input src/proc/**/*.ts --output docs/proc-uml.svg -A",
+        "lint": "npm run lint:ts && npm run lint:prettier",
+        "lint:ts": "eslint --ext \".ts,.vue\" --ignore-path .gitignore .",
+        "lint:prettier": "prettier --check .",
+        "lint:fix": "prettier --write --list-different . && npm run lint:ts --fix"
     },
     "engines": {
         "node": "^14.18.0 || >=16.0.0"
@@ -33,6 +37,7 @@
     ],
     "devDependencies": {
         "@types/clipboardy": "^2.0.1",
+        "@types/node": "^20.2.5",
         "@typescript-eslint/eslint-plugin": "^5.59.0",
         "@typescript-eslint/parser": "^5.59.0",
         "@vitejs/plugin-vue": "^4.1.0",
@@ -40,8 +45,11 @@
         "@vitest/ui": "^0.30.1",
         "electron": "^24.1.2",
         "electron-builder": "^23.6.0",
-        "eslint": "^8.39.0",
-        "eslint-plugin-vue": "^9.11.0",
+        "eslint": "^8.41.0",
+        "eslint-config-prettier": "^8.8.0",
+        "eslint-plugin-prettier": "^4.2.1",
+        "eslint-plugin-vue": "^9.14.1",
+        "eslint-plugin-vuetify": "^2.0.1",
         "happy-dom": "^9.9.2",
         "prettier": "^2.8.8",
         "sass": "^1.62.0",
@@ -49,6 +57,7 @@
         "vite": "^4.3.1",
         "vite-plugin-electron": "^0.11.2",
         "vite-plugin-electron-renderer": "^0.14.1",
+        "vite-plugin-eslint": "^1.8.1",
         "vitest": "^0.30.1",
         "vue": "^3.2.47",
         "vue-cli-plugin-vuetify": "^2.5.8",

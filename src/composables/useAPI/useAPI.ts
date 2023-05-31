@@ -4,9 +4,6 @@ import useNotificationSystem from '@/composables/useNotificationSystem/useNotifi
  * API usage composable
  */
 export default function useAPI() {
-    const baseUrl: string = 'https://api.example.com'; // Replace with your API base URL
-    const bearerToken: string = 'YOUR_BEARER_TOKEN'; // Replace with your Bearer token
-
     /**
      * Perform a GET request to the specified API endpoint.
      * @param {string} endpoint - The API endpoint to fetch data from.
@@ -15,11 +12,11 @@ export default function useAPI() {
      */
     const get = async (endpoint: string): Promise<ApiResponse> => {
         try {
-            const url: string = `${baseUrl}/${endpoint}`;
+            const url: string = `${import.meta.env.VITE_BASEURL}/${endpoint}`;
             const response = await fetch(url, {
                 method: 'GET',
                 headers: {
-                    Authorization: `Bearer ${bearerToken}`,
+                    Authorization: `Bearer ${import.meta.env.VITE_BEARERTOKEN}`,
                 },
             });
 
@@ -52,12 +49,12 @@ export default function useAPI() {
         data: object
     ): Promise<ApiResponse> => {
         try {
-            const url: string = `${baseUrl}/${endpoint}`;
+            const url: string = `${import.meta.env.VITE_BASEURL}/${endpoint}`;
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${bearerToken}`,
+                    Authorization: `Bearer ${import.meta.env.VITE_BEARERTOKEN}`,
                 },
                 body: JSON.stringify(data),
             });

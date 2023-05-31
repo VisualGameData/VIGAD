@@ -51,7 +51,7 @@ import useNotificationSystem from '@/composables/useNotificationSystem/useNotifi
 /**
  * Use the useForceRerender composable to get the isRerendering state and the forceRerender functions
  */
-const { isRerendering, forceRerender } = useForceRerender();
+const { forceRerender } = useForceRerender();
 
 /**
  * Get singelton instance reference to vigad

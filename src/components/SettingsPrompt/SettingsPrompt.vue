@@ -198,7 +198,7 @@ watch(
 
 watch(
     () => accessToken.value,
-    (value) => {
+    () => {
         validate();
     }
 );

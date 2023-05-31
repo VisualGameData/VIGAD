@@ -99,52 +99,56 @@ export class TesseractHandler {
                     const canvas = document.createElement('canvas');
                     canvas.height = video.videoHeight;
                     canvas.width = video.videoWidth;
-                    canvas
-                        .getContext('2d')!
-                        .drawImage(
+                    const context = canvas.getContext('2d');
+                    if (context) {
+                        context.drawImage(
                             video,
                             0,
                             0,
                             video.videoWidth,
                             video.videoHeight
                         );
-                    const img = canvas.toDataURL('image/png');
-                    video.pause();
+                        const img = canvas.toDataURL('image/png');
+                        video.pause();
 
-                    // create rectangles from capture areas
-                    const rectangles = this.enabledCaptureAreas.map((ca) => {
-                        const streamScales = ca.getStreamScales(
-                            stream,
-                            previewWidth,
-                            previewHeight
+                        // create rectangles from capture areas
+                        const rectangles = this.enabledCaptureAreas.map(
+                            (ca) => {
+                                const streamScales = ca.getStreamScales(
+                                    stream,
+                                    previewWidth,
+                                    previewHeight
+                                );
+                                return {
+                                    id: ca.getId(),
+                                    left: streamScales.left,
+                                    top: streamScales.top,
+                                    width: streamScales.width,
+                                    height: streamScales.height,
+                                };
+                            }
                         );
-                        return {
-                            id: ca.getId(),
-                            left: streamScales.left,
-                            top: streamScales.top,
-                            width: streamScales.width,
-                            height: streamScales.height,
-                        };
-                    });
 
-                    // run tesseract
-                    (async () => {
-                        const results: { ca_id: number; data: string }[] = [];
-                        await Promise.all(
-                            rectangles.map((rectangle) =>
-                                scheduler
-                                    .addJob('recognize', img, { rectangle })
-                                    .then((x) =>
-                                        results.push({
-                                            ca_id: rectangle.id,
-                                            data: x.data.text,
-                                        })
-                                    )
-                            )
-                        );
-                        callback(results);
-                        this.running = false;
-                    })();
+                        // run tesseract
+                        (async () => {
+                            const results: { ca_id: number; data: string }[] =
+                                [];
+                            await Promise.all(
+                                rectangles.map((rectangle) =>
+                                    scheduler
+                                        .addJob('recognize', img, { rectangle })
+                                        .then((x) =>
+                                            results.push({
+                                                ca_id: rectangle.id,
+                                                data: x.data.text,
+                                            })
+                                        )
+                                )
+                            );
+                            callback(results);
+                            this.running = false;
+                        })();
+                    }
                 });
             });
         }

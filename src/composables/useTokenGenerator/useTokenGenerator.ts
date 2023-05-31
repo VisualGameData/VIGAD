@@ -46,6 +46,8 @@ export default function useTokenGenerator() {
         // Checks if the environment is Node.js
         if (typeof process !== 'undefined' && process?.versions?.node) {
             // generate random bytes using crypto module in Node.js
+
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
             const { randomBytes } = require('crypto');
             const sourceBytes = randomBytes(lenght);
             generatedToken = Array.from(sourceBytes)

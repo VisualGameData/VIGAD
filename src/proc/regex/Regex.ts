@@ -95,23 +95,23 @@ export abstract class Regex {
      * @param data
      * @return void
      */
-    public genSubstrings(data: string) {
+    public genSubstrings(data: string | null | undefined) {
         switch (this.slicing) {
             case Slicing.SUBSTR:
-                this.substrings = this.getAllSubstrings(data!);
+                this.substrings = this.getAllSubstrings(data || '');
                 break;
             case Slicing.SPACES:
                 this.substrings = [];
-                data.split(' ').forEach((element) => {
+                data?.split(' ').forEach((element) => {
                     this.substrings.push({
-                        index: this.indexOfFirst(data),
+                        index: this.indexOfFirst(data || ''),
                         element: element,
                     });
                 });
                 break;
             case Slicing.ENTIRE_STR:
                 this.substrings = [];
-                this.substrings.push({ index: 0, element: data });
+                this.substrings.push({ index: 0, element: data || '' });
                 break;
         }
     }
@@ -359,10 +359,10 @@ export abstract class Regex {
             return -1;
         }
         let index = match.index;
-        if (before) {
-            index! += match[0].length;
+        if (index !== undefined && before) {
+            index += match[0].length;
         }
-        return index!;
+        return index !== undefined ? index : -1;
     }
 }
 

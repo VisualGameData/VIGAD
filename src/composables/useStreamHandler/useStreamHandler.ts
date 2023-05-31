@@ -88,7 +88,10 @@ export default function useStreamHandler() {
 
         stream.addEventListener('inactive', () => {
             // Check if the stream is the currently previewed stream
-            if (stream.id === currentSelectedSource.value!.id) {
+            if (
+                currentSelectedSource.value &&
+                stream.id === currentSelectedSource.value.id
+            ) {
                 setDefaultPreviewVideoStream();
             }
             fetchAllDesktopCapturableSources();
@@ -106,7 +109,7 @@ export default function useStreamHandler() {
         source: any
     ): Promise<MediaStream> => {
         // MediaStream Constraints
-        const constraints: any = {
+        const constraints: object = {
             video: {
                 mandatory: {
                     chromeMediaSource: 'desktop',

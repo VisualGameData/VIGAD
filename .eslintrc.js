@@ -23,9 +23,7 @@ module.exports = {
     },
     rules: {
         'vue/no-unused-vars': 'error',
-        'vue/script-setup-uses-vars': 'off',
-        '@typescript-eslint/no-var-requires': 'off',
-        '@typescript-eslint/no-explicit-any': 'warn',
-        'grid-unknown-attributes': 'off',
+        '@typescript-eslint/no-explicit-any': 'off',
+        'grid-unknown-attributes': 'off', // vuetify
     },
 };

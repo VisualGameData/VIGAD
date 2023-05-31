@@ -72,11 +72,21 @@ export class CaptureArea {
         previewWidth: number,
         previewHeight: number
     ): { width: number; height: number; left: number; top: number } {
-        const streamWidth = stream.getVideoTracks()[0].getSettings().width;
-        const streamHeight = stream.getVideoTracks()[0].getSettings().height;
+        const videoTrack = stream.getVideoTracks()[0];
+        if (!videoTrack) {
+            throw new Error('No video tracks found in the stream.');
+        }
 
-        const scaleX = streamWidth! / previewWidth;
-        const scaleY = streamHeight! / previewHeight;
+        const settings = videoTrack.getSettings();
+        const streamWidth = settings.width;
+        const streamHeight = settings.height;
+
+        if (streamWidth === undefined || streamHeight === undefined) {
+            throw new Error('Stream width or height is undefined.');
+        }
+
+        const scaleX = streamWidth / previewWidth;
+        const scaleY = streamHeight / previewHeight;
 
         const scaledWidth = this.width * scaleX;
         const scaledHeight = this.height * scaleY;

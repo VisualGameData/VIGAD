@@ -138,8 +138,8 @@ const valueRegex = ref(props.regex.getRegex().toString().slice(1, -1));
 watch(valueRegex, (newValue) => {
     try {
         // try to create a new regex with the new value to check if it is valid
-        const regex = new RegExp(newValue.toString());
-        props.regex.setRegex(regex.toString());
+        new RegExp(newValue.toString());
+        props.regex.setRegex(newValue.toString());
         isRegexValid.value = true;
     } catch (e) {
         // if the regex is not valid notify the user

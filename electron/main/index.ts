@@ -74,6 +74,7 @@ async function createWindow() {
         },
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const remoteMain = require('@electron/remote/main');
     remoteMain.initialize();
 
@@ -146,6 +147,7 @@ ipcMain.handle('open-win', (_, arg) => {
 });
 
 async function getScreen() {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const { desktopCapturer } = require('electron');
 
     try {

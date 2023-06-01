@@ -94,8 +94,8 @@ window.onmessage = (ev) => {
 setTimeout(removeLoading, 4999);
 
 // ! Working with informations from the main process and the renderer process
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { contextBridge, ipcRenderer } = require('electron');
-const remote = require('@electron/remote/main');
 
 contextBridge.exposeInMainWorld('electronAPI', {
     getMedia: () => {

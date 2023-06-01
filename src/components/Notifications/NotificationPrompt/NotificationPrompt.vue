@@ -1,9 +1,9 @@
 <template>
     <div
+        :ref="id"
         class="notification-prompt"
         :style="`--toast-duration: ${duration}s; --toast-color: ${notificationColor}`"
         @click.prevent="close"
-        :ref="id"
     >
         <div class="notification-body">
             <v-icon

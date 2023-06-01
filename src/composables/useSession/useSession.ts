@@ -1,6 +1,7 @@
 import { ref, Ref } from 'vue';
 import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
 
+const sessionToken = ref('');
 // Reactive variable to track session status
 const isSessionActive: Ref<boolean> = ref(false);
 
@@ -27,6 +28,7 @@ export default function useSession() {
     };
 
     return {
+        sessionToken,
         isSessionActive,
         startSession,
         stopSession,

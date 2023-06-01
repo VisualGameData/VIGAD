@@ -1,6 +1,7 @@
 import { CaptureArea } from './CaptureArea';
 import { RegexHandler } from './regex/RegexHandler';
 import { TesseractHandler } from './TesseractHandler';
+import DOMPurify from 'dompurify';
 import useSession from '@/composables/useSession/useSession';
 import useUploadData from '@/composables/useUploadData/useUploadData';
 import useAPI from '@/composables/useAPI/useAPI';
@@ -108,7 +109,7 @@ export class Vigad {
 
                 this.tesseractHandler.run(
                     currentSelectedSource.value,
-                    (result: { ca_id: number; data: string }[]) => {
+                    async (result: { ca_id: number; data: string }[]) => {
                         result.forEach(
                             (value: { ca_id: number; data: string }) => {
                                 const ca = this.getCaptureArea(value.ca_id);
@@ -156,9 +157,9 @@ export class Vigad {
                                 }
                             }
                         );
-                        // Uploading Data to the server
-                        const { isSessionActive } = useSession();
-                        const { get, post } = useAPI();
+                        // Upload Data to the server
+                        const { sessionToken, isSessionActive } = useSession();
+                        const { post } = useAPI();
                         const {
                             streamData,
                             streamRegexAndCaptureAreaSettings,
@@ -171,10 +172,16 @@ export class Vigad {
                                 streamRegexAndCaptureAreaSettings.value)
                         ) {
                             for (let i = 0; i < result.length; i++) {
+                                const sanitizedData = DOMPurify.sanitize(
+                                    result[i].data
+                                ); // Sanitize the data
+
                                 await post(
-                                    `session/abc/data/ca/${result[i].ca_id}`,
+                                    `session/${encodeURIComponent(
+                                        sessionToken.value
+                                    )}/data/ca/${result[i].ca_id}`,
                                     {
-                                        data: `${result[i].data}`,
+                                        data: sanitizedData,
                                     }
                                 );
                             }

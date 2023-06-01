@@ -12,7 +12,7 @@ export default function useAPI() {
      */
     const get = async (endpoint: string): Promise<object> => {
         try {
-            const url: string = `${import.meta.env.VITE_BASEURL}/${endpoint}`;
+            const url = `${import.meta.env.VITE_BASEURL}/${endpoint}`;
             const response = await fetch(url, {
                 method: 'GET',
                 headers: {
@@ -46,7 +46,7 @@ export default function useAPI() {
      */
     const post = async (endpoint: string, data: object): Promise<object> => {
         try {
-            const url: string = `${import.meta.env.VITE_BASEURL}/${endpoint}`;
+            const url = `${import.meta.env.VITE_BASEURL}/${endpoint}`;
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {

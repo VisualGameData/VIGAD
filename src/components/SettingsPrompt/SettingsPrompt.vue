@@ -52,7 +52,7 @@
                 <v-list-item>
                     <v-list-item-title>
                         <v-text-field
-                            v-model="accessToken"
+                            v-model="sessionToken"
                             style="width: 450px"
                             class="pt-2"
                             variant="outlined"
@@ -76,7 +76,7 @@
                                             v-bind="props"
                                             icon="mdi-content-copy"
                                             @click="
-                                                copyToClipboard(accessToken)
+                                                copyToClipboard(sessionToken)
                                             "
                                         ></v-icon>
                                     </template>
@@ -151,7 +151,8 @@ import useSession from '@/composables/useSession/useSession';
 /**
  * Composables
  */
-const { isSessionActive, startSession, stopSession } = useSession();
+const { sessionToken, isSessionActive, startSession, stopSession } =
+    useSession();
 const { writeClipboardText } = useClipboard();
 const { defaultRules, generateValidToken } = useTokenGenerator();
 const { streamData, streamRegexAndCaptureAreaSettings } = useUploadData();
@@ -159,7 +160,6 @@ const { streamData, streamRegexAndCaptureAreaSettings } = useUploadData();
 /**
  * Data
  */
-const accessToken = ref('');
 const isAccessTokenValid = ref(false);
 const errorMessage: Ref<string[]> = ref([]);
 const tokenVisibility = ref(false);
@@ -174,24 +174,24 @@ watch(
     (value) => {
         if (value) {
             // generate token if empty
-            if (accessToken.value === '') {
+            if (sessionToken.value === '') {
                 regenerateAccessToken();
                 return;
             } else {
                 // try to validate token if not empty
                 errorMessage.value = Object.values(defaultRules)
-                    .map((rule) => rule(accessToken.value))
+                    .map((rule) => rule(sessionToken.value))
                     .filter((value) => typeof value === 'string') as string[];
             }
         } else {
             // reset validation state
             const isValid = Object.values(defaultRules).every(
-                (rule) => rule(accessToken.value) === true
+                (rule) => rule(sessionToken.value) === true
             );
 
             if (isAccessTokenValid.value === isValid) {
                 errorMessage.value = Object.values(defaultRules)
-                    .map((rule) => rule(accessToken.value))
+                    .map((rule) => rule(sessionToken.value))
                     .filter((value) => typeof value === 'string') as string[];
             }
         }
@@ -199,7 +199,7 @@ watch(
 );
 
 watch(
-    () => accessToken.value,
+    () => sessionToken.value,
     () => {
         validate();
     }
@@ -216,7 +216,7 @@ function toggleTokenVisibility() {
  * Function which will regenerate a new access token
  */
 async function regenerateAccessToken() {
-    accessToken.value = generateValidToken();
+    sessionToken.value = generateValidToken();
 }
 
 /**
@@ -224,13 +224,13 @@ async function regenerateAccessToken() {
  */
 function validate() {
     const isValid = Object.values(defaultRules).every(
-        (rule) => rule(accessToken.value) === true
+        (rule) => rule(sessionToken.value) === true
     );
 
     isAccessTokenValid.value = isValid;
 
     errorMessage.value = Object.values(defaultRules)
-        .map((rule) => rule(accessToken.value))
+        .map((rule) => rule(sessionToken.value))
         .filter((value) => typeof value === 'string') as string[];
 
     if (!isValid && isSessionActive.value) {
@@ -253,7 +253,7 @@ function validate() {
 function validateAccessToken() {
     // check if the access token is valid via the defaultRules
     const isValid = Object.values(defaultRules).every(
-        (rule) => rule(accessToken.value) === true
+        (rule) => rule(sessionToken.value) === true
     );
 
     if (isAccessTokenValid.value === isValid) {

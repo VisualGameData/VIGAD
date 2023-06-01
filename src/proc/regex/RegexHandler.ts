@@ -1,13 +1,10 @@
-import { ConstraintRegex } from "./ConstraintRegex";
-import { Slicing } from "./Regex";
-import { ValueRegex } from "./ValueRegex";
-import { StringSimilarity } from "../StringSimilarity";
+import { ConstraintRegex } from './ConstraintRegex';
+import { Slicing } from './Regex';
+import { ValueRegex } from './ValueRegex';
+import { StringSimilarity } from '../StringSimilarity';
 
 export class RegexHandler {
     private static instance: RegexHandler;
-
-    private constructor() {
-    }
 
     /**
      * This function gets the singelton instance of RegexHandler.ts
@@ -30,12 +27,16 @@ export class RegexHandler {
      * @param cRegexAfter
      * @return {rating: number, match: {index: number, element: string}}
      */
-    public findValue(data:string, valueRegex: ValueRegex, cRegexBefore?: ConstraintRegex, cRegexAfter?: ConstraintRegex): {rating: number, match: {index: number, element: string}} {
-
+    public findValue(
+        data: string,
+        valueRegex: ValueRegex,
+        cRegexBefore?: ConstraintRegex,
+        cRegexAfter?: ConstraintRegex
+    ): { rating: number; match: { index: number; element: string } } {
         // replace all occurences of \n in data with spaces
-        data = data.replace(/\n/g, " ");
+        data = data.replace(/\n/g, ' ');
 
-        let constraintRegex: ConstraintRegex[] = [];
+        const constraintRegex: ConstraintRegex[] = [];
         if (typeof cRegexBefore !== 'undefined') {
             constraintRegex.push(cRegexBefore);
         }
@@ -43,15 +44,21 @@ export class RegexHandler {
             constraintRegex.push(cRegexAfter);
         }
 
-        let allSubstrings: {index:number, element:string}[] = [];
-        let spacesSubstrings: {index:number, element:string}[] = [];
+        let allSubstrings: { index: number; element: string }[] = [];
+        let spacesSubstrings: { index: number; element: string }[] = [];
 
         // set required substrings for constraint regex & apply similarity conversion
         for (let i = 0; i < constraintRegex.length; i++) {
-            if (constraintRegex[i].getSlicing() === Slicing.SUBSTR && allSubstrings.length !== 0) {
-                constraintRegex[i].setSubstrings(allSubstrings.slice());   // clone array
-            } else if (constraintRegex[i].getSlicing() === Slicing.SPACES && spacesSubstrings.length !== 0) {
-                constraintRegex[i].setSubstrings(spacesSubstrings.slice());   // clone array
+            if (
+                constraintRegex[i].getSlicing() === Slicing.SUBSTR &&
+                allSubstrings.length !== 0
+            ) {
+                constraintRegex[i].setSubstrings(allSubstrings.slice()); // clone array
+            } else if (
+                constraintRegex[i].getSlicing() === Slicing.SPACES &&
+                spacesSubstrings.length !== 0
+            ) {
+                constraintRegex[i].setSubstrings(spacesSubstrings.slice()); // clone array
             } else {
                 constraintRegex[i].genSubstrings(data);
             }
@@ -73,27 +80,40 @@ export class RegexHandler {
         let highestLowIndex = 0;
         let hLIPlus = 0; // highestLowIndex plus length of match
         let lowestHighIndex = data.length;
-        constraintRegex.forEach(regex => {
+        constraintRegex.forEach((regex) => {
             switch (regex.getLocation()) {
-                case "Before":
-                    if (regex.getLastBestMatch().match.index >= highestLowIndex) {
+                case 'Before':
+                    if (
+                        regex.getLastBestMatch().match.index >= highestLowIndex
+                    ) {
                         highestLowIndex = regex.getLastBestMatch().match.index;
-                        hLIPlus = highestLowIndex + regex.getLastBestMatch().match.element.length;
+                        hLIPlus =
+                            highestLowIndex +
+                            regex.getLastBestMatch().match.element.length;
                     }
                     break;
-                case "After":
-                    if (regex.getLastBestMatch().match.index < lowestHighIndex) {
+                case 'After':
+                    if (
+                        regex.getLastBestMatch().match.index < lowestHighIndex
+                    ) {
                         lowestHighIndex = regex.getLastBestMatch().match.index;
                     }
                     break;
             }
         });
         // set required substrings for value regex & apply similarity conversion
-        if (highestLowIndex === 0 && lowestHighIndex === data.length) { // if no constraint regex
-            if (valueRegex.getSlicing() === Slicing.SUBSTR && allSubstrings.length !== 0) {
-                valueRegex.setSubstrings(allSubstrings.slice());   // clone array
-            } else if (valueRegex.getSlicing() === Slicing.SPACES && spacesSubstrings.length !== 0) {
-                valueRegex.setSubstrings(spacesSubstrings.slice());   // clone array
+        if (highestLowIndex === 0 && lowestHighIndex === data.length) {
+            // if no constraint regex
+            if (
+                valueRegex.getSlicing() === Slicing.SUBSTR &&
+                allSubstrings.length !== 0
+            ) {
+                valueRegex.setSubstrings(allSubstrings.slice()); // clone array
+            } else if (
+                valueRegex.getSlicing() === Slicing.SPACES &&
+                spacesSubstrings.length !== 0
+            ) {
+                valueRegex.setSubstrings(spacesSubstrings.slice()); // clone array
             } else {
                 valueRegex.genSubstrings(data);
             }
@@ -114,8 +134,8 @@ export class RegexHandler {
      * @param genMatches: string[]
      * @return {bestMatch: {target: string, rating: number}, ratings: {target: string, rating: number}[]}
      */
-    public static bestMatch(data:string, genMatches:string[]) {
-        let matches = StringSimilarity.findBestMatch(data, genMatches);
+    public static bestMatch(data: string, genMatches: string[]) {
+        const matches = StringSimilarity.findBestMatch(data, genMatches);
         return matches.bestMatch;
     }
 
@@ -125,15 +145,25 @@ export class RegexHandler {
      * @param regexMatches: string[]
      * @return {match: {index: number, element: string}, rating: number}
      */
-    public static approxMatching(substrings:{index:number, element:string}[], regexMatches:string[]): {match: {index: number, element: string}, rating: number} {
+    public static approxMatching(
+        substrings: { index: number; element: string }[],
+        regexMatches: string[]
+    ): { match: { index: number; element: string }; rating: number } {
         let highestRating = 0;
-        let highestRatingElem = {index:-1, element: ""};
-        substrings.every(element => {
-            let bestMatch = RegexHandler.bestMatch(element.element, regexMatches);
+        let highestRatingElem = { index: -1, element: '' };
+        substrings.every((element) => {
+            const bestMatch = RegexHandler.bestMatch(
+                element.element,
+                regexMatches
+            );
             if (bestMatch.rating > highestRating) {
                 highestRating = bestMatch.rating;
                 highestRatingElem = element;
-            } else if (bestMatch.rating == highestRating && element.element.length > highestRatingElem.element.length) { // accept longest element rather
+            } else if (
+                bestMatch.rating == highestRating &&
+                element.element.length > highestRatingElem.element.length
+            ) {
+                // accept longest element rather
                 highestRatingElem = element;
             }
             /*if (highestRating == 1) {
@@ -142,7 +172,6 @@ export class RegexHandler {
             return true;
         });
 
-        return {match: highestRatingElem, rating: highestRating};
+        return { match: highestRatingElem, rating: highestRating };
     }
-
 }

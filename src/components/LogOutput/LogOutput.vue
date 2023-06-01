@@ -8,7 +8,7 @@
             <p v-if="matchedElementsIsEmpty">Start capturing first!</p>
             <v-list v-else lines="three" disabled class="reverse">
                 <v-list-item v-for="(item, i) in matchedElements" :key="i">
-                    <template v-slot:prepend>
+                    <template #prepend>
                         <v-icon
                             :color="item.rating > 0 ? 'success' : 'error'"
                             icon="mdi-information"
@@ -59,6 +59,7 @@ const matchedElementsIsEmpty = computed(() => {
 
 const matchedElements = ref<MatchedElement[]>([]);
 
+// eslint-disable-next-line no-undef
 let timerId: string | number | NodeJS.Timeout | undefined;
 
 // watch for changes in isRunning and start/stop the timer

@@ -10,7 +10,7 @@
         width="700px"
         no-click-animation
     >
-        <template v-slot:activator="{ props }">
+        <template #activator="{ props }">
             <v-btn v-bind="props" prepend-icon="mdi-cog">
                 Session Settings
             </v-btn>
@@ -66,12 +66,12 @@
                             :type="tokenVisibility ? 'text' : 'password'"
                             :error="!validateAccessToken()"
                             :error-messages="errorMessage"
-                            @click:append-inner="toggleTokenVisibility()"
                             persistent-placeholder
+                            @click:append-inner="toggleTokenVisibility()"
                         >
-                            <template v-slot:append>
+                            <template #append>
                                 <v-tooltip location="bottom">
-                                    <template v-slot:activator="{ props }">
+                                    <template #activator="{ props }">
                                         <v-icon
                                             v-bind="props"
                                             icon="mdi-content-copy"
@@ -83,9 +83,9 @@
                                     Copy to clipboard
                                 </v-tooltip>
                             </template>
-                            <template v-slot:prepend>
+                            <template #prepend>
                                 <v-tooltip location="bottom">
-                                    <template v-slot:activator="{ props }">
+                                    <template #activator="{ props }">
                                         <v-icon
                                             v-bind="props"
                                             icon="mdi-refresh"
@@ -110,7 +110,7 @@
                     title="Captured Data"
                     subtitle="The server will have access to the streamed data"
                 >
-                    <template v-slot:prepend>
+                    <template #prepend>
                         <v-switch
                             v-model="streamData"
                             class="mr-4"
@@ -125,7 +125,7 @@
                     title="Regex & Capture Area Settings"
                     subtitle="The server will have access to the regex and capture area settings"
                 >
-                    <template v-slot:prepend>
+                    <template #prepend>
                         <v-switch
                             v-model="streamRegexAndCaptureAreaSettings"
                             class="mr-4"
@@ -200,7 +200,7 @@ watch(
 
 watch(
     () => accessToken.value,
-    (value) => {
+    () => {
         validate();
     }
 );

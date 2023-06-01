@@ -64,7 +64,7 @@ export class Vigad {
         top: number,
         left: number
     ): number {
-        let ca = new CaptureArea(width, height, top, left);
+        const ca = new CaptureArea(width, height, top, left);
         this.captureAreas.push(ca);
         ca.setId(this.captureAreas.length - 1);
         this.tesseractHandler.enableCaptureArea(ca);
@@ -102,58 +102,56 @@ export class Vigad {
         if (!this.intervalRunning) {
             this.tesseractInterval = setInterval(() => {
                 const { currentSelectedSource } = useStreamHandler();
+                if (!currentSelectedSource.value) {
+                    return;
+                }
+
                 this.tesseractHandler.run(
-                    currentSelectedSource.value!,
-                    async (result: { ca_id: number; data: string }[]) => {
+                    currentSelectedSource.value,
+                    (result: { ca_id: number; data: string }[]) => {
                         result.forEach(
-                            (
-                                value: { ca_id: number; data: string },
-                                index: number
-                            ) => {
-                                let ca = this.getCaptureArea(value.ca_id);
-                                let regexGrp = ca.getRegexGroups()[0];
+                            (value: { ca_id: number; data: string }) => {
+                                const ca = this.getCaptureArea(value.ca_id);
+                                const regexGrp = ca.getRegexGroups()[0];
+                                const constraintRegex0 =
+                                    regexGrp.getConstraintRegex()[0];
+                                const constraintRegex1 =
+                                    regexGrp.getConstraintRegex()[1];
+
                                 if (
-                                    regexGrp
-                                        .getConstraintRegex()[0]
-                                        .getRegex()
-                                        .toString() === '/(?:)/' &&
-                                    regexGrp
-                                        .getConstraintRegex()[1]
-                                        .getRegex()
-                                        .toString() === '/(?:)/'
+                                    constraintRegex0.getRegex().toString() ===
+                                        '/(?:)/' &&
+                                    constraintRegex1.getRegex().toString() ===
+                                        '/(?:)/'
                                 ) {
                                     this.regexHandler.findValue(
                                         value.data,
                                         regexGrp.getValueRegex()
                                     );
                                 } else if (
-                                    regexGrp
-                                        .getConstraintRegex()[0]
-                                        .getRegex()
-                                        .toString() === '/(?:)/'
+                                    constraintRegex0.getRegex().toString() ===
+                                    '/(?:)/'
                                 ) {
                                     this.regexHandler.findValue(
                                         value.data,
                                         regexGrp.getValueRegex(),
-                                        regexGrp.getConstraintRegex()[1]
+                                        constraintRegex1
                                     );
                                 } else if (
-                                    regexGrp
-                                        .getConstraintRegex()[1]
-                                        .getRegex()
-                                        .toString() === '/(?:)/'
+                                    constraintRegex1.getRegex().toString() ===
+                                    '/(?:)/'
                                 ) {
                                     this.regexHandler.findValue(
                                         value.data,
                                         regexGrp.getValueRegex(),
-                                        regexGrp.getConstraintRegex()[0]
+                                        constraintRegex0
                                     );
                                 } else {
                                     this.regexHandler.findValue(
                                         value.data,
                                         regexGrp.getValueRegex(),
-                                        regexGrp.getConstraintRegex()[0],
-                                        regexGrp.getConstraintRegex()[1]
+                                        constraintRegex0,
+                                        constraintRegex1
                                     );
                                 }
                             }

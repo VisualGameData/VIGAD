@@ -67,13 +67,11 @@
     "dependencies": {
         "@electron/remote": "^2.0.9",
         "@mdi/font": "^7.2.96",
-        "@types/dompurify": "^3.0.2",
         "@types/webfontloader": "^1.6.35",
         "@vue/test-utils": "^2.3.2",
         "@vueuse/components": "^10.1.2",
         "@vueuse/core": "^10.1.2",
         "clipboardy": "^3.0.0",
-        "dompurify": "^3.0.3",
         "randexp": "^0.5.3",
         "roboto-fontface": "^0.10.0",
         "tesseract.js": "^3.0.3",

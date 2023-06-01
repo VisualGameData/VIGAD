@@ -2,7 +2,6 @@ import { CaptureArea } from './CaptureArea';
 import { RegexHandler } from './regex/RegexHandler';
 import { TesseractHandler } from './TesseractHandler';
 import { MatchedElement } from './MatchedElement';
-import DOMPurify from 'dompurify';
 import useSession from '@/composables/useSession/useSession';
 import useUploadData from '@/composables/useUploadData/useUploadData';
 import useAPI from '@/composables/useAPI/useAPI';
@@ -173,10 +172,6 @@ export class Vigad {
                                 streamRegexAndCaptureAreaSettings.value)
                         ) {
                             for (let i = 0; i < result.length; i++) {
-                                const sanitizedData = DOMPurify.sanitize(
-                                    result[i].data
-                                ); // Sanitize the data
-
                                 const caBestMatch: MatchedElement =
                                     this.getCaptureArea(result[i].ca_id)
                                         .getRegexGroups()[0]
@@ -191,7 +186,7 @@ export class Vigad {
                                         rating: caBestMatch.rating,
                                         match: {
                                             index: caBestMatch.match.index,
-                                            element: sanitizedData,
+                                            element: result[i].data,
                                         },
                                     }
                                 );

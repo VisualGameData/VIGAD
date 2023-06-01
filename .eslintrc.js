@@ -1,23 +1,29 @@
 module.exports = {
+    root: true,
     env: {
+        node: true,
         browser: true,
         es2021: true,
     },
+    plugins: ['vue', 'vuetify', '@typescript-eslint', 'prettier'],
     extends: [
         'eslint:recommended',
-        'plugin:vue/essential',
+        'plugin:vue/base',
+        'plugin:vue/vue3-recommended',
+        'plugin:vuetify/base',
+        'plugin:vuetify/recommended',
         'plugin:@typescript-eslint/recommended',
-        'prettier/@typescript-eslint',
+        'plugin:prettier/recommended',
     ],
+    parser: 'vue-eslint-parser',
     parserOptions: {
         ecmaVersion: 'latest',
         parser: '@typescript-eslint/parser',
         sourceType: 'module',
     },
-    plugins: ['vue', '@typescript-eslint'],
     rules: {
-        // override/add rules settings here, such as:
         'vue/no-unused-vars': 'error',
-        'vue/script-setup-uses-vars': 'off',
+        '@typescript-eslint/no-explicit-any': 'off',
+        'grid-unknown-attributes': 'off', // vuetify
     },
 };

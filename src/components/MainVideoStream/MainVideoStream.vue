@@ -1,37 +1,38 @@
 <template>
     <div class="video-stream">
         <v-responsive id="stream" ref="stream" class="capture-area-selection">
-            <video preload="none" class="video" autoplay ref="videoRef"></video>
-            <VueDragResize
-                v-if="isRerendering"
-                v-for="captureArea in captureAreas"
-                :key="captureArea.getId()"
-                :stickSize="7"
-                :minw="10"
-                :minh="10"
-                contentClass="draggable-capture-area"
-                :w="captureArea.getWidth()"
-                :h="captureArea.getHeight()"
-                :x="captureArea.getLeft()"
-                :y="captureArea.getTop()"
-                :parentW="wParent"
-                :parentH="hParent"
-                :parentScaleX="1"
-                :parentScaleY="1"
-                :isActive="false"
-                :snapToGrid="false"
-                :aspectRatio="false"
-                :preventActiveBehavior="false"
-                :parentLimitation="true"
-                @resizing="changeSize($event, captureArea)"
-                @dragging="changePosition($event, captureArea)"
-                ref="drag"
-                class="center-text"
-            >
-                <v-tooltip activator="parent" location="top"
-                    >Capture area: {{ captureArea.getId() }}</v-tooltip
+            <video ref="videoRef" preload="none" class="video" autoplay></video>
+            <div v-if="isRerendering">
+                <VueDragResize
+                    v-for="captureArea in captureAreas"
+                    :key="captureArea.getId()"
+                    ref="drag"
+                    :stick-size="7"
+                    :minw="10"
+                    :minh="10"
+                    content-class="draggable-capture-area"
+                    :w="captureArea.getWidth()"
+                    :h="captureArea.getHeight()"
+                    :x="captureArea.getLeft()"
+                    :y="captureArea.getTop()"
+                    :parent-w="wParent"
+                    :parent-h="hParent"
+                    :parent-scale-x="1"
+                    :parent-scale-y="1"
+                    :is-active="false"
+                    :snap-to-grid="false"
+                    :aspect-ratio="false"
+                    :prevent-active-behavior="false"
+                    :parent-limitation="true"
+                    class="center-text"
+                    @resizing="changeSize($event, captureArea)"
+                    @dragging="changePosition($event, captureArea)"
                 >
-            </VueDragResize>
+                    <v-tooltip activator="parent" location="top"
+                        >Capture area: {{ captureArea.getId() }}</v-tooltip
+                    >
+                </VueDragResize>
+            </div>
         </v-responsive>
     </div>
 </template>
@@ -44,6 +45,7 @@ import useForceRerender from '@/composables/useForceRerender/useForceRerender';
 import { Rectangle } from './Rectangle';
 import useStreamHandler from '@/composables/useStreamHandler/useStreamHandler';
 import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import VueDragResize from 'vue3-drag-resize';
 
@@ -72,7 +74,7 @@ watch(currentSelectedSource, (newSource) => {
 });
 
 /**
- * Get singelton instance reference to 
+ * Get singelton instance reference to
  */
 const vigad = ref(Vigad.getInstance());
 

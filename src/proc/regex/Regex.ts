@@ -95,23 +95,23 @@ export abstract class Regex {
      * @param data
      * @return void
      */
-    public genSubstrings(data: string) {
+    public genSubstrings(data: string | null | undefined) {
         switch (this.slicing) {
             case Slicing.SUBSTR:
-                this.substrings = this.getAllSubstrings(data!);
+                this.substrings = this.getAllSubstrings(data || '');
                 break;
             case Slicing.SPACES:
                 this.substrings = [];
-                data.split(' ').forEach((element) => {
+                data?.split(' ').forEach((element) => {
                     this.substrings.push({
-                        index: this.indexOfFirst(data),
+                        index: this.indexOfFirst(data || ''),
                         element: element,
                     });
                 });
                 break;
             case Slicing.ENTIRE_STR:
                 this.substrings = [];
-                this.substrings.push({ index: 0, element: data });
+                this.substrings.push({ index: 0, element: data || '' });
                 break;
         }
     }
@@ -143,10 +143,10 @@ export abstract class Regex {
      * @return string[]
      */
     public genMatches(max: number = this.matchesNum) {
-        let regLev0: string[] = [];
-        let randexp = new RandExp(this.regex);
+        const regLev0: string[] = [];
+        const randexp = new RandExp(this.regex);
         for (let i = 0; i < max; i++) {
-            let exp = randexp.gen();
+            const exp = randexp.gen();
             if (!regLev0.includes(exp)) {
                 regLev0.push(exp);
             } else {
@@ -164,7 +164,8 @@ export abstract class Regex {
     private getAllSubstrings(
         str: string
     ): { index: number; element: string }[] {
-        var i, j, result = [];
+        let i, j;
+        const result = [];
 
         for (i = 0; i < str.length; i++) {
             for (j = i + 1; j < str.length + 1; j++) {
@@ -187,7 +188,7 @@ export abstract class Regex {
         switch (this.matching) {
             case Matching.EXACT:
                 this.substrings.every((element) => {
-                    let exactMatch = element.element.match(this.regex);
+                    const exactMatch = element.element.match(this.regex);
                     if (
                         exactMatch !== null &&
                         bestMatch.match.element.length < exactMatch[0].length
@@ -204,7 +205,11 @@ export abstract class Regex {
                 });
                 break;
             case Matching.APPROX:
-                if (this.generatedMatches.length === 0 || this.lastRegex.toString() !== this.regex.toString() || this.matchesNum !== this.lastMatchesNum) {
+                if (
+                    this.generatedMatches.length === 0 ||
+                    this.lastRegex.toString() !== this.regex.toString() ||
+                    this.matchesNum !== this.lastMatchesNum
+                ) {
                     this.generatedMatches = this.genMatches();
                     this.lastRegex = this.regex;
                     this.lastMatchesNum = this.matchesNum;
@@ -348,16 +353,16 @@ export abstract class Regex {
      * @param before: boolean
      * @return number
      */
-    private indexOfFirst(data: string, before: boolean = false): number {
-        let match = data.match(this.regex);
+    private indexOfFirst(data: string, before = false): number {
+        const match = data.match(this.regex);
         if (!match) {
             return -1;
         }
         let index = match.index;
-        if (before) {
-            index! += match[0].length;
+        if (index !== undefined && before) {
+            index += match[0].length;
         }
-        return index!;
+        return index !== undefined ? index : -1;
     }
 }
 

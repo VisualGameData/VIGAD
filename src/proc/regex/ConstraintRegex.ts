@@ -1,4 +1,4 @@
-import { Regex, Matching } from "./Regex";
+import { Regex, Matching } from './Regex';
 
 export class ConstraintRegex extends Regex {
     private location: Location;
@@ -16,10 +16,9 @@ export class ConstraintRegex extends Regex {
     public setLocation(location: Location): void {
         this.location = location;
     }
-
 }
 
 export enum Location {
-    BEFORE = "Before",
-    AFTER = "After"
+    BEFORE = 'Before',
+    AFTER = 'After',
 }

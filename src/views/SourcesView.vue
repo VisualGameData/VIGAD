@@ -1,16 +1,16 @@
 <template>
     <ViewComponent title="Sources" :loading="isLoadingScreensAndApplications">
-        <template v-slot:actions>
+        <template #actions>
             <v-btn
                 class="rounded-pill"
                 prepend-icon="mdi-refresh"
                 variant="tonal"
-                @click="fetchAllDesktopCapturableSources()"
                 :disabled="isLoadingScreensAndApplications"
+                @click="fetchAllDesktopCapturableSources()"
                 >Refresh</v-btn
             >
         </template>
-        <template v-slot:default>
+        <template #default>
             <v-tabs v-model="tabs" class="mb-4" color="primary" grow>
                 <v-tab width="50%" value="screens"> Screens </v-tab>
 
@@ -29,14 +29,14 @@
                                 class="windows-wrapper"
                             >
                                 <v-card
-                                    v-for="(source, index) in onlyScreenSources"
+                                    v-for="source in onlyScreenSources"
                                     :key="(source as any).id"
+                                    class="mb-2"
                                     @click="
                                         setPreviewVideoStream(
                                             mediaStreamsMap[(source as any).id]
                                         )
                                     "
-                                    class="mb-2"
                                 >
                                     <v-card-title>{{
                                         (source as any).name
@@ -58,16 +58,14 @@
                                 class="windows-wrapper"
                             >
                                 <v-card
-                                    v-for="(
-                                        source, index
-                                    ) in onlyApplicationSources"
+                                    v-for="source in onlyApplicationSources"
                                     :key="(source as any).id"
+                                    class="mb-2"
                                     @click="
                                         setPreviewVideoStream(
                                             mediaStreamsMap[(source as any).id]
                                         )
                                     "
-                                    class="mb-2"
                                 >
                                     <v-card-title>{{
                                         (source as any).name

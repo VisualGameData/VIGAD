@@ -2,9 +2,9 @@ import { ref } from 'vue';
 import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
 
 const currentSelectedSource = ref<MediaStream | undefined>();
-const desktopCaptureSources = ref<Object[]>([]);
-const onlyScreenSources = ref<Object[]>([]);
-const onlyApplicationSources = ref<Object[]>([]);
+const desktopCaptureSources = ref<object[]>([]);
+const onlyScreenSources = ref<object[]>([]);
+const onlyApplicationSources = ref<object[]>([]);
 const mediaStreamsMap = ref<Record<string, MediaStream>>({});
 const isLoadingScreensAndApplications = ref(false);
 
@@ -88,7 +88,10 @@ export default function useStreamHandler() {
 
         stream.addEventListener('inactive', () => {
             // Check if the stream is the currently previewed stream
-            if (stream.id === currentSelectedSource.value!.id) {
+            if (
+                currentSelectedSource.value &&
+                stream.id === currentSelectedSource.value.id
+            ) {
                 setDefaultPreviewVideoStream();
             }
             fetchAllDesktopCapturableSources();
@@ -106,7 +109,7 @@ export default function useStreamHandler() {
         source: any
     ): Promise<MediaStream> => {
         // MediaStream Constraints
-        const constraints: any = {
+        const constraints: object = {
             video: {
                 mandatory: {
                     chromeMediaSource: 'desktop',

@@ -1,6 +1,6 @@
 <template>
     <ViewComponent title="Capturing" :loading="isRunning">
-        <template v-slot:actions>
+        <template #actions>
             <v-btn
                 v-if="!isRunning"
                 class="rounded-pill"
@@ -19,22 +19,25 @@
                 >Stop</v-btn
             >
         </template>
-        <template v-slot:default>
-            <v-expansion-panels v-model="defaultOpenPanel" multiple>
+        <template #default>
+            <v-expansion-panels
+                v-if="captureAreas.length !== 0"
+                v-model="defaultOpenPanel"
+                multiple
+            >
                 <LogOutput
-                    v-if="captureAreas.length !== 0"
                     v-for="captureArea in captureAreas"
                     :key="captureArea.getId()"
-                    :captureAreaId="captureArea.getId()"
+                    :capture-area-id="captureArea.getId()"
                 />
-                <v-alert
-                    v-else
-                    type="info"
-                    variant="tonal"
-                    prominent
-                    text="To commence capturing, you must first define at least one capture area."
-                ></v-alert>
             </v-expansion-panels>
+            <v-alert
+                v-else
+                type="info"
+                variant="tonal"
+                prominent
+                text="To commence capturing, you must first define at least one capture area."
+            ></v-alert>
         </template>
     </ViewComponent>
 </template>

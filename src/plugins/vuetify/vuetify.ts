@@ -3,7 +3,7 @@ import '@mdi/font/css/materialdesignicons.css';
 import 'vuetify/styles'; // Global CSS has to be imported
 
 // Vuetify
-import { createVuetify, ThemeDefinition } from 'vuetify';
+import { createVuetify } from 'vuetify';
 
 // if needed imported
 import * as components from 'vuetify/components';

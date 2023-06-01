@@ -4,8 +4,8 @@
         <v-main>
             <!-- Provides the application the proper gutter -->
             <v-container fluid>
-                <v-row cols="12" no-gutters>
-                    <v-col cols="2" md="4" id="side-panel-container">
+                <v-row class="cols" no-gutters>
+                    <v-col id="side-panel-container" cols="2" md="4">
                         <v-sheet
                             color="background"
                             rounded="lg"
@@ -27,7 +27,7 @@
         </v-main>
 
         <!-- Bottom Navigation -->
-        <Navigation />
+        <BottomNavigation />
 
         <!-- Notification Prompts -->
         <NotificantionProvider
@@ -40,7 +40,7 @@
 import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import MainVideoStream from '@/components/MainVideoStream/MainVideoStream.vue';
-import Navigation from '@/components/Navigation/Navigation.vue';
+import BottomNavigation from '@/components/Navigation/BottomNavigation.vue';
 import NotificantionProvider from '@/components/Notifications/NotificationProvider/NotificationProvider.vue';
 import { NotificationAnchorPosition } from '@/components/Notifications/NotificationAnchorPosition';
 import useStreamHandler from '@/composables/useStreamHandler/useStreamHandler';

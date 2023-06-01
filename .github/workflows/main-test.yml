@@ -4,74 +4,69 @@
 name: main-test
 
 on:
-  pull_request:
-    types: [opened, synchronize]
+    pull_request:
+        types: [opened, synchronize]
 
 jobs:
-  build-linux:
+    build-linux:
+        runs-on: ubuntu-latest
 
-    runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node-version: [16.x, 18.x]
 
-    strategy:
-      matrix:
-        node-version: [16.x, 18.x]
+        steps:
+            - uses: actions/checkout@v3
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: 'npm'
+            - run: npm install
+            - run: npm run build:linux
+            - run: npm run test
+              if: matrix.node-version == '16.x'
+            - run: npm run test-coverage
+              if: matrix.node-version == '18.x'
 
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-      - run: npm install
-      - run: npm run build:linux
-      - run: npm run test
-        if: matrix.node-version == '16.x'
-      - run: npm run test-coverage
-        if: matrix.node-version == '18.x'
+            - uses: actions/upload-artifact@v3
+              if: matrix.node-version == '18.x'
+              with:
+                  name: test-coverage
+                  path: tests/unit/coverage/
 
-      - uses: actions/upload-artifact@v3
-        if: matrix.node-version == '18.x'
-        with:
-          name: test-coverage
-          path: tests/unit/coverage/
+    build-win:
+        runs-on: windows-latest
 
+        strategy:
+            matrix:
+                node-version: [16.x, 18.x]
 
-  build-win:
+        steps:
+            - uses: actions/checkout@v3
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: 'npm'
+            - run: npm install
+            - run: npm run build:win
+            - run: npm run test
 
-    runs-on: windows-latest
+    build-mac:
+        runs-on: macos-latest
 
-    strategy:
-      matrix:
-        node-version: [16.x, 18.x]
+        strategy:
+            matrix:
+                node-version: [16.x, 18.x]
 
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-      - run: npm install
-      - run: npm run build:win
-      - run: npm run test
-
-
-  build-mac:
-
-    runs-on: macos-latest
-
-    strategy:
-      matrix:
-        node-version: [16.x, 18.x]
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-      - run: npm install
-      - run: npm run build:mac
-      - run: npm run test
+        steps:
+            - uses: actions/checkout@v3
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: 'npm'
+            - run: npm install
+            - run: npm run build:mac
+            - run: npm run test

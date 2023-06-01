@@ -11,9 +11,9 @@
             @after-leave="allowBodyOverflow"
         >
             <NotificationPrompt
-                v-for="(item, idx) in notifications"
-                :key="item.id"
+                v-for="item in notifications"
                 :id="item.id"
+                :key="item.id"
                 :type="item.type"
                 :title="item.title"
                 :message="item.message"

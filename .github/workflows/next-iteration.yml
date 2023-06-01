@@ -1,20 +1,20 @@
 on:
-  schedule:
-    # Runs "at 12:00, only on Thursday"
-    - cron: '0 12 * * 4'
+    schedule:
+        # Runs "at 12:00, only on Thursday"
+        - cron: '0 12 * * 4'
 
 jobs:
-  move-to-next-iteration:
-    name: Move to next iteration
-    runs-on: ubuntu-latest
+    move-to-next-iteration:
+        name: Move to next iteration
+        runs-on: ubuntu-latest
 
-    steps:
-    - uses: blombard/move-to-next-iteration@master
-      with:
-        owner: VIGAD
-        number: 1
-        token: ${{ secrets.PROJECT_PAT }}
-        iteration-field: Sprint
-        iteration: last
-        new-iteration: current
-        statuses: Not Ready,In Progress,Ready for review
+        steps:
+            - uses: blombard/move-to-next-iteration@master
+              with:
+                  owner: VIGAD
+                  number: 1
+                  token: ${{ secrets.PROJECT_PAT }}
+                  iteration-field: Sprint
+                  iteration: last
+                  new-iteration: current
+                  statuses: Not Ready,In Progress,Ready for review

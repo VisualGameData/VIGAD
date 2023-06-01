@@ -38,7 +38,7 @@ export default function useTokenGenerator() {
      * Generate a random token using crypto module in Node.js or browser depending on the environment (Node.js or browser) - browser for application and Node.js for tests and GitHub Actions
      */
     const generateToken = (
-        lenght: number = 32,
+        lenght = 32,
         alphabet: string = characterSet
     ): string => {
         let generatedToken = '';
@@ -46,6 +46,8 @@ export default function useTokenGenerator() {
         // Checks if the environment is Node.js
         if (typeof process !== 'undefined' && process?.versions?.node) {
             // generate random bytes using crypto module in Node.js
+
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
             const { randomBytes } = require('crypto');
             const sourceBytes = randomBytes(lenght);
             generatedToken = Array.from(sourceBytes)

@@ -1,5 +1,5 @@
-import { ConstraintRegex, Location } from "./ConstraintRegex";
-import { ValueRegex } from "./ValueRegex";
+import { ConstraintRegex, Location } from './ConstraintRegex';
+import { ValueRegex } from './ValueRegex';
 
 export class RegexGroup {
     private id: number;

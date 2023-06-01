@@ -6,6 +6,7 @@ import vue from '@vitejs/plugin-vue';
 import electron from 'vite-plugin-electron';
 import renderer from 'vite-plugin-electron-renderer';
 import pkg from './package.json';
+import eslintPlugin from 'vite-plugin-eslint';
 
 rmSync('dist-electron', { recursive: true, force: true });
 
@@ -82,6 +83,7 @@ export default defineConfig(({ command }) => {
             ]),
             // Use Node.js API in the Renderer-process
             renderer(),
+            eslintPlugin(),
         ],
         resolve: {
             alias: {

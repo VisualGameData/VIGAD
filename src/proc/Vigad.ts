@@ -1,6 +1,7 @@
 import { CaptureArea } from './CaptureArea';
 import { RegexHandler } from './regex/RegexHandler';
 import { TesseractHandler } from './TesseractHandler';
+import { MatchedElement } from './MatchedElement';
 import DOMPurify from 'dompurify';
 import useSession from '@/composables/useSession/useSession';
 import useUploadData from '@/composables/useUploadData/useUploadData';
@@ -176,12 +177,22 @@ export class Vigad {
                                     result[i].data
                                 ); // Sanitize the data
 
+                                const caBestMatch: MatchedElement =
+                                    this.getCaptureArea(result[i].ca_id)
+                                        .getRegexGroups()[0]
+                                        .getValueRegex()
+                                        .getLastBestMatch();
+
                                 await post(
                                     `session/${encodeURIComponent(
                                         sessionToken.value
                                     )}/data/ca/${result[i].ca_id}`,
                                     {
-                                        data: sanitizedData,
+                                        rating: caBestMatch.rating,
+                                        match: {
+                                            index: caBestMatch.match.index,
+                                            element: sanitizedData,
+                                        },
                                     }
                                 );
                             }

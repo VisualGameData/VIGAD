@@ -52,7 +52,7 @@
                 <v-list-item>
                     <v-list-item-title>
                         <v-text-field
-                            v-model="accessToken"
+                            v-model="sessionToken"
                             style="width: 450px"
                             class="pt-2"
                             variant="outlined"
@@ -76,7 +76,7 @@
                                             v-bind="props"
                                             icon="mdi-content-copy"
                                             @click="
-                                                copyToClipboard(accessToken)
+                                                copyToClipboard(sessionToken)
                                             "
                                         ></v-icon>
                                     </template>
@@ -131,6 +131,7 @@
                             class="mr-4"
                             color="primary"
                             inset
+                            :disabled="true"
                         ></v-switch>
                     </template>
                 </v-list-item>
@@ -140,27 +141,28 @@
 </template>
 
 <script setup lang="ts">
+import { Ref, ref, watch } from 'vue';
 import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
 import useClipboard from '@/composables/useClipboard/useClipboard';
 import useTokenGenerator from '@/composables/useTokenGenerator/useTokenGenerator';
-import { Ref, ref, watch } from 'vue';
+import useUploadData from '@/composables/useUploadData/useUploadData';
+import useSession from '@/composables/useSession/useSession';
 
 /**
  * Composables
  */
+const { sessionToken, isSessionActive, startSession, stopSession } =
+    useSession();
 const { writeClipboardText } = useClipboard();
 const { defaultRules, generateValidToken } = useTokenGenerator();
+const { streamData, streamRegexAndCaptureAreaSettings } = useUploadData();
 
 /**
  * Data
  */
-const accessToken = ref('');
 const isAccessTokenValid = ref(false);
 const errorMessage: Ref<string[]> = ref([]);
 const tokenVisibility = ref(false);
-const isSessionActive = ref(false);
-const streamData = ref(false);
-const streamRegexAndCaptureAreaSettings = ref(false);
 
 /**
  * Dialog visibility
@@ -172,24 +174,24 @@ watch(
     (value) => {
         if (value) {
             // generate token if empty
-            if (accessToken.value === '') {
+            if (sessionToken.value === '') {
                 regenerateAccessToken();
                 return;
             } else {
                 // try to validate token if not empty
                 errorMessage.value = Object.values(defaultRules)
-                    .map((rule) => rule(accessToken.value))
+                    .map((rule) => rule(sessionToken.value))
                     .filter((value) => typeof value === 'string') as string[];
             }
         } else {
             // reset validation state
             const isValid = Object.values(defaultRules).every(
-                (rule) => rule(accessToken.value) === true
+                (rule) => rule(sessionToken.value) === true
             );
 
             if (isAccessTokenValid.value === isValid) {
                 errorMessage.value = Object.values(defaultRules)
-                    .map((rule) => rule(accessToken.value))
+                    .map((rule) => rule(sessionToken.value))
                     .filter((value) => typeof value === 'string') as string[];
             }
         }
@@ -197,34 +199,11 @@ watch(
 );
 
 watch(
-    () => accessToken.value,
+    () => sessionToken.value,
     () => {
         validate();
     }
 );
-
-/**
- * Start the session
- */
-function startSession() {
-    isSessionActive.value = true;
-    // TODO: Start session functionality
-    useNotificationSystem().createNotification({
-        title: 'Session started',
-    });
-}
-
-/**
- * Stop the session
- */
-function stopSession() {
-    isSessionActive.value = false;
-    // TODO: Stop session functionality
-    useNotificationSystem().createNotification({
-        title: 'Session stopped',
-        type: 'info',
-    });
-}
 
 /**
  * Function which will toggle the visibility of the access token
@@ -237,7 +216,7 @@ function toggleTokenVisibility() {
  * Function which will regenerate a new access token
  */
 async function regenerateAccessToken() {
-    accessToken.value = generateValidToken();
+    sessionToken.value = generateValidToken();
 }
 
 /**
@@ -245,13 +224,13 @@ async function regenerateAccessToken() {
  */
 function validate() {
     const isValid = Object.values(defaultRules).every(
-        (rule) => rule(accessToken.value) === true
+        (rule) => rule(sessionToken.value) === true
     );
 
     isAccessTokenValid.value = isValid;
 
     errorMessage.value = Object.values(defaultRules)
-        .map((rule) => rule(accessToken.value))
+        .map((rule) => rule(sessionToken.value))
         .filter((value) => typeof value === 'string') as string[];
 
     if (!isValid && isSessionActive.value) {
@@ -274,7 +253,7 @@ function validate() {
 function validateAccessToken() {
     // check if the access token is valid via the defaultRules
     const isValid = Object.values(defaultRules).every(
-        (rule) => rule(accessToken.value) === true
+        (rule) => rule(sessionToken.value) === true
     );
 
     if (isAccessTokenValid.value === isValid) {

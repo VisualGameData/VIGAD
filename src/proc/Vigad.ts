@@ -1,6 +1,10 @@
 import { CaptureArea } from './CaptureArea';
 import { RegexHandler } from './regex/RegexHandler';
 import { TesseractHandler } from './TesseractHandler';
+import { MatchedElement } from './MatchedElement';
+import useSession from '@/composables/useSession/useSession';
+import useUploadData from '@/composables/useUploadData/useUploadData';
+import useAPI from '@/composables/useAPI/useAPI';
 import useStreamHandler from '@/composables/useStreamHandler/useStreamHandler';
 
 export class Vigad {
@@ -105,7 +109,7 @@ export class Vigad {
 
                 this.tesseractHandler.run(
                     currentSelectedSource.value,
-                    (result: { ca_id: number; data: string }[]) => {
+                    async (result: { ca_id: number; data: string }[]) => {
                         result.forEach(
                             (value: { ca_id: number; data: string }) => {
                                 const ca = this.getCaptureArea(value.ca_id);
@@ -153,6 +157,45 @@ export class Vigad {
                                 }
                             }
                         );
+                        // Upload Data to the server
+                        const { sessionToken, isSessionActive } = useSession();
+                        const { post } = useAPI();
+                        const {
+                            streamData,
+                            streamRegexAndCaptureAreaSettings,
+                        } = useUploadData();
+
+                        // Check whether the user streamData or streamRegexAndCaptureAreaSettings is enabled and if the session is active at all
+                        if (
+                            isSessionActive.value &&
+                            (streamData.value ||
+                                streamRegexAndCaptureAreaSettings.value)
+                        ) {
+                            for (let i = 0; i < result.length; i++) {
+                                const caBestMatch: MatchedElement =
+                                    this.getCaptureArea(result[i].ca_id)
+                                        .getRegexGroups()[0]
+                                        .getValueRegex()
+                                        .getLastBestMatch();
+
+                                await post(
+                                    `session/${encodeURIComponent(
+                                        sessionToken.value
+                                    )}/data/ca/${result[i].ca_id}`,
+                                    {
+                                        rating: caBestMatch.rating,
+                                        match: {
+                                            index: caBestMatch.match.index,
+                                            element: result[i].data,
+                                        },
+                                    }
+                                );
+                            }
+                        } else {
+                            console.log(
+                                'Session is not active or streamData/streamRegexAndCaptureAreaSettings is not enabled'
+                            );
+                        }
                     },
                     this.previewWidth,
                     this.previewHeight

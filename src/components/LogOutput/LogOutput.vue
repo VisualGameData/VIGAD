@@ -29,6 +29,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { Vigad } from '@/proc/Vigad';
+import { MatchedElement } from '@/proc/MatchedElement';
 import useRunning from '@/composables/useRunning/useRunning';
 
 const props = defineProps<{
@@ -42,16 +43,6 @@ const { isRunning } = useRunning();
  * Get singelton instance reference to vigad
  */
 const vigad = ref(Vigad.getInstance());
-
-// local interface otherwise typescript is complaining
-interface MatchedElement {
-    match: {
-        index: number;
-        element: string;
-    };
-    rating: number;
-    timestamp?: string;
-}
 
 const matchedElementsIsEmpty = computed(() => {
     return matchedElements.value.length === 0;

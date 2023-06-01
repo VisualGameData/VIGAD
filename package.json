@@ -44,7 +44,7 @@
         "@vitest/coverage-c8": "^0.31.3",
         "@vitest/ui": "^0.31.3",
         "electron": "^24.4.1",
-        "electron-builder": "^23.6.0",
+        "electron-builder": "^24.4.0",
         "eslint": "^8.41.0",
         "eslint-config-prettier": "^8.8.0",
         "eslint-plugin-prettier": "^4.2.1",

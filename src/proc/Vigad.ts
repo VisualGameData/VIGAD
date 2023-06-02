@@ -73,12 +73,18 @@ export class Vigad {
     }
 
     /**
-     * Delete a capture area by id
+     * Delete a capture area by id and reassign IDs for the remaining capture areas
      * @param id
      * @return void
      */
     public deleteCaptureArea(id: number): void {
         this.captureAreas.splice(id, 1);
+
+        // Reassign IDs for the remaining capture areas
+        for (let i = 0; i < this.captureAreas.length; i++) {
+            this.captureAreas[i].setId(i);
+        }
+
         this.tesseractHandler.removeWorker();
     }
 

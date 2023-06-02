@@ -33,13 +33,13 @@
             />
         </div>
 
-        <div class="mt-4 actions">
+        <div class="mt-4">
             <v-btn
                 class="rounded-pill"
                 color="error"
                 prepend-icon="mdi-delete"
                 rounded="lg"
-                @click="deleteCaptureAreaNotification(captureAreaId)"
+                @click="deleteCaptureArea(captureAreaId)"
                 >Delete</v-btn
             >
         </div>
@@ -97,18 +97,13 @@ const afterConstraint = vigad.value
  * Gives a notficiation after deletion of capture area
  * @param captureAreaId
  */
-function deleteCaptureAreaNotification(id: number): void {
+function deleteCaptureArea(id: number): void {
     useNotificationSystem().createWarningNotification({
         title: 'Capture Area Deleted',
-        message: 'The Capture Area ' + id + ' got deleted',
+        message: 'Reorganizing capture areas...',
     });
     vigad.value.deleteCaptureArea(id);
 }
 </script>
 
-<style lang="scss" scoped>
-.actions {
-    display: flex;
-    justify-content: space-between;
-}
-</style>
+<style lang="scss" scoped></style>

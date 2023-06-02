@@ -58,6 +58,8 @@
                             variant="outlined"
                             label="Access Token"
                             name="apiAccessToken"
+                            hint="Token will be URI encoded on when unselected"
+                            persistent-hint
                             :append-inner-icon="
                                 tokenVisibility
                                     ? 'mdi-eye-outline'
@@ -68,6 +70,7 @@
                             :error-messages="errorMessage"
                             persistent-placeholder
                             @click:append-inner="toggleTokenVisibility()"
+                            @blur="encodeSessionToken()"
                         >
                             <template #append>
                                 <v-tooltip location="bottom">
@@ -89,7 +92,7 @@
                                         <v-icon
                                             v-bind="props"
                                             icon="mdi-refresh"
-                                            @click="regenerateAccessToken"
+                                            @click="generateSessionToken()"
                                         ></v-icon>
                                     </template>
                                     Generate new token
@@ -151,10 +154,16 @@ import useSession from '@/composables/useSession/useSession';
 /**
  * Composables
  */
-const { sessionToken, isSessionActive, startSession, stopSession } =
-    useSession();
+const {
+    sessionToken,
+    isSessionActive,
+    startSession,
+    stopSession,
+    generateSessionToken,
+    encodeSessionToken,
+} = useSession();
 const { writeClipboardText } = useClipboard();
-const { defaultRules, generateValidToken } = useTokenGenerator();
+const { defaultRules } = useTokenGenerator();
 const { streamData, streamRegexAndCaptureAreaSettings } = useUploadData();
 
 /**
@@ -175,7 +184,7 @@ watch(
         if (value) {
             // generate token if empty
             if (sessionToken.value === '') {
-                regenerateAccessToken();
+                generateSessionToken();
                 return;
             } else {
                 // try to validate token if not empty
@@ -213,13 +222,6 @@ function toggleTokenVisibility() {
 }
 
 /**
- * Function which will regenerate a new access token
- */
-async function regenerateAccessToken() {
-    sessionToken.value = generateValidToken();
-}
-
-/**
  * Function which will validate the access token and notifies the user
  */
 function validate() {
@@ -238,10 +240,6 @@ function validate() {
         useNotificationSystem().createErrorNotification({
             title: 'Session stopped',
             message: 'The access token is invalid',
-        });
-    } else if (isValid && errorMessage.value.length === 0) {
-        useNotificationSystem().createSuccessNotification({
-            title: 'The access token is valid',
         });
     }
 }

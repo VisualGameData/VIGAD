@@ -19,7 +19,7 @@
                         class="pa-4"
                         expand-icon="mdi-menu-down"
                     >
-                        Capture area
+                        Capture area - Unique ID:
                         {{ captureArea.getId() }}
                     </v-expansion-panel-title>
                     <v-expansion-panel-text>
@@ -67,7 +67,7 @@ const captureAreas = ref(vigad.value.getAllCaptureAreas());
  * Add a new capture area to the list of capture areas
  */
 async function addCaptureArea() {
-    vigad.value.addCaptureArea(100, 100, 0, 0);
+    vigad.value.addCaptureArea();
     await forceRerender();
     useNotificationSystem().createNotification({
         title: 'New Capture Area added',

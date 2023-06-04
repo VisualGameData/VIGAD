@@ -6,6 +6,7 @@ import useSession from '@/composables/useSession/useSession';
 import useUploadData from '@/composables/useUploadData/useUploadData';
 import useAPI from '@/composables/useAPI/useAPI';
 import useStreamHandler from '@/composables/useStreamHandler/useStreamHandler';
+import useTokenGenerator from '@/composables/useTokenGenerator/useTokenGenerator';
 
 export class Vigad {
     private static instance: Vigad;
@@ -52,49 +53,89 @@ export class Vigad {
     }
 
     /**
-     * Add a new capture area. Returns the id of the capture area.
-     * @param width
-     * @param height
-     * @param top
-     * @param left
-     * @return index: number
+     * Add a new capture area with the specified dimensions and position.
+     * @param {number} width - The width of the capture area.
+     * @param {number} height - The height of the capture area.
+     * @param {number} top - The top position of the capture area.
+     * @param {number} left - The left position of the capture area.
+     * @returns {number} - The ID of the newly added capture area.
      */
     public addCaptureArea(
-        width: number,
-        height: number,
-        top: number,
-        left: number
+        width = 100,
+        height = 100,
+        top = 0,
+        left = 0
     ): number {
         const ca = new CaptureArea(width, height, top, left);
+        const { numbers, generateValidToken } = useTokenGenerator();
+
+        let caId: string;
+
+        do {
+            caId = generateValidToken(
+                4,
+                numbers,
+                false,
+                false,
+                false,
+                true,
+                false
+            );
+        } while (this.captureAreaIdExists(caId));
+
+        ca.setId(parseInt(caId));
         this.captureAreas.push(ca);
-        ca.setId(this.captureAreas.length - 1);
         this.tesseractHandler.enableCaptureArea(ca);
+
         return ca.getId();
     }
 
     /**
-     * Delete a capture area by id and reassign IDs for the remaining capture areas
-     * @param id
-     * @return void
+     * Check if the capture area ID already exists.
+     * @param {string} caId - The capture area ID to check.
+     * @returns {boolean} - Returns true if the capture area ID exists, false otherwise.
      */
-    public deleteCaptureArea(id: number): void {
-        this.captureAreas.splice(id, 1);
-
-        // Reassign IDs for the remaining capture areas
-        for (let i = 0; i < this.captureAreas.length; i++) {
-            this.captureAreas[i].setId(i);
-        }
-
-        this.tesseractHandler.removeWorker();
+    private captureAreaIdExists(caId: string): boolean {
+        return this.captureAreas.some(
+            (area) => area.getId() === parseInt(caId)
+        );
     }
 
     /**
-     * Get a capture area by id
-     * @param id
-     * @return CaptureArea
+     * Delete the capture area with the specified ID.
+     * @param {number} id - The ID of the capture area to delete.
+     * @returns {boolean} - Returns true if the capture area is successfully deleted, false otherwise.
+     */
+    public deleteCaptureArea(id: number): boolean {
+        const index = this.captureAreas.findIndex((ca) => ca.getId() === id);
+
+        if (index !== -1) {
+            this.captureAreas.splice(index, 1);
+            this.tesseractHandler.removeWorker();
+            return true;
+        } else {
+            console.log('Capture area not found');
+            return false;
+        }
+    }
+
+    /**
+     * Retrieves the CaptureArea object with the specified id.
+     * @param {number} id - The id of the capture area to retrieve.
+     * @returns {CaptureArea} The CaptureArea object with the specified id.
+     * @throws {Error} If a capture area with the specified id is not found.
      */
     public getCaptureArea(id: number): CaptureArea {
-        return this.captureAreas[id];
+        // Find the capture area with the given id
+        const captureArea = this.captureAreas.find(
+            (area) => area.getId() === id
+        );
+
+        if (!captureArea) {
+            throw new Error(`Capture area with id ${id} not found.`);
+        }
+
+        return captureArea;
     }
 
     /**
@@ -119,6 +160,7 @@ export class Vigad {
                         result.forEach(
                             (value: { ca_id: number; data: string }) => {
                                 const ca = this.getCaptureArea(value.ca_id);
+
                                 const regexGrp = ca.getRegexGroups()[0];
                                 const constraintRegex0 =
                                     regexGrp.getConstraintRegex()[0];

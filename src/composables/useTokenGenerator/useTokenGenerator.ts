@@ -5,10 +5,18 @@ import { ref } from 'vue';
  */
 export default function useTokenGenerator() {
     /**
+     * Parts of the character set
+     */
+    const lowercaseLetters = 'abcdefghijklmnopqrstuvwxyz';
+    const uppercaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const specialCharacters = '!@#$%^&*()_+';
+    const numbers = '0123456789';
+
+    /**
      * Character set for the access token
      */
     const characterSet =
-        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*_+-=?';
+        lowercaseLetters + uppercaseLetters + specialCharacters + numbers;
 
     /**
      * Minimum token length
@@ -66,23 +74,59 @@ export default function useTokenGenerator() {
 
     /**
      * Generate a valid token using the rules defined in the rules object
-     * @returns a valid token
+     * @param {number} length - The length of the token (default: 32)
+     * @param {string} alphabet - The set of characters used to generate the token (default: characterSet)
+     * @param {boolean} isLowerCase - Indicates whether to include lowercase letters in the token (default: true)
+     * @param {boolean} isUpperCase - Indicates whether to include uppercase letters in the token (default: true)
+     * @param {boolean} isSpecial - Indicates whether to include special characters in the token (default: true)
+     * @param {boolean} isNumber - Indicates whether to include numbers in the token (default: true)
+     * @param {boolean} isMin - Indicates whether the token must satisfy a minimum requirement of having at least one character from each selected category (default: true)
+     * @returns {string} - A valid token
      */
-    const generateValidToken = (): string => {
-        const token = generateToken();
-        if (
-            defaultRules.lowercase(token) === true &&
-            defaultRules.uppercase(token) === true &&
-            defaultRules.special(token) === true &&
-            defaultRules.number(token) === true &&
-            defaultRules.min(token) === true
-        ) {
+    const generateValidToken = (
+        length = 32,
+        alphabet = characterSet,
+        isLowerCase = true,
+        isUpperCase = true,
+        isSpecial = true,
+        isNumber = true,
+        isMin = true
+    ): string => {
+        const token = generateToken(length, alphabet);
+
+        const hasLowerCase = defaultRules.lowercase(token);
+        const hasUpperCase = defaultRules.uppercase(token);
+        const hasSpecial = defaultRules.special(token);
+        const hasNumber = defaultRules.number(token);
+        const meetsMinRequirement = defaultRules.min(token);
+
+        const isValid =
+            (!isLowerCase || hasLowerCase === isLowerCase) &&
+            (!isUpperCase || hasUpperCase === isUpperCase) &&
+            (!isSpecial || hasSpecial === isSpecial) &&
+            (!isNumber || hasNumber === isNumber) &&
+            (!isMin || meetsMinRequirement === isMin);
+
+        if (isValid) {
             return token;
         }
-        return generateValidToken();
+
+        return generateValidToken(
+            length,
+            alphabet,
+            isLowerCase,
+            isUpperCase,
+            isSpecial,
+            isNumber,
+            isMin
+        );
     };
 
     return {
+        lowercaseLetters,
+        uppercaseLetters,
+        specialCharacters,
+        numbers,
         characterSet,
         minTokenLenght,
         defaultRules,

@@ -18,7 +18,7 @@ describe('RegexTextField', () => {
     /**
      * Add capture area
      */
-    vigad.value.addCaptureArea(100, 100, 0, 0);
+    vigad.value.addCaptureArea();
 
     /**
      * Capture areas

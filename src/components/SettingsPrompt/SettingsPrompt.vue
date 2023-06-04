@@ -64,7 +64,6 @@
                                     : 'mdi-eye-off-outline'
                             "
                             :type="tokenVisibility ? 'text' : 'password'"
-                            :error="!validateAccessToken()"
                             :error-messages="errorMessage"
                             persistent-placeholder
                             @click:append-inner="toggleTokenVisibility()"
@@ -89,7 +88,7 @@
                                         <v-icon
                                             v-bind="props"
                                             icon="mdi-refresh"
-                                            @click="regenerateAccessToken"
+                                            @click="regenerateAccessToken()"
                                         ></v-icon>
                                     </template>
                                     Generate new token
@@ -141,7 +140,7 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, ref, watch } from 'vue';
+import { Ref, computed, ref, watch } from 'vue';
 import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
 import useClipboard from '@/composables/useClipboard/useClipboard';
 import useTokenGenerator from '@/composables/useTokenGenerator/useTokenGenerator';
@@ -160,7 +159,11 @@ const { streamData, streamRegexAndCaptureAreaSettings } = useUploadData();
 /**
  * Data
  */
-const isAccessTokenValid = ref(false);
+const isAccessTokenValid = computed(() => {
+    return Object.values(defaultRules).every(
+        (rule) => rule(sessionToken.value) === true
+    );
+});
 const errorMessage: Ref<string[]> = ref([]);
 const tokenVisibility = ref(false);
 
@@ -223,45 +226,21 @@ async function regenerateAccessToken() {
  * Function which will validate the access token and notifies the user
  */
 function validate() {
-    const isValid = Object.values(defaultRules).every(
-        (rule) => rule(sessionToken.value) === true
-    );
-
-    isAccessTokenValid.value = isValid;
-
     errorMessage.value = Object.values(defaultRules)
         .map((rule) => rule(sessionToken.value))
         .filter((value) => typeof value === 'string') as string[];
 
-    if (!isValid && isSessionActive.value) {
+    if (!isAccessTokenValid.value && isSessionActive.value) {
         stopSession();
         useNotificationSystem().createErrorNotification({
             title: 'Session stopped',
             message: 'The access token is invalid',
         });
-    } else if (isValid && errorMessage.value.length === 0) {
+    } else if (isAccessTokenValid.value && errorMessage.value.length === 0) {
         useNotificationSystem().createSuccessNotification({
             title: 'The access token is valid',
         });
     }
-}
-
-/**
- * Function which will validate the access token and returns a boolean
- * @returns boolean
- */
-function validateAccessToken() {
-    // check if the access token is valid via the defaultRules
-    const isValid = Object.values(defaultRules).every(
-        (rule) => rule(sessionToken.value) === true
-    );
-
-    if (isAccessTokenValid.value === isValid) {
-        return true;
-    }
-
-    isAccessTokenValid.value = isValid;
-    return false;
 }
 
 /**

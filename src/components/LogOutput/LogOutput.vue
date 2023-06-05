@@ -33,7 +33,7 @@ import { MatchedElement } from '@/proc/MatchedElement';
 import useRunning from '@/composables/useRunning/useRunning';
 
 const props = defineProps<{
-    captureAreaId: number;
+    captureAreaId: string;
 }>();
 
 // Use the useRunning composable to get the isRunning state and the start/stop functions

@@ -131,7 +131,7 @@ export class TesseractHandler {
 
                         // run tesseract
                         (async () => {
-                            const results: { ca_id: number; data: string }[] =
+                            const results: { ca_id: string; data: string }[] =
                                 [];
                             await Promise.all(
                                 rectangles.map((rectangle) =>

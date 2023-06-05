@@ -65,29 +65,43 @@ export class Vigad {
         height = 100,
         top = 0,
         left = 0
-    ): number {
+    ): string {
         const ca = new CaptureArea(width, height, top, left);
-        const { numbers, generateValidToken } = useTokenGenerator();
+
+        ca.setId(this.generateCaptureAreaId());
+        this.captureAreas.push(ca);
+        this.tesseractHandler.enableCaptureArea(ca);
+
+        return ca.getId();
+    }
+
+    /**
+     * Generates a unique capture area ID.
+     * @returns {string} - The generated capture area ID.
+     */
+    public generateCaptureAreaId(): string {
+        const {
+            numbers,
+            lowercaseLetters,
+            uppercaseLetters,
+            generateValidToken,
+        } = useTokenGenerator();
 
         let caId: string;
 
         do {
             caId = generateValidToken(
-                4,
-                numbers,
-                false,
-                false,
+                6,
+                numbers + lowercaseLetters + uppercaseLetters,
+                true,
+                true,
                 false,
                 true,
                 false
             );
         } while (this.captureAreaIdExists(caId));
 
-        ca.setId(parseInt(caId));
-        this.captureAreas.push(ca);
-        this.tesseractHandler.enableCaptureArea(ca);
-
-        return ca.getId();
+        return caId;
     }
 
     /**
@@ -96,9 +110,42 @@ export class Vigad {
      * @returns {boolean} - Returns true if the capture area ID exists, false otherwise.
      */
     private captureAreaIdExists(caId: string): boolean {
-        return this.captureAreas.some(
-            (area) => area.getId() === parseInt(caId)
+        return this.captureAreas.some((area) => area.getId() === caId);
+    }
+
+    /**
+     * Renames a capture area by updating its ID.
+     * @param {string} oldId - The old ID of the capture area.
+     * @param {string} newId - The new ID to assign to the capture area.
+     * @returns {boolean} - Returns true if the renaming was successful, false otherwise.
+     */
+    public renameCaptureArea(oldId: string, newId: string): boolean {
+        // Find the index of the capture area object with the oldId
+        const captureAreaIndex = this.captureAreas.findIndex(
+            (area) => area.getId() === oldId
         );
+
+        // If the capture area with the oldId doesn't exist, return
+        if (captureAreaIndex === -1) {
+            return false;
+        }
+
+        // Check if any other capture area already uses the newId
+        const isIdAlreadyUsed = this.captureAreas.some(
+            (area, index) =>
+                index !== captureAreaIndex && area.getId() === newId
+        );
+
+        // If the newId is already used, return false
+        if (isIdAlreadyUsed) {
+            return false;
+        }
+
+        // Update the id of the capture area
+        this.captureAreas[captureAreaIndex].setId(newId);
+
+        // Return true to indicate successful renaming
+        return true;
     }
 
     /**
@@ -106,7 +153,7 @@ export class Vigad {
      * @param {number} id - The ID of the capture area to delete.
      * @returns {boolean} - Returns true if the capture area is successfully deleted, false otherwise.
      */
-    public deleteCaptureArea(id: number): boolean {
+    public deleteCaptureArea(id: string): boolean {
         const index = this.captureAreas.findIndex((ca) => ca.getId() === id);
 
         if (index !== -1) {
@@ -125,7 +172,7 @@ export class Vigad {
      * @returns {CaptureArea} The CaptureArea object with the specified id.
      * @throws {Error} If a capture area with the specified id is not found.
      */
-    public getCaptureArea(id: number): CaptureArea {
+    public getCaptureArea(id: string): CaptureArea {
         // Find the capture area with the given id
         const captureArea = this.captureAreas.find(
             (area) => area.getId() === id
@@ -156,9 +203,9 @@ export class Vigad {
 
                 this.tesseractHandler.run(
                     currentSelectedSource.value,
-                    async (result: { ca_id: number; data: string }[]) => {
+                    async (result: { ca_id: string; data: string }[]) => {
                         result.forEach(
-                            (value: { ca_id: number; data: string }) => {
+                            (value: { ca_id: string; data: string }) => {
                                 const ca = this.getCaptureArea(value.ca_id);
 
                                 const regexGrp = ca.getRegexGroups()[0];

@@ -18,9 +18,9 @@
                     <v-expansion-panel-title
                         class="pa-4"
                         expand-icon="mdi-menu-down"
+                        collapse-icon="mdi-menu-up"
                     >
-                        Capture area - Unique ID:
-                        {{ captureArea.getId() }}
+                        Capture Area ID: {{ captureArea.getId() }}
                     </v-expansion-panel-title>
                     <v-expansion-panel-text>
                         <CaptureAreaSearchValue

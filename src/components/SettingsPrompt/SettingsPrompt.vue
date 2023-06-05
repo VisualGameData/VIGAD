@@ -66,6 +66,7 @@
                             :type="tokenVisibility ? 'text' : 'password'"
                             :error-messages="errorMessage"
                             persistent-placeholder
+                            autofocus
                             @click:append-inner="toggleTokenVisibility()"
                         >
                             <template #append>
@@ -159,6 +160,7 @@ const { streamData, streamRegexAndCaptureAreaSettings } = useUploadData();
 /**
  * Data
  */
+const dialog = ref(false);
 const isAccessTokenValid = computed(() => {
     return Object.values(defaultRules).every(
         (rule) => rule(sessionToken.value) === true
@@ -168,10 +170,8 @@ const errorMessage: Ref<string[]> = ref([]);
 const tokenVisibility = ref(false);
 
 /**
- * Dialog visibility
+ * Watch if settings dialog is open and validate token
  */
-const dialog = ref(false);
-
 watch(
     () => dialog.value,
     (value) => {
@@ -188,11 +188,7 @@ watch(
             }
         } else {
             // reset validation state
-            const isValid = Object.values(defaultRules).every(
-                (rule) => rule(sessionToken.value) === true
-            );
-
-            if (isAccessTokenValid.value === isValid) {
+            if (!isAccessTokenValid.value) {
                 errorMessage.value = Object.values(defaultRules)
                     .map((rule) => rule(sessionToken.value))
                     .filter((value) => typeof value === 'string') as string[];
@@ -201,6 +197,9 @@ watch(
     }
 );
 
+/**
+ * Watch for changes in the session token
+ */
 watch(
     () => sessionToken.value,
     () => {
@@ -209,44 +208,51 @@ watch(
 );
 
 /**
+ * Watch for access token validity changes
+ */
+watch(isAccessTokenValid, (newValue, oldValue) => {
+    if (oldValue === false && newValue === true) {
+        useNotificationSystem().createSuccessNotification({
+            title: 'The session token is valid',
+        });
+    } else if (oldValue === true && newValue === false) {
+        useNotificationSystem().createErrorNotification({
+            title: 'The session token is invalid',
+        });
+    }
+});
+
+/**
  * Function which will toggle the visibility of the access token
  */
-function toggleTokenVisibility() {
+function toggleTokenVisibility(): void {
     tokenVisibility.value = !tokenVisibility.value;
 }
 
 /**
  * Function which will regenerate a new access token
  */
-async function regenerateAccessToken() {
+function regenerateAccessToken(): void {
     sessionToken.value = generateValidToken();
 }
 
 /**
  * Function which will validate the access token and notifies the user
  */
-function validate() {
+function validate(): void {
     errorMessage.value = Object.values(defaultRules)
         .map((rule) => rule(sessionToken.value))
         .filter((value) => typeof value === 'string') as string[];
 
     if (!isAccessTokenValid.value && isSessionActive.value) {
         stopSession();
-        useNotificationSystem().createErrorNotification({
-            title: 'Session stopped',
-            message: 'The access token is invalid',
-        });
-    } else if (isAccessTokenValid.value && errorMessage.value.length === 0) {
-        useNotificationSystem().createSuccessNotification({
-            title: 'The access token is valid',
-        });
     }
 }
 
 /**
  * Function which will copy the access token to the clipboard
  */
-async function copyToClipboard(text: string) {
+async function copyToClipboard(text: string): Promise<void> {
     const isSuccessful = await writeClipboardText(text);
     if (isSuccessful) {
         useNotificationSystem().createSuccessNotification({

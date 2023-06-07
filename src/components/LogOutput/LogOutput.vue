@@ -1,7 +1,7 @@
 <template>
     <v-expansion-panel class="log-output-container">
         <v-expansion-panel-title class="pa-4" expand-icon="mdi-menu-down">
-            Capture area
+            Capture Area ID:
             {{ captureAreaId }}
         </v-expansion-panel-title>
         <v-expansion-panel-text>

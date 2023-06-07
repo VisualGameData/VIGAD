@@ -1,3 +1,5 @@
+import log from 'electron-log';
+
 function domReady(
     condition: DocumentReadyState[] = ['complete', 'interactive']
 ) {
@@ -114,12 +116,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
         message: string,
         level: ElectronLogLevel = ElectronLogLevel.info
     ) => {
-        ipcRenderer.send('__ELECTRON_LOG__', {
-            // LogMessage-like object
-            data: [message],
-            level: level,
-            // ... some other optional fields like scope, logId and so on
-        });
+        log[level](message); // Save log message using electron-log
     },
 });
 

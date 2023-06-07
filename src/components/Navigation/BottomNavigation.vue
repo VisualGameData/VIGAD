@@ -23,7 +23,6 @@
             to="/regex"
             prepend-icon="mdi-regex"
             value="regex"
-            @click="addLog('New log message')"
         >
             Regex
         </v-btn>

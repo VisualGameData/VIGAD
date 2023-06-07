@@ -1,5 +1,6 @@
 import { ref } from 'vue';
 import useTokenGenerator from '@/composables/useTokenGenerator/useTokenGenerator';
+import useLogger from '@/composables/useLogger/useLogger';
 
 /**
  * notifications list
@@ -11,6 +12,7 @@ const notifications = ref<Notification[]>([]);
  */
 export default function useNotificationSystem() {
     const { generateValidToken } = useTokenGenerator();
+    const { addLog, addWarnLog, addErrorLog } = useLogger();
 
     /**
      * Create a notification
@@ -21,6 +23,17 @@ export default function useNotificationSystem() {
             { ...defaultNotificationOptions },
             options
         );
+
+        const type = _options.type;
+
+        // Add log message to the log file
+        if (type === 'error') {
+            addErrorLog(_options.title);
+        } else if (type === 'warning') {
+            addWarnLog(_options.title);
+        } else {
+            addLog(_options.title);
+        }
 
         notifications.value.push(
             ...[

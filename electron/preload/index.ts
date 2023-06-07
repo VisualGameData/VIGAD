@@ -1,4 +1,6 @@
+import { app } from 'electron';
 import log from 'electron-log';
+import path from 'node:path';
 
 function domReady(
     condition: DocumentReadyState[] = ['complete', 'interactive']
@@ -115,12 +117,31 @@ contextBridge.exposeInMainWorld('electronAPI', {
     saveLog: (
         message: string,
         level: ElectronLogLevel = ElectronLogLevel.INFO,
-        logFile = 'vigad.log'
+        logFileName: string
     ) => {
-        // Set the desired log file name
-        log.transports.file.fileName = logFile;
-        // Save log message using electron-log
-        log[level](message);
+        const logDirecotryName = 'logs';
+
+        console.log(process.env.NODE_ENV);
+
+        log.transports.file.format = '[{h}:{i}:{s}:{ms}] [{level}] {text}';
+        log.transports.file.maxSize = 5 * 1024 * 1024; // 5 MB
+
+        if (process.env.NODE_ENV === 'development') {
+            // Set the desired log file name
+            log.transports.file.resolvePath = () =>
+                path.join(logDirecotryName, logFileName);
+
+            // Save log message using electron-log
+            log[level](message);
+        } else {
+            // TODO: cant save log file in the root directory of the installed application yet
+            // Set the desired log file name in the root directory of the installed application
+            const logFilePath = path.join(app.getPath('exe'), logFileName);
+            log.transports.file.resolvePath = () => logFilePath;
+
+            // Save log message using electron-log
+            log[level](message);
+        }
     },
 });
 

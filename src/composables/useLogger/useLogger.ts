@@ -1,4 +1,4 @@
-import { onMounted, onUnmounted, ref } from 'vue';
+import { ref } from 'vue';
 import { Logger } from 'tslog';
 import { ElectronLogLevel } from './electron-log-level';
 
@@ -25,10 +25,14 @@ export default function useLogger() {
      * @param {string} message - The log message
      * @param {ElectronLogLevel} [logLevel=ElectronLogLevel.INFO] - The log level
      */
-    const addLog = (message: string, logLevel = ElectronLogLevel.INFO) => {
+    const addLog = (
+        message: string,
+        logLevel = ElectronLogLevel.INFO,
+        fileName = import.meta.env.VITE_LOG_FILE_NAME
+    ) => {
         logger.debug(message);
         logMessages.value.push(message);
-        electronLogger.saveLog(message, logLevel);
+        electronLogger.saveLog(message, logLevel, fileName);
     };
 
     /**
@@ -70,15 +74,6 @@ export default function useLogger() {
     const addSillyLog = (message: string) => {
         addLog(message, ElectronLogLevel.SILLY);
     };
-
-    // Lifecycle hooks
-    onMounted(() => {
-        logger.info('Logger initialized');
-    });
-
-    onUnmounted(() => {
-        logger.info('Logger terminated');
-    });
 
     return {
         log: logMessages,

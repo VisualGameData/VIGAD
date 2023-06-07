@@ -44,6 +44,7 @@ import BottomNavigation from '@/components/Navigation/BottomNavigation.vue';
 import NotificantionProvider from '@/components/Notifications/NotificationProvider/NotificationProvider.vue';
 import { NotificationAnchorPosition } from '@/components/Notifications/NotificationAnchorPosition';
 import useStreamHandler from '@/composables/useStreamHandler/useStreamHandler';
+import useLogger from '@/composables/useLogger/useLogger';
 
 // Force the application to navigate to the default route
 const router = useRouter();
@@ -51,11 +52,16 @@ const router = useRouter();
 // Get the default preview video stream function
 const { setDefaultPreviewVideoStream } = useStreamHandler();
 
+// Get the addLog function from the useLogger composable
+const { addLog } = useLogger();
+
 onMounted(async () => {
     // set the default preview video stream
     await setDefaultPreviewVideoStream();
     // navigate to the default route
     router.push('/');
+    // add a log entry
+    addLog('Application started');
 });
 </script>
 

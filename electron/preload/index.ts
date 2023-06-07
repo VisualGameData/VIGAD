@@ -110,4 +110,27 @@ contextBridge.exposeInMainWorld('electronAPI', {
                 });
         });
     },
+    saveLog: (
+        message: string,
+        level: ElectronLogLevel = ElectronLogLevel.info
+    ) => {
+        ipcRenderer.send('__ELECTRON_LOG__', {
+            // LogMessage-like object
+            data: [message],
+            level: level,
+            // ... some other optional fields like scope, logId and so on
+        });
+    },
 });
+
+/**
+ * Electron log levels enum declaration
+ */
+enum ElectronLogLevel {
+    error = 'error',
+    warn = 'warn',
+    info = 'info',
+    verbose = 'verbose',
+    debug = 'debug',
+    silly = 'silly',
+}

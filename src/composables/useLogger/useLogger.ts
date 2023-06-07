@@ -1,11 +1,16 @@
 import { onMounted, onUnmounted, ref } from 'vue';
 import { Logger } from 'tslog';
-import log from 'electron-log';
+import { ElectronLogLevel } from './electron-log-level';
 
 /**
  * Create a logger instance
  */
 const logger = new Logger();
+
+/**
+ * Referene to the electron logger in the main process
+ */
+const electronLogger = (window as any).electronAPI;
 
 /**
  * Logger composable
@@ -14,11 +19,11 @@ export default function useLogger() {
     const logMessages = ref<string[]>([]);
 
     // Function to add log messages
-    function addLog(message: string) {
+    const addLog = (message: string) => {
         logger.debug(message);
         logMessages.value.push(message);
-        log.info(message); // Save log message using electron-log
-    }
+        electronLogger.saveLog(message, ElectronLogLevel.debug);
+    };
 
     // Lifecycle hooks
     onMounted(() => {

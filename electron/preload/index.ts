@@ -114,20 +114,24 @@ contextBridge.exposeInMainWorld('electronAPI', {
     },
     saveLog: (
         message: string,
-        level: ElectronLogLevel = ElectronLogLevel.info
+        level: ElectronLogLevel = ElectronLogLevel.INFO,
+        logFile = 'vigad.log'
     ) => {
-        log[level](message); // Save log message using electron-log
+        // Set the desired log file name
+        log.transports.file.fileName = logFile;
+        // Save log message using electron-log
+        log[level](message);
     },
 });
 
 /**
  * Electron log levels enum declaration
  */
-enum ElectronLogLevel {
-    error = 'error',
-    warn = 'warn',
-    info = 'info',
-    verbose = 'verbose',
-    debug = 'debug',
-    silly = 'silly',
+export enum ElectronLogLevel {
+    INFO = 'info',
+    WARN = 'warn',
+    ERROR = 'error',
+    VERBOSE = 'verbose',
+    DEBUG = 'debug',
+    SILLY = 'silly',
 }

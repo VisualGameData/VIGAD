@@ -1,8 +1,9 @@
-import { ref, Ref } from 'vue';
+import { ref, Ref, watch } from 'vue';
 import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
 import useTokenGenerator from '@/composables/useTokenGenerator/useTokenGenerator';
 
 const sessionToken = ref('');
+
 // Reactive variable to track session status
 const isSessionActive: Ref<boolean> = ref(false);
 
@@ -10,9 +11,18 @@ export default function useSession() {
     const { generateValidToken } = useTokenGenerator();
 
     /**
+     * Watch the session token and encode it if it changes to ensure it is always encoded
+     */
+    watch(sessionToken, () => {
+        encodeSessionToken();
+    });
+
+    /**
      * Starts the session
      */
     const startSession = (): void => {
+        // Encode the session token if it is not already encoded as a fallback
+        encodeSessionToken();
         isSessionActive.value = true;
         useNotificationSystem().createNotification({
             title: 'Session started',
@@ -43,16 +53,15 @@ export default function useSession() {
      */
     const encodeSessionToken = (): void => {
         try {
-            const decodedToken = decodeURIComponent(sessionToken.value);
-            const encodedToken = encodeURIComponent(sessionToken.value);
-
-            if (decodedToken === sessionToken.value) {
-                // sessionToken is not URL encoded, so encode it
-                sessionToken.value = encodedToken;
-            }
+            sessionToken.value = encodeURIComponent(
+                decodeURIComponent(sessionToken.value)
+            );
         } catch (error) {
-            // URIError occurred, indicating that sessionToken is already URL encoded
-            console.log('Session token is already URL encoded');
+            if (error instanceof URIError) {
+                console.log('Session token is already URL encoded');
+            } else {
+                console.error('Error decoding session token:', error);
+            }
         }
     };
 

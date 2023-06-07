@@ -58,7 +58,7 @@
                             variant="outlined"
                             label="Access Token"
                             name="apiAccessToken"
-                            hint="Token will be URI encoded on when unselected"
+                            hint="Token will automatically be URI encoded"
                             persistent-hint
                             :append-inner-icon="
                                 tokenVisibility
@@ -70,7 +70,6 @@
                             :error-messages="errorMessage"
                             persistent-placeholder
                             @click:append-inner="toggleTokenVisibility()"
-                            @blur="encodeSessionToken()"
                         >
                             <template #append>
                                 <v-tooltip location="bottom">
@@ -160,7 +159,6 @@ const {
     startSession,
     stopSession,
     generateSessionToken,
-    encodeSessionToken,
 } = useSession();
 const { writeClipboardText } = useClipboard();
 const { defaultRules } = useTokenGenerator();

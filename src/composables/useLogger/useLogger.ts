@@ -4,11 +4,13 @@ import { ElectronLogLevel } from './electron-log-level';
 
 /**
  * Create a logger instance
+ * @type {Logger}
  */
 const logger = new Logger();
 
 /**
- * Referene to the electron logger in the main process
+ * Reference to the electron logger in the main process
+ * @type {any}
  */
 const electronLogger = (window as any).electronAPI;
 
@@ -18,11 +20,55 @@ const electronLogger = (window as any).electronAPI;
 export default function useLogger() {
     const logMessages = ref<string[]>([]);
 
-    // Function to add log messages
-    const addLog = (message: string) => {
+    /**
+     * Function to add log messages
+     * @param {string} message - The log message
+     * @param {ElectronLogLevel} [logLevel=ElectronLogLevel.INFO] - The log level
+     */
+    const addLog = (message: string, logLevel = ElectronLogLevel.INFO) => {
         logger.debug(message);
         logMessages.value.push(message);
-        electronLogger.saveLog(message, ElectronLogLevel.debug);
+        electronLogger.saveLog(message, logLevel);
+    };
+
+    /**
+     * Function to add warning log messages
+     * @param {string} message - The log message
+     */
+    const addWarnLog = (message: string) => {
+        addLog(message, ElectronLogLevel.WARN);
+    };
+
+    /**
+     * Function to add error log messages
+     * @param {string} message - The log message
+     */
+    const addErrorLog = (message: string) => {
+        addLog(message, ElectronLogLevel.ERROR);
+    };
+
+    /**
+     * Function to add verbose log messages
+     * @param {string} message - The log message
+     */
+    const addVerboseLog = (message: string) => {
+        addLog(message, ElectronLogLevel.VERBOSE);
+    };
+
+    /**
+     * Function to add debug log messages
+     * @param {string} message - The log message
+     */
+    const addDebugLog = (message: string) => {
+        addLog(message, ElectronLogLevel.DEBUG);
+    };
+
+    /**
+     * Function to add silly log messages
+     * @param {string} message - The log message
+     */
+    const addSillyLog = (message: string) => {
+        addLog(message, ElectronLogLevel.SILLY);
     };
 
     // Lifecycle hooks
@@ -34,5 +80,13 @@ export default function useLogger() {
         logger.info('Logger terminated');
     });
 
-    return { log: logMessages, addLog };
+    return {
+        log: logMessages,
+        addLog,
+        addErrorLog,
+        addWarnLog,
+        addVerboseLog,
+        addDebugLog,
+        addSillyLog,
+    };
 }

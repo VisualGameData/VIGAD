@@ -2,10 +2,10 @@
  * Electron log levels enum
  */
 export enum ElectronLogLevel {
-    error = 'error',
-    warn = 'warn',
-    info = 'info',
-    verbose = 'verbose',
-    debug = 'debug',
-    silly = 'silly',
+    INFO = 'info',
+    WARN = 'warn',
+    ERROR = 'error',
+    VERBOSE = 'verbose',
+    DEBUG = 'debug',
+    SILLY = 'silly',
 }

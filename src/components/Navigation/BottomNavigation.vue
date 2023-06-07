@@ -23,6 +23,7 @@
             to="/regex"
             prepend-icon="mdi-regex"
             value="regex"
+            @click="addLog('New log message')"
         >
             Regex
         </v-btn>
@@ -34,6 +35,9 @@
 <script setup lang="ts">
 import useRunning from '@/composables/useRunning/useRunning';
 import SettingsPrompt from '@/components/SettingsPrompt/SettingsPrompt.vue';
+import useLogger from '@/composables/useLogger/useLogger';
+
+const { addLog } = useLogger();
 
 // Use the useRunning composable to get the isRunning state
 const { isRunning } = useRunning();

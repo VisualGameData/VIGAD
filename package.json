@@ -72,10 +72,12 @@
         "@vueuse/components": "^10.1.2",
         "@vueuse/core": "^10.1.2",
         "clipboardy": "^3.0.0",
+        "electron-log": "^4.4.8",
         "randexp": "^0.5.3",
         "roboto-fontface": "^0.10.0",
         "tesseract.js": "^3.0.3",
         "tplant": "^3.1.0",
+        "tslog": "^4.8.2",
         "vue-router": "^4.2.2",
         "vue3-drag-resize": "^2.0.5",
         "vuetify": "^3.3.2"

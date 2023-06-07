@@ -252,8 +252,8 @@ async function copyToClipboard(text: string): Promise<void> {
  */
 function deleteCaptureArea(id: string): void {
     useNotificationSystem().createWarningNotification({
-        title: 'Capture Area Deleted',
-        message: 'Reorganizing capture areas...',
+        title: 'Reorganizing capture areas...',
+        message: 'Cleaning up ...',
     });
     vigad.value.deleteCaptureArea(id);
 }

@@ -81,7 +81,7 @@
                 color="error"
                 prepend-icon="mdi-delete"
                 rounded="lg"
-                @click="deleteCaptureArea(captureAreaId)"
+                @click="deleteCaptureArea(captureAreaIdInputValue)"
                 >Delete</v-btn
             >
         </div>
@@ -136,6 +136,9 @@ const captureAreaIdRules = {
         v.length <= 6 || 'Must be less than or equal to 6 characters',
     nospecial: (v: string) =>
         !/[^A-Za-z0-9]/.test(v) || 'Must not include special characters',
+    idDoesNotExistYet: (v: string) =>
+        vigad.value.CaptureAreaIdIsUnique(v) ||
+        'Capture area id already exists',
 };
 
 /**
@@ -258,6 +261,7 @@ function deleteCaptureArea(id: string): void {
         title: 'Reorganizing capture areas...',
         message: 'Cleaning up ...',
     });
+    console.log('Passed ID', id);
     vigad.value.deleteCaptureArea(id);
 }
 </script>

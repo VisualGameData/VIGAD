@@ -104,8 +104,6 @@ export class Vigad {
             );
         } while (this.captureAreaIdExists(caId));
 
-        console.log(this.captureAreas);
-
         return caId;
     }
 
@@ -196,6 +194,15 @@ export class Vigad {
      */
     public getAllCaptureAreas(): CaptureArea[] {
         return this.captureAreas;
+    }
+
+    /**
+     * Checks if the capture area ID is unique.
+     * @param {string} id - The capture area ID to check.
+     * @returns {boolean} - Returns true if the capture area ID is unique, false otherwise.
+     */
+    public CaptureAreaIdIsUnique(id: string): boolean {
+        return !this.captureAreas.some((area) => area.getId() === id);
     }
 
     public startTesseract(): void {

@@ -130,6 +130,11 @@ export default function useTokenGenerator() {
         // Token Lenght
         minTokenLenght,
         maxTokenLenght,
+        // Character set
+        lowercaseLetters,
+        uppercaseLetters,
+        specialCharacters,
+        numbers,
         // Rules
         requiredRule,
         minCharactersRule,

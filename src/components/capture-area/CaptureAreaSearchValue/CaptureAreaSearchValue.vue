@@ -99,6 +99,7 @@ import {
 } from './ResetSettings';
 import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
 import useClipboard from '@/composables/useClipboard/useClipboard';
+import useTokenGenerator from '@/composables/useTokenGenerator/useTokenGenerator';
 
 /**
  * Definied Props
@@ -111,6 +112,12 @@ const defProps = defineProps<{
  * Composables
  */
 const { writeClipboardText } = useClipboard();
+const {
+    requiredRule,
+    lowercaseLettersRule,
+    uppercaseLettersRule,
+    numbersRule,
+} = useTokenGenerator();
 
 /**
  * Get singelton instance reference to vigad
@@ -121,15 +128,11 @@ const vigad = ref(Vigad.getInstance());
  * Rules for the capture area id input
  */
 const captureAreaIdRules = {
-    required: (value: string) =>
-        !!value || 'An access token is required to start a session',
-    uppercase: (v: string) =>
-        /[A-Z]/.test(v) || 'Must include at least one uppercase letter',
-    lowercase: (v: string) =>
-        /[a-z]/.test(v) || 'Must include at least one lowercase letter',
-    number: (v: string) =>
-        /[0-9]+/.test(v) || 'Must include at least one number',
-    max: (v: string) =>
+    required: requiredRule,
+    uppercase: uppercaseLettersRule,
+    lowercase: lowercaseLettersRule,
+    number: numbersRule,
+    maxCaIdChars: (v: string) =>
         v.length <= 6 || 'Must be less than or equal to 6 characters',
     nospecial: (v: string) =>
         !/[^A-Za-z0-9]/.test(v) || 'Must not include special characters',

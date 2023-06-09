@@ -84,6 +84,9 @@ export class Vigad {
             numbers,
             lowercaseLetters,
             uppercaseLetters,
+            lowercaseLettersRule,
+            uppercaseLettersRule,
+            numbersRule,
             generateValidToken,
         } = useTokenGenerator();
 
@@ -93,13 +96,15 @@ export class Vigad {
             caId = generateValidToken(
                 6,
                 numbers + lowercaseLetters + uppercaseLetters,
-                true,
-                true,
-                false,
-                true,
-                false
+                {
+                    lowercase: lowercaseLettersRule,
+                    uppercase: uppercaseLettersRule,
+                    number: numbersRule,
+                }
             );
         } while (this.captureAreaIdExists(caId));
+
+        console.log(this.captureAreas);
 
         return caId;
     }

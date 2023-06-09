@@ -58,17 +58,15 @@
                             variant="outlined"
                             label="Access Token"
                             name="apiAccessToken"
-                            hint="Token will automatically be URI encoded"
-                            persistent-hint
                             :append-inner-icon="
                                 tokenVisibility
                                     ? 'mdi-eye-outline'
                                     : 'mdi-eye-off-outline'
                             "
                             :type="tokenVisibility ? 'text' : 'password'"
-                            :error="!validateAccessToken()"
                             :error-messages="errorMessage"
                             persistent-placeholder
+                            autofocus
                             @click:append-inner="toggleTokenVisibility()"
                         >
                             <template #append>
@@ -91,7 +89,7 @@
                                         <v-icon
                                             v-bind="props"
                                             icon="mdi-refresh"
-                                            @click="generateSessionToken()"
+                                            @click="regenerateAccessToken()"
                                         ></v-icon>
                                     </template>
                                     Generate new token
@@ -143,7 +141,7 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, ref, watch } from 'vue';
+import { Ref, computed, ref, watch } from 'vue';
 import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
 import useClipboard from '@/composables/useClipboard/useClipboard';
 import useTokenGenerator from '@/composables/useTokenGenerator/useTokenGenerator';
@@ -153,36 +151,34 @@ import useSession from '@/composables/useSession/useSession';
 /**
  * Composables
  */
-const {
-    sessionToken,
-    isSessionActive,
-    startSession,
-    stopSession,
-    generateSessionToken,
-} = useSession();
+const { sessionToken, isSessionActive, startSession, stopSession } =
+    useSession();
 const { writeClipboardText } = useClipboard();
-const { defaultRules } = useTokenGenerator();
+const { defaultRules, generateValidToken } = useTokenGenerator();
 const { streamData, streamRegexAndCaptureAreaSettings } = useUploadData();
 
 /**
  * Data
  */
-const isAccessTokenValid = ref(false);
+const dialog = ref(false);
+const isAccessTokenValid = computed(() => {
+    return Object.values(defaultRules).every(
+        (rule) => rule(sessionToken.value) === true
+    );
+});
 const errorMessage: Ref<string[]> = ref([]);
 const tokenVisibility = ref(false);
 
 /**
- * Dialog visibility
+ * Watch if settings dialog is open and validate token
  */
-const dialog = ref(false);
-
 watch(
     () => dialog.value,
     (value) => {
         if (value) {
             // generate token if empty
             if (sessionToken.value === '') {
-                generateSessionToken();
+                regenerateAccessToken();
                 return;
             } else {
                 // try to validate token if not empty
@@ -192,11 +188,7 @@ watch(
             }
         } else {
             // reset validation state
-            const isValid = Object.values(defaultRules).every(
-                (rule) => rule(sessionToken.value) === true
-            );
-
-            if (isAccessTokenValid.value === isValid) {
+            if (!isAccessTokenValid.value) {
                 errorMessage.value = Object.values(defaultRules)
                     .map((rule) => rule(sessionToken.value))
                     .filter((value) => typeof value === 'string') as string[];
@@ -205,6 +197,9 @@ watch(
     }
 );
 
+/**
+ * Watch for changes in the session token
+ */
 watch(
     () => sessionToken.value,
     () => {
@@ -213,57 +208,51 @@ watch(
 );
 
 /**
+ * Watch for access token validity changes
+ */
+watch(isAccessTokenValid, (newValue, oldValue) => {
+    if (oldValue === false && newValue === true) {
+        useNotificationSystem().createSuccessNotification({
+            title: 'The session token is valid',
+        });
+    } else if (oldValue === true && newValue === false) {
+        useNotificationSystem().createErrorNotification({
+            title: 'The session token is invalid',
+        });
+    }
+});
+
+/**
  * Function which will toggle the visibility of the access token
  */
-function toggleTokenVisibility() {
+function toggleTokenVisibility(): void {
     tokenVisibility.value = !tokenVisibility.value;
+}
+
+/**
+ * Function which will regenerate a new access token
+ */
+function regenerateAccessToken(): void {
+    sessionToken.value = generateValidToken();
 }
 
 /**
  * Function which will validate the access token and notifies the user
  */
-function validate() {
-    const isValid = Object.values(defaultRules).every(
-        (rule) => rule(sessionToken.value) === true
-    );
-
-    isAccessTokenValid.value = isValid;
-
+function validate(): void {
     errorMessage.value = Object.values(defaultRules)
         .map((rule) => rule(sessionToken.value))
         .filter((value) => typeof value === 'string') as string[];
 
-    if (!isValid && isSessionActive.value) {
+    if (!isAccessTokenValid.value && isSessionActive.value) {
         stopSession();
-        useNotificationSystem().createErrorNotification({
-            title: 'Session stopped',
-            message: 'The access token is invalid',
-        });
     }
-}
-
-/**
- * Function which will validate the access token and returns a boolean
- * @returns boolean
- */
-function validateAccessToken() {
-    // check if the access token is valid via the defaultRules
-    const isValid = Object.values(defaultRules).every(
-        (rule) => rule(sessionToken.value) === true
-    );
-
-    if (isAccessTokenValid.value === isValid) {
-        return true;
-    }
-
-    isAccessTokenValid.value = isValid;
-    return false;
 }
 
 /**
  * Function which will copy the access token to the clipboard
  */
-async function copyToClipboard(text: string) {
+async function copyToClipboard(text: string): Promise<void> {
     const isSuccessful = await writeClipboardText(text);
     if (isSuccessful) {
         useNotificationSystem().createSuccessNotification({

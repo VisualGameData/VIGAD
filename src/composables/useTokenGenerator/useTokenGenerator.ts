@@ -1,5 +1,4 @@
 import { ref } from 'vue';
-import useSession from '@/composables/useSession/useSession';
 
 /**
  * Token generator composable
@@ -94,19 +93,15 @@ export default function useTokenGenerator() {
     };
 
     /**
-     * Generate a valid token using the rules defined in the rules object
-     * @param {number} length - The length of the token (default: 32)
-     * @param {string} alphabet - The set of characters used to generate the token (default: characterSet)
-     * @param {boolean} isLowerCase - Indicates whether to include lowercase letters in the token (default: true)
-     * @param {boolean} isUpperCase - Indicates whether to include uppercase letters in the token (default: true)
-     * @param {boolean} isSpecial - Indicates whether to include special characters in the token (default: true)
-     * @param {boolean} isNumber - Indicates whether to include numbers in the token (default: true)
-     * @param {boolean} isMin - Indicates whether the token must satisfy a minimum requirement of having at least one character from each selected category (default: true)
-     * @returns {string} - A valid token
+     * Generates a valid token based on the specified length, alphabet, and validation rules.
+     * @param {number} length The length of the token (default: 32).
+     * @param {string} alphabet The alphabet to generate the token from (default: characterSet).
+     * @param {object} rules The validation rules for the token (default: defaultRules).
+     * @returns {string} A valid token that satisfies all the validation rules.
      */
     const generateValidToken = (
         length = 32,
-        alphabet = characterSet,
+        alphabet: string = characterSet,
         rules: {
             [key: string]: (value: string) => boolean | string;
         } = defaultRules

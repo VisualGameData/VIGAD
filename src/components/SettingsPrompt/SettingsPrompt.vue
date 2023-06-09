@@ -144,17 +144,22 @@
 import { Ref, computed, ref, watch } from 'vue';
 import useNotificationSystem from '@/composables/useNotificationSystem/useNotificationSystem';
 import useClipboard from '@/composables/useClipboard/useClipboard';
-import useTokenGenerator from '@/composables/useTokenGenerator/useTokenGenerator';
 import useUploadData from '@/composables/useUploadData/useUploadData';
 import useSession from '@/composables/useSession/useSession';
 
 /**
  * Composables
  */
-const { sessionToken, isSessionActive, startSession, stopSession } =
-    useSession();
+const {
+    sessionToken,
+    isSessionActive,
+    sessionTokenRules,
+    startSession,
+    stopSession,
+    generateSessionToken,
+} = useSession();
 const { writeClipboardText } = useClipboard();
-const { defaultRules, generateValidToken } = useTokenGenerator();
+
 const { streamData, streamRegexAndCaptureAreaSettings } = useUploadData();
 
 /**
@@ -162,7 +167,7 @@ const { streamData, streamRegexAndCaptureAreaSettings } = useUploadData();
  */
 const dialog = ref(false);
 const isAccessTokenValid = computed(() => {
-    return Object.values(defaultRules).every(
+    return Object.values(sessionTokenRules).every(
         (rule) => rule(sessionToken.value) === true
     );
 });
@@ -182,14 +187,14 @@ watch(
                 return;
             } else {
                 // try to validate token if not empty
-                errorMessage.value = Object.values(defaultRules)
+                errorMessage.value = Object.values(sessionTokenRules)
                     .map((rule) => rule(sessionToken.value))
                     .filter((value) => typeof value === 'string') as string[];
             }
         } else {
             // reset validation state
             if (!isAccessTokenValid.value) {
-                errorMessage.value = Object.values(defaultRules)
+                errorMessage.value = Object.values(sessionTokenRules)
                     .map((rule) => rule(sessionToken.value))
                     .filter((value) => typeof value === 'string') as string[];
             }
@@ -233,14 +238,14 @@ function toggleTokenVisibility(): void {
  * Function which will regenerate a new access token
  */
 function regenerateAccessToken(): void {
-    sessionToken.value = generateValidToken();
+    generateSessionToken();
 }
 
 /**
  * Function which will validate the access token and notifies the user
  */
 function validate(): void {
-    errorMessage.value = Object.values(defaultRules)
+    errorMessage.value = Object.values(sessionTokenRules)
         .map((rule) => rule(sessionToken.value))
         .filter((value) => typeof value === 'string') as string[];
 

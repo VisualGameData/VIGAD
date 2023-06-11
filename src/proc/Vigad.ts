@@ -60,17 +60,17 @@ export class Vigad {
      * @param {number} left - The left position of the capture area.
      * @returns {number} - The ID of the newly added capture area.
      */
-    public addCaptureArea(
+    public async addCaptureArea(
         width = 100,
         height = 100,
         top = 0,
         left = 0
-    ): string {
+    ): Promise<string> {
         const ca = new CaptureArea(width, height, top, left);
 
         ca.setId(this.generateCaptureAreaId());
         this.captureAreas.push(ca);
-        this.tesseractHandler.enableCaptureArea(ca);
+        await this.tesseractHandler.enableCaptureArea(ca);
 
         return ca.getId();
     }
@@ -161,7 +161,7 @@ export class Vigad {
 
         if (index !== -1) {
             this.captureAreas.splice(index, 1);
-            this.tesseractHandler.removeWorker();
+            this.tesseractHandler.removeCaptureAreaAndWorker(id);
             return true;
         } else {
             console.log('Capture area not found');
@@ -212,7 +212,6 @@ export class Vigad {
                 if (!currentSelectedSource.value) {
                     return;
                 }
-
                 this.tesseractHandler.run(
                     currentSelectedSource.value,
                     async (result: { ca_id: string; data: string }[]) => {

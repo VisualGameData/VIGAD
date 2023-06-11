@@ -261,7 +261,6 @@ function deleteCaptureArea(id: string): void {
         title: 'Reorganizing capture areas...',
         message: 'Cleaning up ...',
     });
-    console.log('Passed ID', id);
     vigad.value.deleteCaptureArea(id);
 }
 </script>

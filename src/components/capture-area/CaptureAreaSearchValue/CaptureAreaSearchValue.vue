@@ -11,7 +11,6 @@
                 :error-messages="errorMessage"
                 type="text"
                 validate-on="input"
-                autofocus
             >
                 <template #append>
                     <v-tooltip location="bottom">
@@ -120,12 +119,12 @@ const {
 } = useTokenGenerator();
 
 /**
- * Get singelton instance reference to vigad
+ * Get singleton instance reference to vigad
  */
 const vigad = ref(Vigad.getInstance());
 
 /**
- * Rules for the capture area id input
+ * Rules for the capture area ID input
  */
 const captureAreaIdRules = {
     required: requiredRule,
@@ -138,7 +137,7 @@ const captureAreaIdRules = {
         !/[^A-Za-z0-9]/.test(v) || 'Must not include special characters',
     idDoesNotExistYet: (v: string) =>
         vigad.value.CaptureAreaIdIsUnique(v) ||
-        'Capture area id already exists',
+        'Capture area ID already exists',
 };
 
 /**
@@ -188,22 +187,28 @@ watch(
 );
 
 /**
- * Watch for capture area id validity changes
+ * Computed property to check if the capture area ID input is invalid
  */
-watch(isCaptureAreaIdInputValid, (newValue, oldValue) => {
-    if (oldValue === false && newValue === true) {
-        useNotificationSystem().createSuccessNotification({
-            title: 'The capture area id is valid',
-        });
-    } else if (oldValue === true && newValue === false) {
+const isCaptureAreaIdInputInvalid = computed(() => {
+    return (
+        isCaptureAreaIdInputValid.value === false &&
+        errorMessage.value.length > 0
+    );
+});
+
+/**
+ * Watch for capture area ID input validity changes
+ */
+watch(isCaptureAreaIdInputInvalid, (newValue, oldValue) => {
+    if (newValue) {
         useNotificationSystem().createErrorNotification({
-            title: 'The capture area id is invalid',
+            title: 'The capture area ID is invalid',
         });
     }
 });
 
 /**
- * Function which will validate the access token and notifies the user
+ * Function to validate the access token and notify the user
  */
 function validate() {
     errorMessage.value = Object.values(captureAreaIdRules)
@@ -211,32 +216,34 @@ function validate() {
         .filter((value) => typeof value === 'string') as string[];
 
     if (isCaptureAreaIdInputValid.value && errorMessage.value.length === 0) {
-        const isRenamed = vigad.value.renameCaptureArea(
-            defProps.captureAreaId,
-            captureAreaIdInputValue.value
+        const isRenamed = ref(
+            vigad.value.renameCaptureArea(
+                defProps.captureAreaId,
+                captureAreaIdInputValue.value
+            )
         );
 
-        if (isRenamed) {
+        if (isRenamed.value) {
             useNotificationSystem().createSuccessNotification({
-                title: 'Capture area id has been renamed',
+                title: 'Capture area ID has been renamed',
             });
         } else {
             useNotificationSystem().createErrorNotification({
-                title: 'Failed to rename capture area id',
+                title: 'Failed to rename capture area ID',
             });
         }
     }
 }
 
 /**
- * Function which will regenerate a new access token
+ * Function to regenerate a new access token
  */
 function regenerateAccessToken(): void {
     captureAreaIdInputValue.value = vigad.value.generateCaptureAreaId();
 }
 
 /**
- * Function which will copy the access token to the clipboard
+ * Function to copy the access token to the clipboard
  */
 async function copyToClipboard(text: string): Promise<void> {
     const isSuccessful = await writeClipboardText(text);
@@ -253,7 +260,7 @@ async function copyToClipboard(text: string): Promise<void> {
 }
 
 /**
- * Gives a notficiation after deletion of capture area
+ * Function to give a notification after deletion of the capture area
  * @param captureAreaId
  */
 function deleteCaptureArea(id: string): void {

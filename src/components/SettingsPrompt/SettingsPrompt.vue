@@ -66,7 +66,6 @@
                             :type="tokenVisibility ? 'text' : 'password'"
                             :error-messages="errorMessage"
                             persistent-placeholder
-                            autofocus
                             @click:append-inner="toggleTokenVisibility()"
                         >
                             <template #append>
@@ -244,7 +243,11 @@ function validate(): void {
         .map((rule) => rule(sessionToken.value))
         .filter((value) => typeof value === 'string') as string[];
 
-    if (!isAccessTokenValid.value && isSessionActive.value) {
+    if (
+        !isAccessTokenValid.value &&
+        isSessionActive.value &&
+        errorMessage.value.length === 0
+    ) {
         stopSession();
     }
 }

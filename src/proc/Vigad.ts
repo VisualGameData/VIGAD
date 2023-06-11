@@ -128,7 +128,7 @@ export class Vigad {
             (area) => area.getId() === oldId
         );
 
-        // If the capture area with the oldId doesn't exist, return
+        // If the capture area with the oldId doesn't exist, return false
         if (captureAreaIndex === -1) {
             return false;
         }
@@ -145,6 +145,7 @@ export class Vigad {
         }
 
         // Update the id of the capture area
+        // TODO: this causes the problem that the input field is not focused anymore
         this.captureAreas[captureAreaIndex].setId(newId);
 
         // Return true to indicate successful renaming

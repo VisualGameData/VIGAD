@@ -66,7 +66,6 @@
                             :type="tokenVisibility ? 'text' : 'password'"
                             :error-messages="errorMessage"
                             persistent-placeholder
-                            autofocus
                             @click:append-inner="toggleTokenVisibility()"
                         >
                             <template #append>

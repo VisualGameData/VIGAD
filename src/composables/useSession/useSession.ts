@@ -35,8 +35,7 @@ export default function useSession() {
         specialCharacters: specialCharactersRule,
         numbers: numbersRule,
         uriValidation: (v: string) =>
-            encodeSessionToken(v) ||
-            'Token cannot be transformed into a valid URI',
+            encodeSessionToken(v) || 'Token is no valid URI',
     };
 
     /**

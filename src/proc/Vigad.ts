@@ -158,7 +158,11 @@ export class Vigad {
                             }
                         );
                         // Upload Data to the server
-                        const { sessionToken, isSessionActive } = useSession();
+                        const {
+                            sessionToken,
+                            isSessionActive,
+                            encodeSessionToken,
+                        } = useSession();
                         const { post } = useAPI();
                         const {
                             streamData,
@@ -178,10 +182,11 @@ export class Vigad {
                                         .getValueRegex()
                                         .getLastBestMatch();
 
+                                // Encode the session token if it is not already encoded as a fallback
+                                encodeSessionToken();
+
                                 await post(
-                                    `session/${encodeURIComponent(
-                                        sessionToken.value
-                                    )}/data/ca/${result[i].ca_id}`,
+                                    `session/${sessionToken.value}/data/ca/${result[i].ca_id}`,
                                     {
                                         rating: caBestMatch.rating,
                                         match: {

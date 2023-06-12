@@ -1,6 +1,7 @@
 import { app } from 'electron';
 import log from 'electron-log';
 import path from 'node:path';
+import fs from 'fs';
 
 function domReady(
     condition: DocumentReadyState[] = ['complete', 'interactive']
@@ -119,29 +120,50 @@ contextBridge.exposeInMainWorld('electronAPI', {
         level: ElectronLogLevel = ElectronLogLevel.INFO,
         logFileName: string
     ) => {
-        const logDirecotryName = 'logs';
+        //github.com/finos/SymphonyElectron/blob/0431a9f5add13cd16c19006775f1e907f3c3b2ce/src/common/logger.ts#L66
+        const logDirectoryPath = path.join(app.getPath('exe'), 'logs');
 
-        console.log(process.env.NODE_ENV);
-
-        log.transports.file.format = '[{h}:{i}:{s}:{ms}] [{level}] {text}';
-        log.transports.file.maxSize = 5 * 1024 * 1024; // 5 MB
-
-        if (process.env.NODE_ENV === 'development') {
-            // Set the desired log file name
-            log.transports.file.resolvePath = () =>
-                path.join(logDirecotryName, logFileName);
-
-            // Save log message using electron-log
-            log[level](message);
-        } else {
-            // TODO: cant save log file in the root directory of the installed application yet
-            // Set the desired log file name in the root directory of the installed application
-            const logFilePath = path.join(app.getPath('exe'), logFileName);
-            log.transports.file.resolvePath = () => logFilePath;
-
-            // Save log message using electron-log
-            log[level](message);
+        // Create the log directory if it doesn't exist
+        if (!fs.existsSync(logDirectoryPath)) {
+            fs.mkdirSync(logDirectoryPath);
         }
+
+        const logFilePath = path.join(logDirectoryPath, logFileName);
+
+        try {
+            // Save log message using electron-log
+            log.transports.file.resolvePath = () => logFilePath;
+            log[level](message);
+
+            return { success: true, message: message };
+        } catch (error) {
+            console.error(error);
+            return { success: false, message: 'Error saving log file.' };
+        }
+
+        // const logDirecotryName = 'logs';
+
+        // console.log(process.env.NODE_ENV);
+
+        // log.transports.file.format = '[{h}:{i}:{s}:{ms}] [{level}] {text}';
+        // log.transports.file.maxSize = 5 * 1024 * 1024; // 5 MB
+
+        // if (process.env.NODE_ENV === 'development') {
+        //     // Set the desired log file name
+        //     log.transports.file.resolvePath = () =>
+        //         path.join(logDirecotryName, logFileName);
+
+        //     // Save log message using electron-log
+        //     log[level](message);
+        // } else {
+        //     // TODO: cant save log file in the root directory of the installed application yet
+        //     // Set the desired log file name in the root directory of the installed application
+        //     const logFilePath = path.join(app.getPath('exe'), logFileName);
+        //     log.transports.file.resolvePath = () => logFilePath;
+
+        //     // Save log message using electron-log
+        //     log[level](message);
+        // }
     },
 });
 

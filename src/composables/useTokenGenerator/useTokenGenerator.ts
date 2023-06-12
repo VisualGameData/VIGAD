@@ -5,33 +5,61 @@ import { ref } from 'vue';
  */
 export default function useTokenGenerator() {
     /**
+     * Parts of the character set
+     */
+    const lowercaseLetters = 'abcdefghijklmnopqrstuvwxyz';
+    const uppercaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const specialCharacters = '!@#$%^&*()_+';
+    const numbers = '0123456789';
+
+    /**
      * Character set for the access token
      */
     const characterSet =
-        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*_+-=?';
+        lowercaseLetters + uppercaseLetters + specialCharacters + numbers;
 
     /**
-     * Minimum token length
+     * Token length
      */
     const minTokenLenght = ref(8);
+    const maxTokenLenght = ref(64);
+
+    /**
+     * Definable rules for an token
+     */
+    const requiredRule = (value: string) =>
+        !!value || 'An access token is required to start a session';
+
+    const minCharactersRule = (v: string) =>
+        v.length >= minTokenLenght.value ||
+        `Min ${minTokenLenght.value} characters`;
+
+    const maxCharactersRule = (v: string) =>
+        v.length <= 64 || `Max ${maxTokenLenght.value} characters`;
+
+    const lowercaseLettersRule = (v: string) =>
+        /[a-z]/.test(v) || 'Must include at least one lowercase letter';
+
+    const uppercaseLettersRule = (v: string) =>
+        /[A-Z]/.test(v) || 'Must include at least one uppercase letter';
+
+    const specialCharactersRule = (v: string) =>
+        /[\W_]/.test(v) || 'Must include at least one special character';
+
+    const numbersRule = (v: string) =>
+        /[0-9]+/.test(v) || 'Must include at least one number';
 
     /**
      * Default Rules for the access token
      */
     const defaultRules = {
-        required: (value: string) =>
-            !!value || 'An access token is required to start a session',
-        min: (v: string) =>
-            v.length >= minTokenLenght.value ||
-            `Min ${minTokenLenght.value} characters`,
-        uppercase: (v: string) =>
-            /[A-Z]/.test(v) || 'Must include at least one uppercase letter',
-        lowercase: (v: string) =>
-            /[a-z]/.test(v) || 'Must include at least one lowercase letter',
-        special: (v: string) =>
-            /[\W_]/.test(v) || 'Must include at least one special character',
-        number: (v: string) =>
-            /[0-9]+/.test(v) || 'Must include at least one number',
+        required: requiredRule,
+        min: minCharactersRule,
+        max: maxCharactersRule,
+        uppercase: uppercaseLettersRule,
+        lowercase: lowercaseLettersRule,
+        special: specialCharactersRule,
+        number: numbersRule,
     };
 
     /**
@@ -65,27 +93,58 @@ export default function useTokenGenerator() {
     };
 
     /**
-     * Generate a valid token using the rules defined in the rules object
-     * @returns a valid token
+     * Generates a valid token based on the specified length, alphabet, and validation rules.
+     * @param {number} length The length of the token (default: 32).
+     * @param {string} alphabet The alphabet to generate the token from (default: characterSet).
+     * @param {object} rules The validation rules for the token (default: defaultRules).
+     * @returns {string} A valid token that satisfies all the validation rules.
      */
-    const generateValidToken = (): string => {
-        const token = generateToken();
-        if (
-            defaultRules.lowercase(token) === true &&
-            defaultRules.uppercase(token) === true &&
-            defaultRules.special(token) === true &&
-            defaultRules.number(token) === true &&
-            defaultRules.min(token) === true
-        ) {
+    const generateValidToken = (
+        length = 32,
+        alphabet: string = characterSet,
+        rules: {
+            [key: string]: (value: string) => boolean | string;
+        } = defaultRules
+    ): string => {
+        const token = generateToken(length, alphabet);
+
+        const validationResults = Object.values(rules).map((ruleFn) => {
+            return {
+                ruleFn,
+                validationResult: ruleFn(token),
+            };
+        });
+
+        const isValid = validationResults.every(({ validationResult }) => {
+            return !validationResult || validationResult === true;
+        });
+
+        if (isValid) {
             return token;
         }
-        return generateValidToken();
+
+        return generateValidToken(length, alphabet, rules);
     };
 
     return {
-        characterSet,
+        // Token Lenght
         minTokenLenght,
+        maxTokenLenght,
+        // Character set
+        lowercaseLetters,
+        uppercaseLetters,
+        specialCharacters,
+        numbers,
+        // Rules
+        requiredRule,
+        minCharactersRule,
+        maxCharactersRule,
+        lowercaseLettersRule,
+        uppercaseLettersRule,
+        specialCharactersRule,
+        numbersRule,
         defaultRules,
+        // Functions
         generateToken,
         generateValidToken,
     };

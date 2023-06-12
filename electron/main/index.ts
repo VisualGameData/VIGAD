@@ -97,6 +97,10 @@ async function createWindow() {
 
     // Get all screens/windows from the main process to the renderer process
     ipcMain.handle('get-screens', getScreen);
+
+    // Electron wants this to be called initially before calling
+    // app.getPath('logs')
+    app.setAppLogsPath();
 }
 
 // This method will be called when Electron has finished

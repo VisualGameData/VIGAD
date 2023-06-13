@@ -2,15 +2,15 @@
     <div>
         <div class="pt-2">
             <v-text-field
-                ref="captureAreaIdInput"
                 v-model="captureAreaIdInputValue"
                 variant="outlined"
                 label="Capture Area ID"
                 name="captureAreaId"
-                persistent-placeholder
-                :error-messages="errorMessage"
                 type="text"
-                validate-on="input"
+                :error-messages="errorMessage"
+                persistent-placeholder
+                @blur="updateIdName()"
+                @keyup.enter="updateIdName()"
             >
                 <template #append>
                     <v-tooltip location="bottom">
@@ -143,7 +143,6 @@ const captureAreaIdRules = {
 /**
  * Data
  */
-const captureAreaIdInput: Ref<HTMLInputElement | undefined> = ref();
 const captureAreaIdInputValue = ref(defProps.captureAreaId);
 const isCaptureAreaIdInputValid = computed(() => {
     return Object.values(captureAreaIdRules).every(
@@ -199,7 +198,7 @@ const isCaptureAreaIdInputInvalid = computed(() => {
 /**
  * Watch for capture area ID input validity changes
  */
-watch(isCaptureAreaIdInputInvalid, (newValue, oldValue) => {
+watch(isCaptureAreaIdInputInvalid, (newValue) => {
     if (newValue) {
         useNotificationSystem().createErrorNotification({
             title: 'The capture area ID is invalid',
@@ -211,6 +210,31 @@ watch(isCaptureAreaIdInputInvalid, (newValue, oldValue) => {
  * Function to validate the access token and notify the user
  */
 function validate() {
+    errorMessage.value = Object.values(captureAreaIdRules)
+        .map((rule) => rule(captureAreaIdInputValue.value))
+        .filter((value) => typeof value === 'string') as string[];
+
+    // if (isCaptureAreaIdInputValid.value && errorMessage.value.length === 0) {
+    //     const isRenamed = ref(
+    //         vigad.value.renameCaptureArea(
+    //             defProps.captureAreaId,
+    //             captureAreaIdInputValue.value
+    //         )
+    //     );
+
+    //     if (isRenamed.value) {
+    //         useNotificationSystem().createSuccessNotification({
+    //             title: 'Capture area ID has been renamed',
+    //         });
+    //     } else {
+    //         useNotificationSystem().createErrorNotification({
+    //             title: 'Failed to rename capture area ID',
+    //         });
+    //     }
+    // }
+}
+
+function updateIdName() {
     errorMessage.value = Object.values(captureAreaIdRules)
         .map((rule) => rule(captureAreaIdInputValue.value))
         .filter((value) => typeof value === 'string') as string[];

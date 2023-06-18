@@ -5,8 +5,6 @@
 [![Tests](https://github.com/VisualGameData/VIGAD/actions/workflows/main-test.yml/badge.svg)](https://github.com/VisualGameData/VIGAD/actions/workflows/main-test.yml?branch=main)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/e0714cc489084a76bfaccea19fa71a06)](https://app.codacy.com/gh/VisualGameData/VIGAD/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![Github All Releases](https://img.shields.io/github/downloads/VisualGameData/VIGAD/total.svg)]()
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/VisualGameData/VIGAD/main/LICENSE)
-[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/VisualGameData/VIGAD/pulls)
 
 ## Description
 

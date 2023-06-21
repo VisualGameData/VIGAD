@@ -1,6 +1,5 @@
 ![Vigad](https://user-images.githubusercontent.com/58397976/209412078-1a7f2dfc-3ce8-4a7c-9ad6-2ca19a4e764d.png)
 
-[![GitHub version](https://badge.fury.io/gh/VisualGameData%2FVigad.svg)](https://github.com/VisualGameData/VIGAD)
 [![Build](https://github.com/VisualGameData/VIGAD/actions/workflows/publish-build.yml/badge.svg)](https://github.com/VisualGameData/VIGAD/actions/workflows/publish-build.yml)
 [![Tests](https://github.com/VisualGameData/VIGAD/actions/workflows/main-test.yml/badge.svg)](https://github.com/VisualGameData/VIGAD/actions/workflows/main-test.yml?branch=main)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/e0714cc489084a76bfaccea19fa71a06)](https://app.codacy.com/gh/VisualGameData/VIGAD/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)

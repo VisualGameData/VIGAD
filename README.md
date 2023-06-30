@@ -28,7 +28,51 @@ Download the executable for the latest version [here](https://github.com/VisualG
 Note: In order to run the .AppImage executable, fuse is required.
 
 -   Install fuse:
-    > apt install fuse
+    ```
+    apt install fuse
+    ```
+
+## QuickStart
+
+1. Open the VIGAD application
+2. Under "Source", select the screen or application window you want to extract data from
+3. Under "Regex", click "ADD CAPTURE AREA" at the top
+4. Position the newly appeared green box over the area you want to extract data from
+5. Open up the dropdown menu of the capture area on the left
+6. Configure the capture area
+   - Capture Area ID: A unique identifier for the capture area. You will be able to identify your desired data using that ID later on
+   - Search value: A regular expression for values you are searching for
+   - Before/After Constraint: Regular expressions between which your desired value may be found
+   - Options:
+       ##### Matching:
+             - Approximate: The value that is closest to your defined regex will be matched. An according rating for this match will be generated as well
+             - Exact: Only values will be extracted that exactly match your defined regex
+       ##### Slicing:
+             - The type of algorithm to be used for parsing text extracted by the tesseract AI
+             - Substring: Very accurate but very slow for large texts
+             - Spaces: Mix between accuracy and performance
+             - Entire String: Least accurate but most performant
+       ##### Similarity:
+             - Numbers to Letters: Convert numbers to similar looking letters
+             - Letters to Numbers: Convert letters to similar looking numbers
+             - None: Do not convert anything
+7. Under "Session Settings", configure a token used to access your extracted data from the [VIGAD-API](https://github.com/VisualGameData/VIGAD-API) and select the data you want to share
+8. Click "START SESSION" in the top right corner
+9. Under Capturing, click "START" at the top
+
+Data will now be extracted and (if configured correctly in .env & Session Settings) uploaded to the VIGAD-API. Currently you will need to build the application yourself in order to edit the VIGAD-API credentials.
+
+## Build
+
+1. Checkout the sourcecode:
+```
+git clone https://github.com/VisualGameData/VIGAD-API.git
+```
+2. If the VIGAD-API should be used, edit .env accordingly
+3. Start the build process:
+```
+npm run build
+```
 
 ## Contributors
 

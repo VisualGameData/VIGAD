@@ -68,8 +68,12 @@ Data will now be extracted and (if configured correctly in .env & Session Settin
 ```
 git clone https://github.com/VisualGameData/VIGAD-API.git
 ```
-2. If the VIGAD-API should be used, edit .env accordingly
-3. Start the build process:
+2. If the VIGAD-API should be used, edit .env accordingly:
+```
+VITE_BASEURL: The URL to the VIGAD-API (eg. http://localhost:3000)
+VITE_BEARERTOKEN: A token, the TOKEN_HASH in the VIGAD_API was generated from
+```
+4. Start the build process:
 ```
 npm run build
 ```

@@ -48,6 +48,26 @@ export class TesseractHandler {
     }
 
     /**
+     * Remove a capture area and its corresponding worker.
+     * @param {string} id - The identifier of the capture area to remove.
+     * @returns {void}
+     */
+    public removeCaptureAreaAndWorker(id: string): void {
+        const index = this.enabledCaptureAreas.findIndex(
+            (ca) => ca.getId() === id
+        );
+
+        if (index !== -1) {
+            this.enabledCaptureAreas.splice(index, 1);
+
+            if (index < this.worker.length) {
+                const removedWorker = this.worker.splice(index, 1);
+                removedWorker[0].terminate();
+            }
+        }
+    }
+
+    /**
      * Add and initialize a new tesseract worker
      * @return void
      */
@@ -58,14 +78,6 @@ export class TesseractHandler {
         await worker.initialize('eng');
         this.worker.push(worker);
         console.log('added tesseract worker');
-    }
-
-    /**
-     * Remove a tesseract worker
-     * @return void
-     */
-    public removeWorker(): void {
-        this.worker.pop();
     }
 
     /**
@@ -131,7 +143,7 @@ export class TesseractHandler {
 
                         // run tesseract
                         (async () => {
-                            const results: { ca_id: number; data: string }[] =
+                            const results: { ca_id: string; data: string }[] =
                                 [];
                             await Promise.all(
                                 rectangles.map((rectangle) =>

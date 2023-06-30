@@ -96,7 +96,7 @@ import { ResetSettings } from '../CaptureAreaSearchValue/ResetSettings';
 const props = defineProps<{
     label: string;
     placeholder: string;
-    captureAreaId: number;
+    captureAreaId: string;
     prependIcon: string;
     regex: ConstraintRegex | ValueRegex;
     resetOptions: ResetSettings;

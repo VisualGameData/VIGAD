@@ -1,7 +1,7 @@
 import { RegexGroup } from './regex/RegexGroup';
 
 export class CaptureArea {
-    private id = 0;
+    private id = '';
     private width = 0;
     private height = 0;
     private top = 0;
@@ -23,11 +23,11 @@ export class CaptureArea {
         this.enabled = true;
     }
 
-    public getId(): number {
+    public getId(): string {
         return this.id;
     }
 
-    public setId(id: number) {
+    public setId(id: string) {
         this.id = id;
     }
 

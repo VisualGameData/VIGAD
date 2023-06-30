@@ -45,17 +45,17 @@ Note: In order to run the .AppImage executable, fuse is required.
    - Before/After Constraint: Regular expressions between which your desired value may be found
    - Options:
        ##### Matching:
-             - Approximate: The value that is closest to your defined regex will be matched. An according rating for this match will be generated as well
-             - Exact: Only values will be extracted that exactly match your defined regex
+         - Approximate: The value that is closest to your defined regex will be matched. An according rating for this match will be generated as well
+         - Exact: Only values will be extracted that exactly match your defined regex
        ##### Slicing:
-             - The type of algorithm to be used for parsing text extracted by the tesseract AI
-             - Substring: Very accurate but very slow for large texts
-             - Spaces: Mix between accuracy and performance
-             - Entire String: Least accurate but most performant
+         - The type of algorithm to be used for parsing text extracted by the tesseract AI
+         - Substring: Very accurate but very slow for large texts
+         - Spaces: Mix between accuracy and performance
+         - Entire String: Least accurate but most performant
        ##### Similarity:
-             - Numbers to Letters: Convert numbers to similar looking letters
-             - Letters to Numbers: Convert letters to similar looking numbers
-             - None: Do not convert anything
+         - Numbers to Letters: Convert numbers to similar looking letters
+         - Letters to Numbers: Convert letters to similar looking numbers
+         - None: Do not convert anything
 7. Under "Session Settings", configure a token used to access your extracted data from the [VIGAD-API](https://github.com/VisualGameData/VIGAD-API) and select the data you want to share
 8. Click "START SESSION" in the top right corner
 9. Under Capturing, click "START" at the top
